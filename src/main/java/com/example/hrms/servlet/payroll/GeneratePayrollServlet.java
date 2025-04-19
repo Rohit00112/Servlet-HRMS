@@ -4,6 +4,7 @@ import com.example.hrms.dao.EmployeeDAO;
 import com.example.hrms.model.Employee;
 import com.example.hrms.model.Payroll;
 import com.example.hrms.service.PayrollService;
+import com.example.hrms.util.EmailService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,7 +22,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @WebServlet(name = "GeneratePayrollServlet", urlPatterns = {
-    "/admin/payroll/generate", 
+    "/admin/payroll/generate",
     "/hr/payroll/generate"
 })
 public class GeneratePayrollServlet extends HttpServlet {
@@ -78,7 +79,7 @@ public class GeneratePayrollServlet extends HttpServlet {
                 List<Payroll> payrolls = payrollService.getPayrollsByMonth(viewMonth);
                 request.setAttribute("payrolls", payrolls);
                 request.setAttribute("selectedMonth", viewMonth);
-                
+
                 // Format month for display
                 YearMonth ym = YearMonth.parse(viewMonth);
                 String formattedMonth = ym.format(DateTimeFormatter.ofPattern("MMMM yyyy"));
@@ -111,28 +112,28 @@ public class GeneratePayrollServlet extends HttpServlet {
 
         try {
             String action = request.getParameter("action");
-            
+
             if ("generate".equals(action)) {
                 // Generate payroll for a specific employee or all employees
                 String employeeIdParam = request.getParameter("employeeId");
                 String month = request.getParameter("month");
-                
+
                 if (month == null || month.isEmpty()) {
                     // Default to current month
                     month = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
                 }
-                
+
                 if (employeeIdParam != null && !employeeIdParam.isEmpty() && !employeeIdParam.equals("all")) {
                     // Generate for a specific employee
                     int employeeId = Integer.parseInt(employeeIdParam);
                     Payroll payroll = payrollService.generatePayroll(employeeId, month);
-                    
+
                     // Redirect to view the generated payroll
                     response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/payroll/view?id=" + payroll.getId());
                 } else {
                     // Generate for all employees
                     payrollService.generatePayrollForAllEmployees(month);
-                    
+
                     // Redirect to view all payrolls for the month
                     response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/payroll/generate?month=" + month);
                 }
@@ -140,21 +141,21 @@ public class GeneratePayrollServlet extends HttpServlet {
                 // Update an existing payroll
                 int payrollId = Integer.parseInt(request.getParameter("payrollId"));
                 Payroll payroll = payrollService.getPayrollById(payrollId);
-                
+
                 if (payroll != null) {
                     // Update payroll details
                     BigDecimal baseSalary = new BigDecimal(request.getParameter("baseSalary"));
                     BigDecimal allowances = new BigDecimal(request.getParameter("allowances"));
                     BigDecimal deductions = new BigDecimal(request.getParameter("deductions"));
                     String notes = request.getParameter("notes");
-                    
+
                     payroll.setBaseSalary(baseSalary);
                     payroll.setAllowances(allowances);
                     payroll.setDeductions(deductions);
                     payroll.setNotes(notes);
-                    
+
                     payrollService.updatePayroll(payroll);
-                    
+
                     // Redirect to view the updated payroll
                     response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/payroll/view?id=" + payrollId);
                 } else {
@@ -164,15 +165,49 @@ public class GeneratePayrollServlet extends HttpServlet {
             } else if ("finalize".equals(action)) {
                 // Finalize a payroll
                 int payrollId = Integer.parseInt(request.getParameter("payrollId"));
-                payrollService.finalizePayroll(payrollId);
-                
+                boolean success = payrollService.finalizePayroll(payrollId);
+
+                if (success) {
+                    // Send email notification
+                    try {
+                        // Get payroll details
+                        Payroll payroll = payrollService.getPayrollById(payrollId);
+                        if (payroll != null) {
+                            // Get employee details
+                            Employee employee = employeeDAO.getEmployeeById(payroll.getEmployeeId());
+                            if (employee != null && employee.getEmail() != null) {
+                                // Format month for display
+                                String formattedMonth = payroll.getFormattedMonth();
+
+                                // Format net salary
+                                String netSalary = payroll.getNetSalary().toString();
+
+                                // Send email notification
+                                EmailService.sendPayslipNotification(
+                                    employee.getEmail(),
+                                    employee.getName(),
+                                    formattedMonth,
+                                    netSalary,
+                                    payrollId
+                                );
+
+                                System.out.println("Payslip notification email sent to " + employee.getEmail());
+                            }
+                        }
+                    } catch (Exception e) {
+                        // Log the error but don't fail the request
+                        System.err.println("Error sending email notification: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+
                 // Redirect back to the payroll view
                 response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/payroll/view?id=" + payrollId);
             } else if ("markPaid".equals(action)) {
                 // Mark a payroll as paid
                 int payrollId = Integer.parseInt(request.getParameter("payrollId"));
                 payrollService.markPayrollAsPaid(payrollId);
-                
+
                 // Redirect back to the payroll view
                 response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/payroll/view?id=" + payrollId);
             } else if ("delete".equals(action)) {
@@ -180,7 +215,7 @@ public class GeneratePayrollServlet extends HttpServlet {
                 int payrollId = Integer.parseInt(request.getParameter("payrollId"));
                 String month = request.getParameter("month");
                 payrollService.deletePayroll(payrollId);
-                
+
                 // Redirect back to the payroll list
                 response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/payroll/generate?month=" + month);
             } else {

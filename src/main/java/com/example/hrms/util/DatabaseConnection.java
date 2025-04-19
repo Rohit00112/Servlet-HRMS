@@ -97,6 +97,21 @@ public class DatabaseConnection {
                     ")";
             stmt.executeUpdate(createEmployeesTable);
 
+            // Create leaves table if it doesn't exist
+            String createLeavesTable = "CREATE TABLE IF NOT EXISTS leaves (" +
+                    "id SERIAL PRIMARY KEY, " +
+                    "employee_id INTEGER REFERENCES employees(id), " +
+                    "start_date DATE NOT NULL, " +
+                    "end_date DATE NOT NULL, " +
+                    "reason TEXT NOT NULL, " +
+                    "status VARCHAR(20) NOT NULL CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED')), " +
+                    "applied_date DATE NOT NULL, " +
+                    "reviewed_by INTEGER REFERENCES users(id), " +
+                    "reviewed_date DATE, " +
+                    "comments TEXT" +
+                    ")";
+            stmt.executeUpdate(createLeavesTable);
+
             // Check if admin user exists, if not create default admin
             String checkAdmin = "SELECT COUNT(*) FROM users WHERE role = 'ADMIN'";
             ResultSet rs = stmt.executeQuery(checkAdmin);

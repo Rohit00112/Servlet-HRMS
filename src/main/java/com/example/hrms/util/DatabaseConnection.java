@@ -112,6 +112,39 @@ public class DatabaseConnection {
                     ")";
             stmt.executeUpdate(createLeavesTable);
 
+            // Create attendance table if it doesn't exist
+            String createAttendanceTable = "CREATE TABLE IF NOT EXISTS attendance (" +
+                    "id SERIAL PRIMARY KEY, " +
+                    "employee_id INTEGER REFERENCES employees(id), " +
+                    "date DATE NOT NULL, " +
+                    "check_in_time TIME, " +
+                    "check_out_time TIME, " +
+                    "status VARCHAR(20) NOT NULL CHECK (status IN ('PRESENT', 'ABSENT', 'HALF_DAY', 'LATE')), " +
+                    "notes TEXT, " +
+                    "UNIQUE(employee_id, date)" +
+                    ")";
+            stmt.executeUpdate(createAttendanceTable);
+
+            // Create payroll table if it doesn't exist
+            String createPayrollTable = "CREATE TABLE IF NOT EXISTS payroll (" +
+                    "id SERIAL PRIMARY KEY, " +
+                    "employee_id INTEGER REFERENCES employees(id), " +
+                    "month VARCHAR(7) NOT NULL, " + // Format: YYYY-MM
+                    "base_salary DECIMAL(10, 2) NOT NULL, " +
+                    "days_present INTEGER NOT NULL, " +
+                    "days_absent INTEGER NOT NULL, " +
+                    "days_late INTEGER NOT NULL, " +
+                    "days_half INTEGER NOT NULL, " +
+                    "allowances DECIMAL(10, 2) DEFAULT 0, " +
+                    "deductions DECIMAL(10, 2) DEFAULT 0, " +
+                    "net_salary DECIMAL(10, 2) NOT NULL, " +
+                    "generation_date DATE NOT NULL, " +
+                    "status VARCHAR(20) NOT NULL CHECK (status IN ('DRAFT', 'FINALIZED', 'PAID')), " +
+                    "notes TEXT, " +
+                    "UNIQUE(employee_id, month)" +
+                    ")";
+            stmt.executeUpdate(createPayrollTable);
+
             // Check if admin user exists, if not create default admin
             String checkAdmin = "SELECT COUNT(*) FROM users WHERE role = 'ADMIN'";
             ResultSet rs = stmt.executeQuery(checkAdmin);

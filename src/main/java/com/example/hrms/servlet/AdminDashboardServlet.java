@@ -1,5 +1,7 @@
 package com.example.hrms.servlet;
 
+import com.example.hrms.dao.EmployeeDAO;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -9,9 +11,19 @@ import java.io.IOException;
 
 @WebServlet(name = "adminDashboardServlet", value = "/admin/dashboard")
 public class AdminDashboardServlet extends HttpServlet {
-    
+    private EmployeeDAO employeeDAO;
+
+    @Override
+    public void init() {
+        employeeDAO = new EmployeeDAO();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Get employee count for dashboard
+        int employeeCount = employeeDAO.getEmployeeCount();
+        request.setAttribute("employeeCount", employeeCount);
+
         request.getRequestDispatcher("/WEB-INF/admin/dashboard.jsp").forward(request, response);
     }
 }

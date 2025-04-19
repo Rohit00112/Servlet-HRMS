@@ -72,6 +72,31 @@ public class DatabaseConnection {
                     ")";
             stmt.executeUpdate(createUsersTable);
 
+            // Create departments table if it doesn't exist
+            String createDepartmentsTable = "CREATE TABLE IF NOT EXISTS departments (" +
+                    "id SERIAL PRIMARY KEY, " +
+                    "name VARCHAR(100) UNIQUE NOT NULL" +
+                    ")";
+            stmt.executeUpdate(createDepartmentsTable);
+
+            // Create designations table if it doesn't exist
+            String createDesignationsTable = "CREATE TABLE IF NOT EXISTS designations (" +
+                    "id SERIAL PRIMARY KEY, " +
+                    "title VARCHAR(100) UNIQUE NOT NULL" +
+                    ")";
+            stmt.executeUpdate(createDesignationsTable);
+
+            // Create employees table if it doesn't exist
+            String createEmployeesTable = "CREATE TABLE IF NOT EXISTS employees (" +
+                    "id SERIAL PRIMARY KEY, " +
+                    "name VARCHAR(100) NOT NULL, " +
+                    "email VARCHAR(100) UNIQUE NOT NULL, " +
+                    "department_id INTEGER REFERENCES departments(id), " +
+                    "designation_id INTEGER REFERENCES designations(id), " +
+                    "join_date DATE NOT NULL" +
+                    ")";
+            stmt.executeUpdate(createEmployeesTable);
+
             // Check if admin user exists, if not create default admin
             String checkAdmin = "SELECT COUNT(*) FROM users WHERE role = 'ADMIN'";
             ResultSet rs = stmt.executeQuery(checkAdmin);
@@ -89,6 +114,40 @@ public class DatabaseConnection {
                 pstmt.executeUpdate();
 
                 System.out.println("Default admin user created");
+            }
+
+            // Add some default departments if none exist
+            String checkDepartments = "SELECT COUNT(*) FROM departments";
+            rs = stmt.executeQuery(checkDepartments);
+            rs.next();
+            int departmentCount = rs.getInt(1);
+
+            if (departmentCount == 0) {
+                String[] defaultDepartments = {"Human Resources", "Information Technology", "Finance", "Marketing", "Operations"};
+                for (String dept : defaultDepartments) {
+                    String insertDept = "INSERT INTO departments (name) VALUES (?)";
+                    PreparedStatement pstmt = conn.prepareStatement(insertDept);
+                    pstmt.setString(1, dept);
+                    pstmt.executeUpdate();
+                }
+                System.out.println("Default departments created");
+            }
+
+            // Add some default designations if none exist
+            String checkDesignations = "SELECT COUNT(*) FROM designations";
+            rs = stmt.executeQuery(checkDesignations);
+            rs.next();
+            int designationCount = rs.getInt(1);
+
+            if (designationCount == 0) {
+                String[] defaultDesignations = {"Manager", "Team Lead", "Senior Developer", "Junior Developer", "HR Specialist", "Financial Analyst", "Marketing Specialist"};
+                for (String desig : defaultDesignations) {
+                    String insertDesig = "INSERT INTO designations (title) VALUES (?)";
+                    PreparedStatement pstmt = conn.prepareStatement(insertDesig);
+                    pstmt.setString(1, desig);
+                    pstmt.executeUpdate();
+                }
+                System.out.println("Default designations created");
             }
         }
     }

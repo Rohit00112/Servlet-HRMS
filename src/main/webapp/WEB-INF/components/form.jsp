@@ -64,40 +64,30 @@ Then add your form fields after including the component:
     </c:otherwise>
 </c:choose>
 
-<c:set var="formGlassClasses">
-    <jsp:include page="/WEB-INF/components/glassmorphism.jsp">
-        <jsp:param name="type" value="form" />
-        <jsp:param name="blur" value="lg" />
-        <jsp:param name="opacity" value="10" />
-        <jsp:param name="border" value="light" />
-        <jsp:param name="shadow" value="lg" />
-        <jsp:param name="rounded" value="xl" />
-    </jsp:include>
-</c:set>
-<div class="${formGlassClasses} overflow-hidden">
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
     <c:if test="${not empty formTitle}">
-        <div class="px-6 py-5 border-b border-white/10 bg-gradient-to-r from-primary-600/30 to-secondary-600/30 backdrop-blur-md">
-            <h3 class="text-lg leading-6 font-medium text-white">${formTitle}</h3>
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">${formTitle}</h3>
             <c:if test="${not empty formDescription}">
-                <p class="mt-1 max-w-2xl text-sm text-white/70">${formDescription}</p>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500">${formDescription}</p>
             </c:if>
         </div>
     </c:if>
-
-    <div class="px-6 py-6">
+    
+    <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
         <form id="${formId}" action="${pageContext.request.contextPath}${formAction}" method="${formMethod}" class="space-y-6">
             <div class="grid ${gridClass} gap-6">
                 <%-- Form fields will be provided by the user after including this component --%>
                 <jsp:doBody />
             </div>
-
+            
             <div class="flex justify-end pt-5">
                 <c:if test="${not empty cancelButtonUrl}">
-                    <a href="${pageContext.request.contextPath}${cancelButtonUrl}" class="inline-flex items-center px-4 py-2 border border-white/20 text-sm font-medium rounded-lg shadow-lg text-white bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/30 mr-3">
+                    <a href="${pageContext.request.contextPath}${cancelButtonUrl}" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 mr-3">
                         ${cancelButtonText}
                     </a>
                 </c:if>
-                <button type="submit" class="inline-flex items-center px-4 py-2 border border-primary-400/30 text-sm font-medium rounded-lg shadow-lg text-white bg-primary-600/80 backdrop-blur-md hover:bg-primary-500/90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400/50">
+                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
                     ${submitButtonText}
                 </button>
             </div>

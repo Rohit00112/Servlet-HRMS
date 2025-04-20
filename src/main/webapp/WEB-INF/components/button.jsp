@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<%--
+<%-- 
 Primary Button:
 <jsp:include page="/WEB-INF/components/button.jsp">
     <jsp:param name="type" value="primary" />
@@ -23,25 +23,25 @@ Secondary Button:
 
 <c:choose>
     <c:when test="${param.type == 'primary'}">
-        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-primary-400/30 text-sm font-medium rounded-lg shadow-lg text-white bg-primary-600/80 backdrop-blur-md hover:bg-primary-500/90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400/50" />
+        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" />
     </c:when>
     <c:when test="${param.type == 'secondary'}">
-        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-white/20 text-sm font-medium rounded-lg shadow-lg text-white bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/30" />
+        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" />
     </c:when>
     <c:when test="${param.type == 'danger'}">
-        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-red-400/30 text-sm font-medium rounded-lg shadow-lg text-white bg-red-600/80 backdrop-blur-md hover:bg-red-500/90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400/50" />
+        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" />
     </c:when>
     <c:when test="${param.type == 'success'}">
-        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-green-400/30 text-sm font-medium rounded-lg shadow-lg text-white bg-green-600/80 backdrop-blur-md hover:bg-green-500/90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-400/50" />
+        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" />
     </c:when>
     <c:when test="${param.type == 'warning'}">
-        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-yellow-400/30 text-sm font-medium rounded-lg shadow-lg text-white bg-yellow-600/80 backdrop-blur-md hover:bg-yellow-500/90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400/50" />
+        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500" />
     </c:when>
     <c:when test="${param.type == 'info'}">
-        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-blue-400/30 text-sm font-medium rounded-lg shadow-lg text-white bg-blue-600/80 backdrop-blur-md hover:bg-blue-500/90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400/50" />
+        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" />
     </c:when>
     <c:otherwise>
-        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-white/20 text-sm font-medium rounded-lg shadow-lg text-white bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/30" />
+        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" />
     </c:otherwise>
 </c:choose>
 

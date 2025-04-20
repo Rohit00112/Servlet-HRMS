@@ -29,36 +29,36 @@ Card Component Usage:
 <%-- Icon background color --%>
 <c:choose>
     <c:when test="${cardIconBgColor eq 'primary'}">
-        <c:set var="iconBgStyle" value="bg-primary-500/20 backdrop-blur-sm" />
-        <c:set var="iconTextStyle" value="text-primary-300" />
+        <c:set var="iconBgStyle" value="bg-primary-100" />
+        <c:set var="iconTextStyle" value="text-primary-600" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'blue'}">
-        <c:set var="iconBgStyle" value="bg-blue-500/20 backdrop-blur-sm" />
-        <c:set var="iconTextStyle" value="text-blue-300" />
+        <c:set var="iconBgStyle" value="bg-blue-100" />
+        <c:set var="iconTextStyle" value="text-blue-600" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'green'}">
-        <c:set var="iconBgStyle" value="bg-green-500/20 backdrop-blur-sm" />
-        <c:set var="iconTextStyle" value="text-green-300" />
+        <c:set var="iconBgStyle" value="bg-green-100" />
+        <c:set var="iconTextStyle" value="text-green-600" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'red'}">
-        <c:set var="iconBgStyle" value="bg-red-500/20 backdrop-blur-sm" />
-        <c:set var="iconTextStyle" value="text-red-300" />
+        <c:set var="iconBgStyle" value="bg-red-100" />
+        <c:set var="iconTextStyle" value="text-red-600" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'yellow'}">
-        <c:set var="iconBgStyle" value="bg-yellow-500/20 backdrop-blur-sm" />
-        <c:set var="iconTextStyle" value="text-yellow-300" />
+        <c:set var="iconBgStyle" value="bg-yellow-100" />
+        <c:set var="iconTextStyle" value="text-yellow-600" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'purple'}">
-        <c:set var="iconBgStyle" value="bg-secondary-500/20 backdrop-blur-sm" />
-        <c:set var="iconTextStyle" value="text-secondary-300" />
+        <c:set var="iconBgStyle" value="bg-purple-100" />
+        <c:set var="iconTextStyle" value="text-purple-600" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'gray'}">
-        <c:set var="iconBgStyle" value="bg-gray-500/20 backdrop-blur-sm" />
-        <c:set var="iconTextStyle" value="text-gray-300" />
+        <c:set var="iconBgStyle" value="bg-gray-100" />
+        <c:set var="iconTextStyle" value="text-gray-600" />
     </c:when>
     <c:otherwise>
-        <c:set var="iconBgStyle" value="bg-primary-500/20 backdrop-blur-sm" />
-        <c:set var="iconTextStyle" value="text-primary-300" />
+        <c:set var="iconBgStyle" value="bg-primary-100" />
+        <c:set var="iconTextStyle" value="text-primary-600" />
     </c:otherwise>
 </c:choose>
 
@@ -117,31 +117,20 @@ Card Component Usage:
     </c:when>
 </c:choose>
 
-<c:set var="cardGlassClasses">
-    <jsp:include page="/WEB-INF/components/glassmorphism.jsp">
-        <jsp:param name="type" value="card" />
-        <jsp:param name="blur" value="lg" />
-        <jsp:param name="opacity" value="10" />
-        <jsp:param name="border" value="light" />
-        <jsp:param name="shadow" value="lg" />
-        <jsp:param name="rounded" value="xl" />
-        <jsp:param name="hoverEffect" value="true" />
-    </jsp:include>
-</c:set>
-<div class="${cardGlassClasses} w-full overflow-hidden">
+<div class="bg-white overflow-hidden shadow rounded-lg w-full">
     <div class="p-5">
         <c:if test="${not empty cardTitle || not empty cardIcon}">
             <div class="flex items-center">
                 <c:if test="${not empty cardIcon}">
-                    <div class="flex-shrink-0 ${iconBgStyle} rounded-xl p-3 border border-white/20">
+                    <div class="flex-shrink-0 ${iconBgStyle} rounded-md p-3">
                         ${iconSvg}
                     </div>
                 </c:if>
                 <c:if test="${not empty cardTitle}">
                     <div class="ml-5 w-0 flex-1">
-                        <h3 class="text-lg font-medium text-white truncate">${cardTitle}</h3>
+                        <h3 class="text-lg font-medium text-gray-900 truncate">${cardTitle}</h3>
                         <c:if test="${not empty cardSubtitle}">
-                            <p class="mt-1 text-sm text-white/70">${cardSubtitle}</p>
+                            <p class="mt-1 text-sm text-gray-500">${cardSubtitle}</p>
                         </c:if>
                     </div>
                 </c:if>
@@ -156,7 +145,7 @@ Card Component Usage:
     </div>
 
     <c:if test="${not empty cardFooterContent}">
-        <div class="bg-white/5 backdrop-blur-sm px-5 py-3 border-t border-white/10">
+        <div class="bg-gray-50 px-5 py-3">
             ${cardFooterContent}
         </div>
     </c:if>

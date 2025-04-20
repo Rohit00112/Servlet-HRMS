@@ -140,7 +140,8 @@
             </form>
 
             <div class="mt-6 text-center text-sm text-gray-600">
-                <p>Default admin credentials: username: admin, password: admin123</p>
+                <p class="mb-2">Default admin credentials: <strong>admin / admin123</strong></p>
+                <p>Employee and HR accounts are created by the admin in the Employee Management section.</p>
             </div>
         </div>
     </div>

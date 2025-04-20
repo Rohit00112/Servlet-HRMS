@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ page import="java.math.BigDecimal" %>
 
 <c:set var="pageTitle" value="View Payslip" scope="request" />
 
@@ -187,7 +188,7 @@
                                     <div class="space-y-3">
                                         <div class="flex justify-between">
                                             <span class="text-sm text-gray-500">Attendance Deductions</span>
-                                            <span class="text-sm font-medium text-gray-900">$<fmt:formatNumber value="${payroll.baseSalary - (payroll.baseSalary * payroll.effectiveWorkingDays / payroll.totalWorkingDays)}" pattern="#,##0.00"/></span>
+                                            <span class="text-sm font-medium text-gray-900">$<fmt:formatNumber value="${payroll.baseSalary.multiply(BigDecimal.valueOf(payroll.daysAbsent + payroll.daysLate * 0.1 + payroll.daysHalf * 0.5)).divide(BigDecimal.valueOf(payroll.daysPresent + payroll.daysAbsent + payroll.daysLate + payroll.daysHalf), 2, java.math.RoundingMode.HALF_UP)}" pattern="#,##0.00"/></span>
                                         </div>
                                         <div class="flex justify-between">
                                             <span class="text-sm text-gray-500">Other Deductions</span>
@@ -196,7 +197,7 @@
                                         <div class="border-t border-gray-200 pt-2 mt-2">
                                             <div class="flex justify-between font-medium">
                                                 <span class="text-sm text-gray-700">Total Deductions</span>
-                                                <span class="text-sm text-gray-900">$<fmt:formatNumber value="${(payroll.baseSalary - (payroll.baseSalary * payroll.effectiveWorkingDays / payroll.totalWorkingDays)) + payroll.deductions}" pattern="#,##0.00"/></span>
+                                                <span class="text-sm text-gray-900">$<fmt:formatNumber value="${payroll.baseSalary.multiply(BigDecimal.valueOf(payroll.daysAbsent + payroll.daysLate * 0.1 + payroll.daysHalf * 0.5)).divide(BigDecimal.valueOf(payroll.daysPresent + payroll.daysAbsent + payroll.daysLate + payroll.daysHalf), 2, java.math.RoundingMode.HALF_UP).add(payroll.deductions)}" pattern="#,##0.00"/></span>
                                             </div>
                                         </div>
                                     </div>
@@ -286,7 +287,7 @@
                                 <div class="flex justify-between items-center">
                                     <div class="text-sm font-medium text-gray-500">Attendance Percentage</div>
                                     <div class="text-lg font-semibold text-primary-600">
-                                        <fmt:formatNumber value="${(payroll.effectiveWorkingDays / payroll.totalWorkingDays) * 100}" maxFractionDigits="1" />%
+                                        <fmt:formatNumber value="${(payroll.daysPresent + (payroll.daysLate * 0.9) + (payroll.daysHalf * 0.5)) / (payroll.daysPresent + payroll.daysAbsent + payroll.daysLate + payroll.daysHalf) * 100}" maxFractionDigits="1" />%
                                     </div>
                                 </div>
                             </div>

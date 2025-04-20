@@ -434,6 +434,29 @@
                     </div>
                 </div>
 
+                <!-- Test Users (For Development) -->
+                <div class="mt-8 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-lg font-medium text-gray-900">Test Users (For Development)</h2>
+                        <a href="${pageContext.request.contextPath}/admin/create-test-users" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Create Test Users
+                        </a>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">Click the button to create test users for HR and Employee roles. This will create users with the following credentials:</p>
+                    <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-3 rounded border border-gray-200">
+                            <p class="font-medium">HR User</p>
+                            <p class="text-sm">Username: <span class="font-mono">hr</span></p>
+                            <p class="text-sm">Password: <span class="font-mono">hr123</span></p>
+                        </div>
+                        <div class="bg-white p-3 rounded border border-gray-200">
+                            <p class="font-medium">Employee User</p>
+                            <p class="text-sm">Username: <span class="font-mono">employee</span></p>
+                            <p class="text-sm">Password: <span class="font-mono">emp123</span></p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Recent Activity -->
                 <div class="mt-8">
                     <h2 class="text-lg font-medium text-gray-900">Recent Activity</h2>

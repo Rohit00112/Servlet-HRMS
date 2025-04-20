@@ -56,13 +56,13 @@ Layout Component Usage:
         <jsp:include page="/WEB-INF/components/sidebar.jsp" />
 
         <!-- Main Content -->
-        <div class="flex flex-col flex-1 overflow-hidden w-full">
+        <div class="flex flex-col flex-1 overflow-hidden w-full max-w-full">
             <!-- Top Navigation -->
             <jsp:include page="/WEB-INF/components/header.jsp" />
 
             <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto py-6 px-6 w-full">
-                <div class="w-full">
+            <main class="flex-1 overflow-y-auto py-6 px-6 w-full max-w-full">
+                <div class="w-full max-w-full">
                     <!-- Page Title and Back Button -->
                     <c:if test="${not empty param.pageTitle}">
                         <div class="flex items-center justify-between">

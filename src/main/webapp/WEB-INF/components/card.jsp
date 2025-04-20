@@ -117,7 +117,7 @@ Card Component Usage:
     </c:when>
 </c:choose>
 
-<div class="bg-white overflow-hidden shadow rounded-lg">
+<div class="bg-white overflow-hidden shadow rounded-lg w-full">
     <div class="p-5">
         <c:if test="${not empty cardTitle || not empty cardIcon}">
             <div class="flex items-center">
@@ -136,14 +136,14 @@ Card Component Usage:
                 </c:if>
             </div>
         </c:if>
-        
+
         <c:if test="${not empty cardContent}">
             <div class="mt-4">
                 ${cardContent}
             </div>
         </c:if>
     </div>
-    
+
     <c:if test="${not empty cardFooterContent}">
         <div class="bg-gray-50 px-5 py-3">
             ${cardFooterContent}

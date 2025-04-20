@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<header class="bg-white shadow-sm">
-    <div class="flex items-center justify-between px-6 py-3">
+<header class="bg-white shadow-sm w-full">
+    <div class="flex items-center justify-between px-6 py-3 w-full">
         <div class="flex items-center md:hidden">
             <button type="button" class="text-gray-500 hover:text-gray-600 focus:outline-none focus:text-gray-600" id="mobile-menu-button">
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

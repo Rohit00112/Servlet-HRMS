@@ -15,9 +15,9 @@
                 </c:if>
 
                 <!-- Stats Overview -->
-                <div class="mt-6">
+                <div class="mt-6 w-full">
                     <h2 class="text-xl font-semibold text-gray-900 mb-4">Overview</h2>
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 w-full">
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 w-full max-w-full">
                         <!-- Stat Card 1 -->
                         <jsp:include page="/WEB-INF/components/card.jsp">
                             <jsp:param name="title" value="Attendance Rate" />
@@ -89,9 +89,9 @@
                 </div>
 
                 <!-- Quick Access Cards -->
-                <div class="mt-8">
+                <div class="mt-8 w-full">
                     <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Access</h2>
-                    <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 w-full">
+                    <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 w-full max-w-full">
                         <!-- Card 1: My Profile -->
                         <div class="bg-white overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 rounded-lg">
                             <div class="p-5">
@@ -183,9 +183,9 @@
                 </div>
 
                 <!-- Recent Activity -->
-                <div class="mt-8">
+                <div class="mt-8 w-full">
                     <h2 class="text-xl font-semibold text-gray-900 mb-4">Recent Activity</h2>
-                    <div class="mt-4 bg-white shadow-md overflow-hidden sm:rounded-lg w-full">
+                    <div class="mt-4 bg-white shadow-md overflow-hidden sm:rounded-lg w-full max-w-full">
                         <ul class="divide-y divide-gray-200">
                             <li class="hover:bg-gray-50 transition-colors duration-150">
                                 <div class="px-4 py-4 sm:px-6">

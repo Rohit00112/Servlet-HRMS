@@ -51,18 +51,18 @@ Layout Component Usage:
     </c:if>
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <div class="flex h-screen overflow-hidden">
+    <div class="flex h-screen overflow-hidden w-full">
         <!-- Sidebar -->
         <jsp:include page="/WEB-INF/components/sidebar.jsp" />
 
         <!-- Main Content -->
-        <div class="flex flex-col flex-1 overflow-hidden">
+        <div class="flex flex-col flex-1 overflow-hidden w-full">
             <!-- Top Navigation -->
             <jsp:include page="/WEB-INF/components/header.jsp" />
 
             <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto py-6 px-6">
-                <div class="w-full px-2 sm:px-4 md:px-6">
+            <main class="flex-1 overflow-y-auto py-6 px-6 w-full">
+                <div class="w-full">
                     <!-- Page Title and Back Button -->
                     <c:if test="${not empty param.pageTitle}">
                         <div class="flex items-center justify-between">

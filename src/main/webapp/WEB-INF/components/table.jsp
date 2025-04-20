@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<%-- 
+<%--
 Table Component:
 <jsp:include page="/WEB-INF/components/table.jsp">
     <jsp:param name="tableId" value="employeesTable" />
@@ -37,7 +37,7 @@ Table Component:
                         <tr>
                             <c:set var="columns" value="${param.columns}" />
                             <c:set var="columnWidths" value="${param.columnWidths}" />
-                            
+
                             <c:forEach var="column" items="${columns.split(',')}" varStatus="status">
                                 <c:set var="width" value="" />
                                 <c:if test="${not empty columnWidths}">
@@ -55,7 +55,7 @@ Table Component:
                     <tbody class="bg-white divide-y divide-gray-200">
                         <c:set var="items" value="${requestScope[param.items]}" />
                         <c:choose>
-                            <c:when test="${empty items}">
+                            <c:when test="${empty requestScope[param.items]}">
                                 <tr>
                                     <td colspan="${columns.split(',').length}" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                                         ${param.emptyMessage}
@@ -63,7 +63,9 @@ Table Component:
                                 </tr>
                             </c:when>
                             <c:otherwise>
-                                <jsp:doBody />
+                                <c:if test="${not empty param.tableContent}">
+                                    ${param.tableContent}
+                                </c:if>
                             </c:otherwise>
                         </c:choose>
                     </tbody>

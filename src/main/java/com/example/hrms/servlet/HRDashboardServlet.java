@@ -4,6 +4,8 @@ import com.example.hrms.dao.EmployeeDAO;
 import com.example.hrms.dao.LeaveDAO;
 import com.example.hrms.service.PayrollService;
 import com.example.hrms.dao.AttendanceDAO;
+import com.example.hrms.model.Employee;
+import com.example.hrms.model.User;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -14,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet(name = "hrDashboardServlet", value = "/hr/dashboard")
@@ -34,6 +37,22 @@ public class HRDashboardServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            // Get the current user from the session
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
+
+            if (user == null) {
+                response.sendRedirect(request.getContextPath() + "/login");
+                return;
+            }
+
+            // Get the HR employee for the current user
+            Employee hrEmployee = employeeDAO.getEmployeeByUserId(user.getId());
+
+            if (hrEmployee != null) {
+                request.setAttribute("hrEmployee", hrEmployee);
+            }
+
             // Get employee count for dashboard
             int employeeCount = employeeDAO.getEmployeeCount();
             request.setAttribute("employeeCount", employeeCount);

@@ -27,25 +27,37 @@
     </div>
 </header>
 
+<!-- Include Mobile Sidebar -->
+<jsp:include page="/WEB-INF/components/mobile-sidebar.jsp" />
+
 <script>
     // Toggle user dropdown menu
     document.getElementById('user-menu-button').addEventListener('click', function() {
         document.getElementById('user-menu').classList.toggle('hidden');
     });
-    
+
     // Close dropdown when clicking outside
     document.addEventListener('click', function(event) {
         const userMenu = document.getElementById('user-menu');
         const userMenuButton = document.getElementById('user-menu-button');
-        
+
         if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
             userMenu.classList.add('hidden');
         }
     });
-    
+
     // Mobile menu toggle
     document.getElementById('mobile-menu-button').addEventListener('click', function() {
-        // Implement mobile menu toggle logic here
-        // This would typically show/hide a mobile sidebar
+        document.getElementById('mobile-sidebar').style.display = 'flex';
+    });
+
+    // Close mobile sidebar
+    document.getElementById('close-mobile-sidebar').addEventListener('click', function() {
+        document.getElementById('mobile-sidebar').style.display = 'none';
+    });
+
+    // Close mobile sidebar when clicking on backdrop
+    document.getElementById('mobile-sidebar-backdrop').addEventListener('click', function() {
+        document.getElementById('mobile-sidebar').style.display = 'none';
     });
 </script>

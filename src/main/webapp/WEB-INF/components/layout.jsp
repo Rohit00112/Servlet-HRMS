@@ -50,7 +50,7 @@ Layout Component Usage:
         ${param.additionalHead}
     </c:if>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex flex-col bg-fixed" style="background-image: url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?q=80&w=2029&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); background-size: cover; background-position: center; background-attachment: fixed;">
     <div class="flex flex-1 w-full">
         <!-- Sidebar -->
         <jsp:include page="/WEB-INF/components/sidebar.jsp" />

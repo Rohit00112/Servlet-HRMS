@@ -210,7 +210,7 @@ public class PayrollDAO {
         // Extract year and month from the input string (format: YYYY-MM)
         String year = month.substring(0, 4);
         String monthNum = month.substring(5, 7);
-        
+
         String sql = "SELECT employee_id, status, COUNT(*) as count FROM attendance " +
                 "WHERE EXTRACT(YEAR FROM date) = ? AND EXTRACT(MONTH FROM date) = ? " +
                 "GROUP BY employee_id, status";
@@ -261,6 +261,24 @@ public class PayrollDAO {
             }
             // Default base salary if no previous record exists
             return new BigDecimal("50000.00");
+        }
+    }
+
+    // Get count of payrolls by status and month
+    public int getPayrollCountByStatus(String status, String month) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM payroll WHERE status = ? AND month = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, status);
+            stmt.setString(2, month);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
         }
     }
 

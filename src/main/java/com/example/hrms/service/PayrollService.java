@@ -31,10 +31,10 @@ public class PayrollService {
 
         // Get attendance summary for the month
         Map<Integer, Map<String, Integer>> attendanceSummary = payrollDAO.getAttendanceSummaryForMonth(month);
-        
+
         // Get employee's base salary
         BigDecimal baseSalary = payrollDAO.getEmployeeBaseSalary(employeeId);
-        
+
         // Create new payroll
         Payroll payroll = new Payroll();
         payroll.setEmployeeId(employeeId);
@@ -42,7 +42,7 @@ public class PayrollService {
         payroll.setBaseSalary(baseSalary);
         payroll.setGenerationDate(new Date());
         payroll.setStatus("DRAFT");
-        
+
         // Set attendance data
         if (attendanceSummary.containsKey(employeeId)) {
             Map<String, Integer> employeeAttendance = attendanceSummary.get(employeeId);
@@ -57,14 +57,14 @@ public class PayrollService {
             payroll.setDaysLate(0);
             payroll.setDaysHalf(0);
         }
-        
+
         // Calculate net salary
         calculateNetSalary(payroll);
-        
+
         // Save to database
         int payrollId = payrollDAO.createPayroll(payroll);
         payroll.setId(payrollId);
-        
+
         return payroll;
     }
 
@@ -72,43 +72,43 @@ public class PayrollService {
     public List<Payroll> generatePayrollForAllEmployees(String month) throws SQLException {
         List<Employee> employees = employeeDAO.getAllEmployees();
         List<Payroll> payrolls = new ArrayList<>();
-        
+
         for (Employee employee : employees) {
             Payroll payroll = generatePayroll(employee.getId(), month);
             payrolls.add(payroll);
         }
-        
+
         return payrolls;
     }
 
     // Calculate net salary based on attendance and base salary
     private void calculateNetSalary(Payroll payroll) {
         BigDecimal baseSalary = payroll.getBaseSalary();
-        
+
         // Get total working days (assuming 22 working days in a month if no data)
         int totalWorkingDays = payroll.getTotalWorkingDays();
         if (totalWorkingDays == 0) {
             totalWorkingDays = 22; // Default working days in a month
         }
-        
+
         // Calculate per day salary
         BigDecimal perDaySalary = baseSalary.divide(BigDecimal.valueOf(totalWorkingDays), 2, RoundingMode.HALF_UP);
-        
+
         // Calculate effective working days
         BigDecimal effectiveWorkingDays = payroll.getEffectiveWorkingDays();
-        
+
         // Calculate salary based on attendance
         BigDecimal attendanceSalary = perDaySalary.multiply(effectiveWorkingDays);
-        
+
         // Add allowances
         BigDecimal allowances = payroll.getAllowances() != null ? payroll.getAllowances() : BigDecimal.ZERO;
-        
+
         // Subtract deductions
         BigDecimal deductions = payroll.getDeductions() != null ? payroll.getDeductions() : BigDecimal.ZERO;
-        
+
         // Calculate net salary
         BigDecimal netSalary = attendanceSalary.add(allowances).subtract(deductions);
-        
+
         // Set net salary
         payroll.setNetSalary(netSalary.setScale(2, RoundingMode.HALF_UP));
     }
@@ -117,7 +117,7 @@ public class PayrollService {
     public boolean updatePayroll(Payroll payroll) throws SQLException {
         // Recalculate net salary
         calculateNetSalary(payroll);
-        
+
         // Update in database
         return payrollDAO.updatePayroll(payroll);
     }
@@ -155,5 +155,10 @@ public class PayrollService {
     // Delete payroll
     public boolean deletePayroll(int id) throws SQLException {
         return payrollDAO.deletePayroll(id);
+    }
+
+    // Get count of payrolls by status and month
+    public int getPayrollCountByStatus(String status, String month) throws SQLException {
+        return payrollDAO.getPayrollCountByStatus(status, month);
     }
 }

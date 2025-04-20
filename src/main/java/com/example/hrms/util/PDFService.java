@@ -173,7 +173,9 @@ public class PDFService {
         addTableCell(earningsTable, formatCurrency(payroll.getAllowances()), valueFont);
 
         // Total Earnings
-        BigDecimal totalEarnings = payroll.getBaseSalary().add(payroll.getAllowances());
+        BigDecimal baseSalary = payroll.getBaseSalary() != null ? payroll.getBaseSalary() : BigDecimal.ZERO;
+        BigDecimal allowances = payroll.getAllowances() != null ? payroll.getAllowances() : BigDecimal.ZERO;
+        BigDecimal totalEarnings = baseSalary.add(allowances);
         addTableCell(earningsTable, "Total Earnings:", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD));
         addTableCell(earningsTable, formatCurrency(totalEarnings), new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD));
 
@@ -201,7 +203,8 @@ public class PDFService {
         addTableCell(deductionsTable, formatCurrency(attendanceDeduction), valueFont);
 
         // Total Deductions
-        BigDecimal totalDeductions = payroll.getDeductions().add(attendanceDeduction);
+        BigDecimal deductions = payroll.getDeductions() != null ? payroll.getDeductions() : BigDecimal.ZERO;
+        BigDecimal totalDeductions = deductions.add(attendanceDeduction);
         addTableCell(deductionsTable, "Total Deductions:", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD));
         addTableCell(deductionsTable, formatCurrency(totalDeductions), new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD));
 
@@ -312,11 +315,19 @@ public class PDFService {
     }
 
     private static String formatCurrency(BigDecimal amount) {
+        if (amount == null) {
+            return "$0.00";
+        }
         DecimalFormat df = new DecimalFormat("$#,##0.00");
         return df.format(amount);
     }
 
     private static BigDecimal calculateAttendanceDeduction(Payroll payroll) {
+        // Check if base salary is null
+        if (payroll.getBaseSalary() == null) {
+            return BigDecimal.ZERO;
+        }
+
         // Calculate deduction based on attendance
         BigDecimal dailyRate = payroll.getBaseSalary().divide(new BigDecimal(30), 2, java.math.RoundingMode.HALF_UP);
         BigDecimal absentDeduction = dailyRate.multiply(new BigDecimal(payroll.getDaysAbsent()));

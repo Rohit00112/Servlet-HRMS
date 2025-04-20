@@ -2,124 +2,98 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <c:set var="pageTitle" value="Employee Dashboard" scope="request" />
+<c:set var="userRole" value="employee" scope="request" />
 
 <c:set var="mainContent">
+                <!-- Alert Message -->
+                <c:if test="${not empty errorMessage}">
+                    <jsp:include page="/WEB-INF/components/alert.jsp">
+                        <jsp:param name="type" value="error" />
+                        <jsp:param name="message" value="${errorMessage}" />
+                        <jsp:param name="dismissible" value="true" />
+                    </jsp:include>
+                </c:if>
 
                 <!-- Stats Overview -->
                 <div class="mt-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Overview</h2>
                     <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
                         <!-- Stat Card 1 -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="p-5">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-primary-100 rounded-md p-3">
-                                        <svg class="h-6 w-6 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        <jsp:include page="/WEB-INF/components/card.jsp">
+                            <jsp:param name="title" value="Attendance Rate" />
+                            <jsp:param name="icon" value="calendar" />
+                            <jsp:param name="iconBgColor" value="primary" />
+                            <jsp:param name="content" value="
+                                <div class='flex items-baseline'>
+                                    <div class='text-2xl font-semibold text-gray-900'>98.5%</div>
+                                    <div class='ml-2 flex items-baseline text-sm font-semibold text-green-600'>
+                                        <svg class='self-center flex-shrink-0 h-5 w-5 text-green-500' fill='currentColor' viewBox='0 0 20 20' aria-hidden='true'>
+                                            <path fill-rule='evenodd' d='M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z' clip-rule='evenodd' />
                                         </svg>
-                                    </div>
-                                    <div class="ml-5 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">Attendance Rate</dt>
-                                            <dd class="flex items-baseline">
-                                                <div class="text-2xl font-semibold text-gray-900">98.5%</div>
-                                                <div class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
-                                                    <svg class="self-center flex-shrink-0 h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                                        <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                                                    </svg>
-                                                    <span class="sr-only">Increased by</span>
-                                                    1.2%
-                                                </div>
-                                            </dd>
-                                        </dl>
+                                        <span class='sr-only'>Increased by</span>
+                                        1.2%
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            " />
+                        </jsp:include>
 
                         <!-- Stat Card 2 -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="p-5">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-purple-100 rounded-md p-3">
-                                        <svg class="h-6 w-6 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        <jsp:include page="/WEB-INF/components/card.jsp">
+                            <jsp:param name="title" value="Leave Balance" />
+                            <jsp:param name="icon" value="document" />
+                            <jsp:param name="iconBgColor" value="purple" />
+                            <jsp:param name="content" value="
+                                <div class='flex items-baseline'>
+                                    <div class='text-2xl font-semibold text-gray-900'>14 days</div>
+                                    <div class='ml-2 flex items-baseline text-sm font-semibold text-red-600'>
+                                        <svg class='self-center flex-shrink-0 h-5 w-5 text-red-500' fill='currentColor' viewBox='0 0 20 20' aria-hidden='true'>
+                                            <path fill-rule='evenodd' d='M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z' clip-rule='evenodd' />
                                         </svg>
-                                    </div>
-                                    <div class="ml-5 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">Leave Balance</dt>
-                                            <dd class="flex items-baseline">
-                                                <div class="text-2xl font-semibold text-gray-900">14 days</div>
-                                                <div class="ml-2 flex items-baseline text-sm font-semibold text-red-600">
-                                                    <svg class="self-center flex-shrink-0 h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                                        <path fill-rule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                                    </svg>
-                                                    <span class="sr-only">Decreased by</span>
-                                                    2 days
-                                                </div>
-                                            </dd>
-                                        </dl>
+                                        <span class='sr-only'>Decreased by</span>
+                                        2 days
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            " />
+                        </jsp:include>
 
                         <!-- Stat Card 3 -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="p-5">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-green-100 rounded-md p-3">
-                                        <svg class="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </div>
-                                    <div class="ml-5 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">Next Payroll</dt>
-                                            <dd class="flex items-baseline">
-                                                <div class="text-2xl font-semibold text-gray-900">May 30</div>
-                                                <div class="ml-2 flex items-baseline text-sm font-semibold text-gray-600">
-                                                    <span>In 8 days</span>
-                                                </div>
-                                            </dd>
-                                        </dl>
+                        <jsp:include page="/WEB-INF/components/card.jsp">
+                            <jsp:param name="title" value="Next Payroll" />
+                            <jsp:param name="icon" value="money" />
+                            <jsp:param name="iconBgColor" value="green" />
+                            <jsp:param name="content" value="
+                                <div class='flex items-baseline'>
+                                    <div class='text-2xl font-semibold text-gray-900'>May 30</div>
+                                    <div class='ml-2 flex items-baseline text-sm font-semibold text-gray-600'>
+                                        <span>In 8 days</span>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            " />
+                        </jsp:include>
 
                         <!-- Stat Card 4 -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="p-5">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-yellow-100 rounded-md p-3">
-                                        <svg class="h-6 w-6 text-yellow-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                                        </svg>
-                                    </div>
-                                    <div class="ml-5 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">Notifications</dt>
-                                            <dd class="flex items-baseline">
-                                                <div class="text-2xl font-semibold text-gray-900">3</div>
-                                                <div class="ml-2 flex items-baseline text-sm font-semibold text-yellow-600">
-                                                    <span>Unread</span>
-                                                </div>
-                                            </dd>
-                                        </dl>
+                        <jsp:include page="/WEB-INF/components/card.jsp">
+                            <jsp:param name="title" value="Notifications" />
+                            <jsp:param name="icon" value="bell" />
+                            <jsp:param name="iconBgColor" value="yellow" />
+                            <jsp:param name="content" value="
+                                <div class='flex items-baseline'>
+                                    <div class='text-2xl font-semibold text-gray-900'>3</div>
+                                    <div class='ml-2 flex items-baseline text-sm font-semibold text-yellow-600'>
+                                        <span>Unread</span>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            " />
+                        </jsp:include>
                     </div>
                 </div>
 
                 <!-- Quick Access Cards -->
                 <div class="mt-8">
-                    <h2 class="text-lg font-medium text-gray-900">Quick Access</h2>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Access</h2>
                     <div class="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
                         <!-- Card 1: My Profile -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="bg-white overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 rounded-lg">
                             <div class="p-5">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 bg-primary-100 rounded-md p-3">
@@ -133,7 +107,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-4">
-                                    <a href="#" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                    <a href="${pageContext.request.contextPath}/employee/profile" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
                                         View Profile
                                     </a>
                                 </div>
@@ -141,7 +115,7 @@
                         </div>
 
                         <!-- Card 2: Leave Requests -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="bg-white overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 rounded-lg">
                             <div class="p-5">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 bg-green-100 rounded-md p-3">
@@ -163,7 +137,7 @@
                         </div>
 
                         <!-- Card 3: Attendance -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="bg-white overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 rounded-lg">
                             <div class="p-5">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 bg-yellow-100 rounded-md p-3">
@@ -185,7 +159,7 @@
                         </div>
 
                         <!-- Card 4: Payslips -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="bg-white overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 rounded-lg">
                             <div class="p-5">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 bg-indigo-100 rounded-md p-3">
@@ -210,10 +184,10 @@
 
                 <!-- Recent Activity -->
                 <div class="mt-8">
-                    <h2 class="text-lg font-medium text-gray-900">Recent Activity</h2>
-                    <div class="mt-4 bg-white shadow overflow-hidden sm:rounded-md">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Recent Activity</h2>
+                    <div class="mt-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
                         <ul class="divide-y divide-gray-200">
-                            <li>
+                            <li class="hover:bg-gray-50 transition-colors duration-150">
                                 <div class="px-4 py-4 sm:px-6">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
@@ -233,7 +207,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li>
+                            <li class="hover:bg-gray-50 transition-colors duration-150">
                                 <div class="px-4 py-4 sm:px-6">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
@@ -253,7 +227,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li>
+                            <li class="hover:bg-gray-50 transition-colors duration-150">
                                 <div class="px-4 py-4 sm:px-6">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
@@ -281,5 +255,6 @@
 
 <jsp:include page="/WEB-INF/components/layout.jsp">
     <jsp:param name="pageTitle" value="${pageTitle}" />
+    <jsp:param name="userRole" value="${userRole}" />
     <jsp:param name="mainContent" value="${mainContent}" />
 </jsp:include>

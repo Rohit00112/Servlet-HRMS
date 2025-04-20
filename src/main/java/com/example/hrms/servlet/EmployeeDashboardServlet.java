@@ -3,6 +3,7 @@ package com.example.hrms.servlet;
 import com.example.hrms.dao.EmployeeDAO;
 import com.example.hrms.dao.LeaveDAO;
 import com.example.hrms.model.Employee;
+import com.example.hrms.model.User;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -25,17 +26,17 @@ public class EmployeeDashboardServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get the current user's username from the session
+        // Get the current user from the session
         HttpSession session = request.getSession();
-        String username = (String) session.getAttribute("username");
+        User user = (User) session.getAttribute("user");
 
-        if (username == null) {
+        if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
-        // Get the employee ID for the current user
-        Employee employee = employeeDAO.getEmployeeByEmail(username);
+        // Get the employee for the current user
+        Employee employee = employeeDAO.getEmployeeByUserId(user.getId());
 
         if (employee != null) {
             // Get pending leave count for this employee
@@ -44,6 +45,26 @@ public class EmployeeDashboardServlet extends HttpServlet {
 
             // Set employee information for the dashboard
             request.setAttribute("employee", employee);
+        } else {
+            // If employee not found, try to find by email (username)
+            String username = user.getUsername();
+            employee = employeeDAO.getEmployeeByEmail(username + "@company.com");
+
+            if (employee != null) {
+                // Get pending leave count for this employee
+                int pendingLeaveCount = leaveDAO.getEmployeePendingLeaveCount(employee.getId());
+                request.setAttribute("pendingLeaveCount", pendingLeaveCount);
+
+                // Set employee information for the dashboard
+                request.setAttribute("employee", employee);
+
+                // Update the employee with the user ID for future reference
+                employee.setUserId(user.getId());
+                employeeDAO.updateEmployee(employee);
+            } else {
+                // No employee record found
+                request.setAttribute("errorMessage", "No employee record found for your account. Please contact HR.");
+            }
         }
 
         request.getRequestDispatcher("/WEB-INF/employee/dashboard.jsp").forward(request, response);

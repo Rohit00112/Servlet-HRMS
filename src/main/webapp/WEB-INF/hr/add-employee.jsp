@@ -5,11 +5,11 @@
 <c:set var="backUrl" value="/hr/employees" scope="request" />
 <c:set var="backLabel" value="Back to Employees" scope="request" />
 
-<jsp:include page="/WEB-INF/components/layout.jsp">
-    <jsp:attribute name="additionalScripts">
-        <jsp:include page="/WEB-INF/components/form-validation.jsp" />
-    </jsp:attribute>
-    <jsp:body>
+<c:set var="additionalScriptsContent">
+    <jsp:include page="/WEB-INF/components/form-validation.jsp" />
+</c:set>
+
+<c:set var="mainContent">
 
         <!-- Add Employee Form -->
         <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-lg">
@@ -70,5 +70,12 @@
                 }
             });
         </script>
-    </jsp:body>
+</c:set>
+
+<jsp:include page="/WEB-INF/components/layout.jsp">
+    <jsp:param name="pageTitle" value="${pageTitle}" />
+    <jsp:param name="backUrl" value="${backUrl}" />
+    <jsp:param name="backLabel" value="${backLabel}" />
+    <jsp:param name="mainContent" value="${mainContent}" />
+    <jsp:param name="additionalScripts" value="${additionalScriptsContent}" />
 </jsp:include>

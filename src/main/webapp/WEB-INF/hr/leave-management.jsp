@@ -37,7 +37,7 @@
                     </c:if>
 
                     <!-- Leave Summary Cards -->
-                    <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 w-full">
                         <!-- Pending Leaves Card -->
                         <div class="bg-white overflow-hidden shadow rounded-lg">
                             <div class="p-5">
@@ -96,7 +96,7 @@
                     </div>
 
                     <!-- Pending Leave Applications Section -->
-                    <div class="mt-8 max-w-7xl mx-auto px-4 sm:px-6 md:px-8" id="pending-section">
+                    <div class="mt-8 w-full" id="pending-section">
                         <h2 class="text-lg font-medium text-gray-900">Pending Leave Applications</h2>
                         <div class="mt-4 bg-white shadow overflow-hidden sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
@@ -170,7 +170,7 @@
                     </div>
 
                     <!-- All Leave Applications Section -->
-                    <div class="mt-8 max-w-7xl mx-auto px-4 sm:px-6 md:px-8" id="all-section">
+                    <div class="mt-8 w-full" id="all-section">
                         <h2 class="text-lg font-medium text-gray-900">All Leave Applications</h2>
                         <div class="mt-4 bg-white shadow overflow-hidden sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">

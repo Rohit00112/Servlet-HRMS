@@ -62,7 +62,7 @@ Layout Component Usage:
 
             <!-- Main Content -->
             <main class="flex-1 overflow-y-auto py-6 px-6">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                <div class="w-full px-2 sm:px-4 md:px-6">
                     <!-- Page Title and Back Button -->
                     <c:if test="${not empty param.pageTitle}">
                         <div class="flex items-center justify-between">

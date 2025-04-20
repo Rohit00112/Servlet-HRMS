@@ -50,8 +50,8 @@ Layout Component Usage:
         ${param.additionalHead}
     </c:if>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <div class="flex h-screen w-full">
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div class="flex flex-1 w-full">
         <!-- Sidebar -->
         <jsp:include page="/WEB-INF/components/sidebar.jsp" />
 
@@ -86,10 +86,12 @@ Layout Component Usage:
                 </div>
             </main>
 
-            <!-- Footer -->
-            <jsp:include page="/WEB-INF/components/footer.jsp" />
+
         </div>
     </div>
+
+    <!-- Footer -->
+    <jsp:include page="/WEB-INF/components/footer.jsp" />
 
     <!-- Additional Scripts -->
     <c:if test="${not empty param.additionalScripts}">

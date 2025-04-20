@@ -59,10 +59,10 @@ public class EmployeeDAO {
     }
 
     public boolean createEmployee(Employee employee) {
-        String sql = "INSERT INTO employees (name, email, department_id, designation_id, join_date) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO employees (name, email, department_id, designation_id, join_date, user_id) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, employee.getName());
             pstmt.setString(2, employee.getEmail());
@@ -70,8 +70,25 @@ public class EmployeeDAO {
             pstmt.setInt(4, employee.getDesignationId());
             pstmt.setDate(5, employee.getJoinDate());
 
+            // Set user_id (can be null)
+            if (employee.getUserId() != null) {
+                pstmt.setInt(6, employee.getUserId());
+            } else {
+                pstmt.setNull(6, java.sql.Types.INTEGER);
+            }
+
             int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;
+
+            // Get the generated employee ID
+            if (rowsAffected > 0) {
+                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        employee.setId(generatedKeys.getInt(1));
+                    }
+                }
+                return true;
+            }
+            return false;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -80,7 +97,7 @@ public class EmployeeDAO {
     }
 
     public boolean updateEmployee(Employee employee) {
-        String sql = "UPDATE employees SET name = ?, email = ?, department_id = ?, designation_id = ?, join_date = ? WHERE id = ?";
+        String sql = "UPDATE employees SET name = ?, email = ?, department_id = ?, designation_id = ?, join_date = ?, user_id = ? WHERE id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -90,7 +107,15 @@ public class EmployeeDAO {
             pstmt.setInt(3, employee.getDepartmentId());
             pstmt.setInt(4, employee.getDesignationId());
             pstmt.setDate(5, employee.getJoinDate());
-            pstmt.setInt(6, employee.getId());
+
+            // Set user_id (can be null)
+            if (employee.getUserId() != null) {
+                pstmt.setInt(6, employee.getUserId());
+            } else {
+                pstmt.setNull(6, java.sql.Types.INTEGER);
+            }
+
+            pstmt.setInt(7, employee.getId());
 
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
@@ -193,6 +218,31 @@ public class EmployeeDAO {
         return employee;
     }
 
+    public Employee getEmployeeByUserId(int userId) {
+        Employee employee = null;
+        String sql = "SELECT e.*, d.name as department_name, ds.title as designation_title " +
+                     "FROM employees e " +
+                     "LEFT JOIN departments d ON e.department_id = d.id " +
+                     "LEFT JOIN designations ds ON e.designation_id = ds.id " +
+                     "WHERE e.user_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                employee = mapEmployeeFromResultSet(rs);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return employee;
+    }
+
     private Employee mapEmployeeFromResultSet(ResultSet rs) throws SQLException {
         Employee employee = new Employee();
         employee.setId(rs.getInt("id"));
@@ -203,6 +253,13 @@ public class EmployeeDAO {
         employee.setJoinDate(rs.getDate("join_date"));
         employee.setDepartmentName(rs.getString("department_name"));
         employee.setDesignationTitle(rs.getString("designation_title"));
+
+        // Handle user_id which can be null
+        int userId = rs.getInt("user_id");
+        if (!rs.wasNull()) {
+            employee.setUserId(userId);
+        }
+
         return employee;
     }
 }

@@ -9,10 +9,12 @@ public class Employee {
     private int departmentId;
     private int designationId;
     private Date joinDate;
+    private Integer userId; // Reference to User entity
     
     // Additional fields for display purposes
     private String departmentName;
     private String designationTitle;
+    private String role; // User role (HR, EMPLOYEE)
     
     public Employee() {
     }
@@ -90,6 +92,22 @@ public class Employee {
         this.designationTitle = designationTitle;
     }
     
+    public Integer getUserId() {
+        return userId;
+    }
+    
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+    
+    public String getRole() {
+        return role;
+    }
+    
+    public void setRole(String role) {
+        this.role = role;
+    }
+    
     @Override
     public String toString() {
         return "Employee{" +
@@ -99,6 +117,8 @@ public class Employee {
                 ", departmentId=" + departmentId +
                 ", designationId=" + designationId +
                 ", joinDate=" + joinDate +
+                ", userId=" + userId +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

@@ -73,7 +73,7 @@
                             </svg>
                             Attendance
                         </a>
-                        
+
                         <div class="px-2 py-2 mt-6 text-xs font-semibold text-gray-400 uppercase tracking-wider">
                             Settings
                         </div>
@@ -152,55 +152,7 @@
                     <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-lg">
                         <form action="${pageContext.request.contextPath}/admin/employees/add" method="post" class="p-6" id="employeeForm">
                             <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                                <!-- Name Field -->
-                                <div class="sm:col-span-3">
-                                    <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
-                                    <div class="mt-1">
-                                        <input type="text" name="name" id="name" required class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                    </div>
-                                </div>
-
-                                <!-- Email Field -->
-                                <div class="sm:col-span-3">
-                                    <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
-                                    <div class="mt-1">
-                                        <input type="email" name="email" id="email" required class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                    </div>
-                                </div>
-
-                                <!-- Department Field -->
-                                <div class="sm:col-span-3">
-                                    <label for="departmentId" class="block text-sm font-medium text-gray-700">Department</label>
-                                    <div class="mt-1">
-                                        <select id="departmentId" name="departmentId" required class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                            <option value="">Select Department</option>
-                                            <c:forEach var="department" items="${departments}">
-                                                <option value="${department.id}">${department.name}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- Designation Field -->
-                                <div class="sm:col-span-3">
-                                    <label for="designationId" class="block text-sm font-medium text-gray-700">Designation</label>
-                                    <div class="mt-1">
-                                        <select id="designationId" name="designationId" required class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                            <option value="">Select Designation</option>
-                                            <c:forEach var="designation" items="${designations}">
-                                                <option value="${designation.id}">${designation.title}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- Join Date Field -->
-                                <div class="sm:col-span-3">
-                                    <label for="joinDate" class="block text-sm font-medium text-gray-700">Join Date</label>
-                                    <div class="mt-1">
-                                        <input type="date" name="joinDate" id="joinDate" required class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                    </div>
-                                </div>
+                                <jsp:include page="/WEB-INF/components/employee-form-fields.jsp" />
                             </div>
 
                             <div class="mt-6 flex justify-end">
@@ -233,15 +185,17 @@
             const departmentId = document.getElementById('departmentId').value;
             const designationId = document.getElementById('designationId').value;
             const joinDate = document.getElementById('joinDate').value;
-            
+            const createAccount = document.getElementById('createAccount')?.checked || false;
+            const role = document.getElementById('role')?.value || '';
+
             let isValid = true;
             let errorMessage = '';
-            
+
             if (!name) {
                 isValid = false;
                 errorMessage += 'Name is required. ';
             }
-            
+
             if (!email) {
                 isValid = false;
                 errorMessage += 'Email is required. ';
@@ -249,28 +203,33 @@
                 isValid = false;
                 errorMessage += 'Please enter a valid email address. ';
             }
-            
+
             if (!departmentId) {
                 isValid = false;
                 errorMessage += 'Department is required. ';
             }
-            
+
             if (!designationId) {
                 isValid = false;
                 errorMessage += 'Designation is required. ';
             }
-            
+
             if (!joinDate) {
                 isValid = false;
                 errorMessage += 'Join date is required. ';
             }
-            
+
+            if (createAccount && !role) {
+                isValid = false;
+                errorMessage += 'Role is required when creating a user account. ';
+            }
+
             if (!isValid) {
                 event.preventDefault();
                 alert('Please correct the following errors: ' + errorMessage);
             }
         });
-        
+
         function isValidEmail(email) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return emailRegex.test(email);

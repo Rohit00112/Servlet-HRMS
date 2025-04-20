@@ -4,9 +4,9 @@ import com.example.hrms.model.Employee;
 import com.example.hrms.model.Payroll;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -30,7 +30,8 @@ public class PDFService {
         Document document = new Document(PageSize.A4);
 
         try {
-            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            // Create a writer instance (required for PDF generation)
+            PdfWriter.getInstance(document, baos);
             document.open();
 
             // Add company logo or header
@@ -125,7 +126,7 @@ public class PDFService {
 
         // Designation
         addTableCell(table, "Designation:", headerFont);
-        addTableCell(table, employee.getDesignationName(), valueFont);
+        addTableCell(table, employee.getDesignationTitle(), valueFont);
 
         // Pay Period
         addTableCell(table, "Pay Period:", headerFont);
@@ -317,7 +318,7 @@ public class PDFService {
 
     private static BigDecimal calculateAttendanceDeduction(Payroll payroll) {
         // Calculate deduction based on attendance
-        BigDecimal dailyRate = payroll.getBaseSalary().divide(new BigDecimal(30), 2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal dailyRate = payroll.getBaseSalary().divide(new BigDecimal(30), 2, java.math.RoundingMode.HALF_UP);
         BigDecimal absentDeduction = dailyRate.multiply(new BigDecimal(payroll.getDaysAbsent()));
         BigDecimal lateDeduction = dailyRate.multiply(new BigDecimal(payroll.getDaysLate())).multiply(new BigDecimal("0.5"));
         BigDecimal halfDayDeduction = dailyRate.multiply(new BigDecimal(payroll.getDaysHalf())).multiply(new BigDecimal("0.5"));

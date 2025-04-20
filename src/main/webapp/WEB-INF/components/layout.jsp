@@ -50,8 +50,8 @@ Layout Component Usage:
         ${param.additionalHead}
     </c:if>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
-    <div class="flex flex-1 overflow-hidden w-full">
+<body class="bg-gray-50 min-h-screen">
+    <div class="flex h-screen overflow-hidden w-full">
         <!-- Sidebar -->
         <jsp:include page="/WEB-INF/components/sidebar.jsp" />
 

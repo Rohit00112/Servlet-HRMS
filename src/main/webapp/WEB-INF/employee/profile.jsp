@@ -53,7 +53,7 @@
                                     <svg class='h-5 w-5 text-gray-500 mr-2' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                                         <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' />
                                     </svg>
-                                    <span class='text-sm text-gray-600'>Joined <fmt:formatDate value='${employee.joinDate}' pattern='MMM d, yyyy' /></span>
+                                    <span class='text-sm text-gray-600'>Joined ${employee.joinDate}</span>
                                 </div>
                                 <div class='flex items-center'>
                                     <svg class='h-5 w-5 text-gray-500 mr-2' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
@@ -107,7 +107,7 @@
                                 <div class='sm:col-span-3'>
                                     <label for='joinDate' class='block text-sm font-medium text-gray-700'>Join Date</label>
                                     <div class='mt-1'>
-                                        <input type='text' id='joinDate' value='<fmt:formatDate value='${employee.joinDate}' pattern='MMM d, yyyy' />' disabled class='bg-gray-50 shadow-sm block w-full sm:text-sm border-gray-300 rounded-md'>
+                                        <input type='text' id='joinDate' value='${employee.joinDate}' disabled class='bg-gray-50 shadow-sm block w-full sm:text-sm border-gray-300 rounded-md'>
                                     </div>
                                 </div>
 

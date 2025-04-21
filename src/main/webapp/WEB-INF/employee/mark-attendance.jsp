@@ -121,7 +121,7 @@
                                 <div>
                                     <h3 class="text-lg leading-6 font-medium text-gray-900">Today's Attendance</h3>
                                     <p class="mt-1 max-w-2xl text-sm text-gray-500">
-                                        <fmt:formatDate value="${today}" pattern="EEEE, MMMM d, yyyy" />
+                                        ${today.getDayOfWeek().toString().substring(0, 1).concat(today.getDayOfWeek().toString().substring(1).toLowerCase())}, ${today.getMonth().toString().substring(0, 1).concat(today.getMonth().toString().substring(1).toLowerCase())} ${today.getDayOfMonth()}, ${today.getYear()}
                                     </p>
                                 </div>
                                 <div class="text-right">

@@ -2,10 +2,8 @@ package com.example.hrms.servlet;
 
 import com.example.hrms.dao.EmployeeDAO;
 import com.example.hrms.dao.LeaveDAO;
-import com.example.hrms.dao.UserDAO;
 import com.example.hrms.model.Employee;
 import com.example.hrms.model.Leave;
-import com.example.hrms.model.User;
 import com.example.hrms.util.EmailService;
 
 import jakarta.servlet.ServletException;
@@ -21,27 +19,26 @@ import java.time.LocalDate;
 @WebServlet(name = "rejectLeaveServlet", value = {"/hr/leave/reject", "/admin/leave/reject"})
 public class RejectLeaveServlet extends HttpServlet {
     private LeaveDAO leaveDAO;
-    private UserDAO userDAO;
     private EmployeeDAO employeeDAO;
 
     @Override
     public void init() {
         leaveDAO = new LeaveDAO();
-        userDAO = new UserDAO();
         employeeDAO = new EmployeeDAO();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get the current user's username and role from the session
+        // Get the current user from the session
         HttpSession session = request.getSession();
-        String username = (String) session.getAttribute("username");
-        String role = (String) session.getAttribute("role");
+        com.example.hrms.model.User user = (com.example.hrms.model.User) session.getAttribute("user");
 
-        if (username == null || role == null || (!role.equals("HR") && !role.equals("ADMIN"))) {
+        if (user == null || (!user.getRole().equals("HR") && !user.getRole().equals("ADMIN"))) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
+
+        String role = user.getRole();
 
         // Get form data
         String leaveIdStr = request.getParameter("leaveId");
@@ -79,17 +76,11 @@ public class RejectLeaveServlet extends HttpServlet {
                 return;
             }
 
-            // Get the current user's ID
-            User user = userDAO.getUserByUsername(username);
-
-            if (user == null) {
-                request.getSession().setAttribute("errorMessage", "User record not found");
-                redirectBack(request, response, role);
-                return;
-            }
+            // Get the current user's ID from the session
+            int userId = user.getId();
 
             // Update leave status
-            boolean success = leaveDAO.updateLeaveStatus(leaveId, "REJECTED", user.getId(), Date.valueOf(LocalDate.now()), comments);
+            boolean success = leaveDAO.updateLeaveStatus(leaveId, "REJECTED", userId, Date.valueOf(LocalDate.now()), comments);
 
             if (success) {
                 // Send email notification

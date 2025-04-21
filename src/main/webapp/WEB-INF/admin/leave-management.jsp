@@ -5,40 +5,28 @@
 
 <c:set var="mainContent">
 
-                    <!-- Success/Error Messages -->
-                    <c:if test="${not empty successMessage}">
-                        <div class="mt-4 bg-green-50 border-l-4 border-green-400 p-4">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm text-green-700">${successMessage}</p>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- Alert Messages -->
+                    <c:if test="${not empty sessionScope.successMessage}">
+                        <jsp:include page="/WEB-INF/components/alert.jsp">
+                            <jsp:param name="type" value="success" />
+                            <jsp:param name="message" value="${sessionScope.successMessage}" />
+                            <jsp:param name="dismissible" value="true" />
+                        </jsp:include>
+                        <c:remove var="successMessage" scope="session" />
                     </c:if>
-                    <c:if test="${not empty errorMessage}">
-                        <div class="mt-4 bg-red-50 border-l-4 border-red-400 p-4">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm text-red-700">${errorMessage}</p>
-                                </div>
-                            </div>
-                        </div>
+                    <c:if test="${not empty sessionScope.errorMessage}">
+                        <jsp:include page="/WEB-INF/components/alert.jsp">
+                            <jsp:param name="type" value="error" />
+                            <jsp:param name="message" value="${sessionScope.errorMessage}" />
+                            <jsp:param name="dismissible" value="true" />
+                        </jsp:include>
+                        <c:remove var="errorMessage" scope="session" />
                     </c:if>
 
                     <!-- Leave Summary Cards -->
                     <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                         <!-- Pending Leaves Card -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="backdrop-blur-xl bg-gradient-to-br from-blue-50/80 to-indigo-50/80 border border-blue-100/50 overflow-hidden shadow rounded-lg">
                             <div class="p-5">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 bg-yellow-100 rounded-md p-3">
@@ -66,7 +54,7 @@
                         </div>
 
                         <!-- Total Leaves Card -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="backdrop-blur-xl bg-gradient-to-br from-blue-50/80 to-indigo-50/80 border border-blue-100/50 overflow-hidden shadow rounded-lg">
                             <div class="p-5">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
@@ -97,7 +85,7 @@
                     <!-- Pending Leave Applications Section -->
                     <div class="mt-8 max-w-7xl mx-auto px-4 sm:px-6 md:px-8" id="pending-section">
                         <h2 class="text-lg font-medium text-gray-900">Pending Leave Applications</h2>
-                        <div class="mt-4 bg-white shadow overflow-hidden sm:rounded-lg">
+                        <div class="mt-4 backdrop-blur-xl bg-gradient-to-br from-blue-50/80 to-indigo-50/80 border border-blue-100/50 shadow overflow-hidden sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
@@ -171,7 +159,7 @@
                     <!-- All Leave Applications Section -->
                     <div class="mt-8 max-w-7xl mx-auto px-4 sm:px-6 md:px-8" id="all-section">
                         <h2 class="text-lg font-medium text-gray-900">All Leave Applications</h2>
-                        <div class="mt-4 bg-white shadow overflow-hidden sm:rounded-lg">
+                        <div class="mt-4 backdrop-blur-xl bg-gradient-to-br from-blue-50/80 to-indigo-50/80 border border-blue-100/50 shadow overflow-hidden sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
@@ -265,7 +253,7 @@
                 </div>
 </c:set>
 
-<c:set var="additionalContent">
+<c:set var="modals">
     <!-- Approve Leave Modal -->
     <div id="approveModal" class="hidden fixed z-10 inset-0 overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -389,7 +377,8 @@
 
 <jsp:include page="/WEB-INF/components/layout.jsp">
     <jsp:param name="pageTitle" value="${pageTitle}" />
+    <jsp:param name="userRole" value="admin" />
     <jsp:param name="mainContent" value="${mainContent}" />
-    <jsp:param name="additionalContent" value="${additionalContent}" />
+    <jsp:param name="modals" value="${modals}" />
     <jsp:param name="additionalScripts" value="${additionalScripts}" />
 </jsp:include>

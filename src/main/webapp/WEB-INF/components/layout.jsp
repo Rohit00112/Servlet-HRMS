@@ -93,6 +93,11 @@ Layout Component Usage:
     <!-- Footer -->
     <jsp:include page="/WEB-INF/components/footer.jsp" />
 
+    <!-- Modals -->
+    <c:if test="${not empty param.modals}">
+        ${param.modals}
+    </c:if>
+
     <!-- Additional Scripts -->
     <c:if test="${not empty param.additionalScripts}">
         ${param.additionalScripts}

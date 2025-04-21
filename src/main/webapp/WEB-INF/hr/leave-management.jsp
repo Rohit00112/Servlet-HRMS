@@ -139,8 +139,8 @@
                                                     <div class="text-sm text-gray-900">${leave.reason}</div>
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    <button onclick="openApproveModal(${leave.id})" class="text-green-600 hover:text-green-900 mr-4">Approve</button>
-                                                    <button onclick="openRejectModal(${leave.id})" class="text-red-600 hover:text-red-900">Reject</button>
+                                                    <button type="button" onclick="openApproveModal(${leave.id})" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-2">Approve</button>
+                                                    <button type="button" onclick="openRejectModal(${leave.id})" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Reject</button>
                                                 </td>
                                             </tr>
                                         </c:if>
@@ -280,7 +280,7 @@
                                 <div class="mt-4">
                                     <label for="approveComments" class="block text-sm font-medium text-gray-700">Comments (Optional)</label>
                                     <div class="mt-1">
-                                        <textarea id="approveComments" name="comments" rows="3" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
+                                        <textarea id="approveComments" name="comments" rows="3" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border border-gray-300 rounded-md p-2"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -324,7 +324,7 @@
                                 <div class="mt-4">
                                     <label for="rejectComments" class="block text-sm font-medium text-gray-700">Reason for Rejection <span class="text-red-500">*</span></label>
                                     <div class="mt-1">
-                                        <textarea id="rejectComments" name="comments" rows="3" required class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
+                                        <textarea id="rejectComments" name="comments" rows="3" required class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border border-gray-300 rounded-md p-2"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -346,33 +346,58 @@
 
 <c:set var="additionalScripts">
     <script>
+        // Debug function to check if elements exist
+        function debugElement(id) {
+            const element = document.getElementById(id);
+            if (!element) {
+                console.error('Element not found:', id);
+                return false;
+            }
+            return true;
+        }
+
         function openApproveModal(leaveId) {
-            document.getElementById('approveLeaveId').value = leaveId;
-            document.getElementById('approveModal').classList.remove('hidden');
+            console.log('Opening approve modal for leave ID:', leaveId);
+            if (debugElement('approveLeaveId') && debugElement('approveModal')) {
+                document.getElementById('approveLeaveId').value = leaveId;
+                document.getElementById('approveModal').classList.remove('hidden');
+            }
         }
 
         function closeApproveModal() {
-            document.getElementById('approveModal').classList.add('hidden');
+            console.log('Closing approve modal');
+            if (debugElement('approveModal')) {
+                document.getElementById('approveModal').classList.add('hidden');
+            }
         }
 
         function openRejectModal(leaveId) {
-            document.getElementById('rejectLeaveId').value = leaveId;
-            document.getElementById('rejectModal').classList.remove('hidden');
+            console.log('Opening reject modal for leave ID:', leaveId);
+            if (debugElement('rejectLeaveId') && debugElement('rejectModal')) {
+                document.getElementById('rejectLeaveId').value = leaveId;
+                document.getElementById('rejectModal').classList.remove('hidden');
+            }
         }
 
         function closeRejectModal() {
-            document.getElementById('rejectModal').classList.add('hidden');
+            console.log('Closing reject modal');
+            if (debugElement('rejectModal')) {
+                document.getElementById('rejectModal').classList.add('hidden');
+            }
         }
 
         // Form validation for reject form
-        document.getElementById('rejectForm').addEventListener('submit', function(event) {
-            const comments = document.getElementById('rejectComments').value.trim();
+        if (debugElement('rejectForm')) {
+            document.getElementById('rejectForm').addEventListener('submit', function(event) {
+                const comments = document.getElementById('rejectComments').value.trim();
+                console.log('Submitting reject form with comments:', comments);
 
-            if (!comments) {
-                event.preventDefault();
-                alert('Please provide a reason for rejection');
-            }
-        });
+                if (!comments) {
+                    event.preventDefault();
+                    alert('Please provide a reason for rejection');
+                }
+            });
+        }
     </script>
 </c:set>
 

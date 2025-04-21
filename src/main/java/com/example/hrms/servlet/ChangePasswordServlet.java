@@ -2,7 +2,7 @@ package com.example.hrms.servlet;
 
 import com.example.hrms.dao.UserDAO;
 import com.example.hrms.model.User;
-import com.example.hrms.service.UserService;
+import com.example.hrms.util.PasswordUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,12 +15,10 @@ import java.io.IOException;
 @WebServlet(name = "changePasswordServlet", value = "/change-password")
 public class ChangePasswordServlet extends HttpServlet {
     private UserDAO userDAO;
-    private UserService userService;
 
     @Override
     public void init() {
         userDAO = new UserDAO();
-        userService = new UserService();
     }
 
     @Override
@@ -55,14 +53,14 @@ public class ChangePasswordServlet extends HttpServlet {
         }
 
         // Verify current password
-        if (!userService.verifyPassword(currentPassword, user.getPasswordHash())) {
+        if (!PasswordUtil.verifyPassword(currentPassword, user.getPasswordHash())) {
             session.setAttribute("errorMessage", "Current password is incorrect");
             redirectBack(request, response, user.getRole());
             return;
         }
 
         // Update password
-        String newPasswordHash = userService.hashPassword(newPassword);
+        String newPasswordHash = PasswordUtil.hashPassword(newPassword);
         user.setPasswordHash(newPasswordHash);
         boolean success = userDAO.updateUserPassword(user.getId(), newPasswordHash);
 

@@ -11,7 +11,10 @@
             </button>
         </div>
         <div class="text-xl font-bold text-gray-800 md:hidden">HRMS</div>
-        <div class="flex items-center">
+        <div class="flex items-center space-x-4">
+            <!-- Theme Toggle Button -->
+            <jsp:include page="/WEB-INF/components/theme-toggle.jsp" />
+
             <div class="relative">
                 <button type="button" class="flex items-center max-w-xs text-sm rounded-full focus:outline-none focus:shadow-outline" id="user-menu-button">
                     <span class="mr-2 text-gray-700">Welcome, ${username}</span>
@@ -19,6 +22,7 @@
                 </button>
                 <!-- User dropdown menu -->
                 <div class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-10" id="user-menu">
+                    <a href="${pageContext.request.contextPath}/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Profile</a>
                     <a href="${pageContext.request.contextPath}/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
                     <a href="${pageContext.request.contextPath}/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
                 </div>

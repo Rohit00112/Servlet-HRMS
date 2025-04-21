@@ -3,6 +3,9 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
 <c:set var="pageTitle" value="Leave Status" scope="request" />
+<c:set var="userRole" value="employee" scope="request" />
+<c:set var="backUrl" value="/employee/dashboard" scope="request" />
+<c:set var="backLabel" value="Back to Dashboard" scope="request" />
 
 <c:set var="mainContent">
                     <div class="flex items-center justify-between">
@@ -15,38 +18,26 @@
                         </a>
                     </div>
 
-                    <!-- Success/Error Messages -->
-                    <c:if test="${not empty successMessage}">
-                        <div class="mt-4 bg-green-50 border-l-4 border-green-400 p-4">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm text-green-700">${successMessage}</p>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- Alert Messages -->
+                    <c:if test="${not empty sessionScope.successMessage}">
+                        <jsp:include page="/WEB-INF/components/alert.jsp">
+                            <jsp:param name="type" value="success" />
+                            <jsp:param name="message" value="${sessionScope.successMessage}" />
+                            <jsp:param name="dismissible" value="true" />
+                        </jsp:include>
+                        <c:remove var="successMessage" scope="session" />
                     </c:if>
-                    <c:if test="${not empty errorMessage}">
-                        <div class="mt-4 bg-red-50 border-l-4 border-red-400 p-4">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm text-red-700">${errorMessage}</p>
-                                </div>
-                            </div>
-                        </div>
+                    <c:if test="${not empty sessionScope.errorMessage}">
+                        <jsp:include page="/WEB-INF/components/alert.jsp">
+                            <jsp:param name="type" value="error" />
+                            <jsp:param name="message" value="${sessionScope.errorMessage}" />
+                            <jsp:param name="dismissible" value="true" />
+                        </jsp:include>
+                        <c:remove var="errorMessage" scope="session" />
                     </c:if>
 
                     <!-- Leave Applications Table -->
-                    <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-lg">
+                    <div class="mt-6 backdrop-blur-xl bg-gradient-to-br from-blue-50/80 to-indigo-50/80 border border-blue-100/50 shadow overflow-hidden sm:rounded-lg">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
@@ -133,5 +124,8 @@
 
 <jsp:include page="/WEB-INF/components/layout.jsp">
     <jsp:param name="pageTitle" value="${pageTitle}" />
+    <jsp:param name="userRole" value="${userRole}" />
     <jsp:param name="mainContent" value="${mainContent}" />
+    <jsp:param name="backUrl" value="${backUrl}" />
+    <jsp:param name="backLabel" value="${backLabel}" />
 </jsp:include>

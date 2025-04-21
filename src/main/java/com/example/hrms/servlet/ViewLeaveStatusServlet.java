@@ -18,51 +18,57 @@ import java.util.List;
 public class ViewLeaveStatusServlet extends HttpServlet {
     private LeaveDAO leaveDAO;
     private EmployeeDAO employeeDAO;
-    
+
     @Override
     public void init() {
         leaveDAO = new LeaveDAO();
         employeeDAO = new EmployeeDAO();
     }
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get the current user's username and role from the session
+        // Get the current user from the session
         HttpSession session = request.getSession();
-        String username = (String) session.getAttribute("username");
-        String role = (String) session.getAttribute("role");
-        
-        if (username == null || role == null) {
+        com.example.hrms.model.User user = (com.example.hrms.model.User) session.getAttribute("user");
+
+        if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-        
+
+        String role = user.getRole();
+
         // Handle based on role
         if (role.equals("EMPLOYEE")) {
-            // Get the employee ID for the current user
-            Employee employee = employeeDAO.getEmployeeByEmail(username);
-            
+            // Get the employee for the current user
+            Employee employee = employeeDAO.getEmployeeByUserId(user.getId());
+
+            // If not found by user ID, try by email
+            if (employee == null) {
+                employee = employeeDAO.getEmployeeByEmail(user.getUsername() + "@company.com");
+            }
+
             if (employee == null) {
                 request.getSession().setAttribute("errorMessage", "Employee record not found for the current user");
                 response.sendRedirect(request.getContextPath() + "/employee/dashboard");
                 return;
             }
-            
+
             // Get leave applications for this employee
             List<Leave> leaves = leaveDAO.getLeavesByEmployeeId(employee.getId());
             request.setAttribute("leaves", leaves);
-            
+
             // Forward to employee leave status page
             request.getRequestDispatcher("/WEB-INF/employee/leave-status.jsp").forward(request, response);
         } else if (role.equals("HR") || role.equals("ADMIN")) {
             // Get all leave applications for HR/Admin
             List<Leave> leaves = leaveDAO.getAllLeaves();
             request.setAttribute("leaves", leaves);
-            
+
             // Get pending leave count
             int pendingCount = leaveDAO.getPendingLeaveCount();
             request.setAttribute("pendingCount", pendingCount);
-            
+
             // Forward to HR/Admin leave management page
             String requestURI = request.getRequestURI();
             if (requestURI.contains("/hr/")) {

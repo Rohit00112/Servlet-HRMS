@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet(name = "ViewPayslipServlet", urlPatterns = {
-    "/admin/payroll/view", 
+    "/admin/payroll/view",
     "/hr/payroll/view",
     "/employee/payroll/view"
 })
@@ -35,36 +35,44 @@ public class ViewPayslipServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("username") == null) {
+        if (session == null || session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
-        String role = (String) session.getAttribute("role");
-        
+        com.example.hrms.model.User user = (com.example.hrms.model.User) session.getAttribute("user");
+        String role = user.getRole();
+
         try {
             String idParam = request.getParameter("id");
-            
+
             if (idParam != null && !idParam.isEmpty()) {
                 // View a specific payslip
                 int payrollId = Integer.parseInt(idParam);
                 Payroll payroll = payrollService.getPayrollById(payrollId);
-                
+
                 if (payroll != null) {
                     // Check if employee is viewing their own payslip
                     if (role.equals("EMPLOYEE")) {
-                        int employeeId = (int) session.getAttribute("employeeId");
-                        if (payroll.getEmployeeId() != employeeId) {
+                        // Get the employee for the current user
+                        Employee currentEmployee = employeeDAO.getEmployeeByUserId(user.getId());
+
+                        // If not found by user ID, try by email
+                        if (currentEmployee == null) {
+                            currentEmployee = employeeDAO.getEmployeeByEmail(user.getUsername() + "@company.com");
+                        }
+
+                        if (currentEmployee == null || payroll.getEmployeeId() != currentEmployee.getId()) {
                             response.sendRedirect(request.getContextPath() + "/access-denied");
                             return;
                         }
                     }
-                    
+
                     // Get employee details
                     Employee employee = employeeDAO.getEmployeeById(payroll.getEmployeeId());
                     request.setAttribute("employee", employee);
                     request.setAttribute("payroll", payroll);
-                    
+
                     // Forward to the payslip view
                     String jspPath = "/WEB-INF/" + role.toLowerCase() + "/view-payslip.jsp";
                     request.getRequestDispatcher(jspPath).forward(request, response);
@@ -74,16 +82,29 @@ public class ViewPayslipServlet extends HttpServlet {
                 }
             } else if (role.equals("EMPLOYEE")) {
                 // Employee viewing their payslips
-                int employeeId = (int) session.getAttribute("employeeId");
-                List<Payroll> payrolls = payrollService.getPayrollsByEmployeeId(employeeId);
-                
+                // Get the employee for the current user
+                Employee employee = employeeDAO.getEmployeeByUserId(user.getId());
+
+                // If not found by user ID, try by email
+                if (employee == null) {
+                    employee = employeeDAO.getEmployeeByEmail(user.getUsername() + "@company.com");
+                }
+
+                if (employee == null) {
+                    request.getSession().setAttribute("errorMessage", "Employee record not found for the current user");
+                    response.sendRedirect(request.getContextPath() + "/employee/dashboard");
+                    return;
+                }
+
+                List<Payroll> payrolls = payrollService.getPayrollsByEmployeeId(employee.getId());
+
                 request.setAttribute("payrolls", payrolls);
                 request.getRequestDispatcher("/WEB-INF/employee/payroll-list.jsp").forward(request, response);
             } else {
                 // Admin or HR viewing all payslips
                 List<Payroll> payrolls = payrollService.getAllPayrolls();
                 request.setAttribute("payrolls", payrolls);
-                
+
                 String jspPath = "/WEB-INF/" + role.toLowerCase() + "/payroll-list.jsp";
                 request.getRequestDispatcher(jspPath).forward(request, response);
             }

@@ -1,10 +1,8 @@
 package com.example.hrms.servlet.payroll;
 
 import com.example.hrms.dao.EmployeeDAO;
-import com.example.hrms.dao.UserDAO;
 import com.example.hrms.model.Employee;
 import com.example.hrms.model.Payroll;
-import com.example.hrms.model.User;
 import com.example.hrms.service.PayrollService;
 import com.example.hrms.util.PDFService;
 import com.itextpdf.text.DocumentException;
@@ -28,26 +26,24 @@ import java.sql.SQLException;
 public class DownloadPayslipServlet extends HttpServlet {
     private PayrollService payrollService;
     private EmployeeDAO employeeDAO;
-    private UserDAO userDAO;
 
     @Override
     public void init() throws ServletException {
         super.init();
         payrollService = new PayrollService();
         employeeDAO = new EmployeeDAO();
-        userDAO = new UserDAO();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("username") == null) {
+        if (session == null || session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
-        String role = (String) session.getAttribute("role");
-        String username = (String) session.getAttribute("username");
+        com.example.hrms.model.User user = (com.example.hrms.model.User) session.getAttribute("user");
+        String role = user.getRole();
 
         try {
             String idParam = request.getParameter("id");
@@ -70,14 +66,14 @@ public class DownloadPayslipServlet extends HttpServlet {
             // Check access permissions
             if (role.equals("EMPLOYEE")) {
                 // Employees can only view their own payslips
-                User user = userDAO.getUserByUsername(username);
-                if (user == null) {
-                    request.setAttribute("errorMessage", "User not found");
-                    request.getRequestDispatcher("/WEB-INF/error.jsp").forward(request, response);
-                    return;
+                // Get the employee for the current user
+                Employee employee = employeeDAO.getEmployeeByUserId(user.getId());
+
+                // If not found by user ID, try by email
+                if (employee == null) {
+                    employee = employeeDAO.getEmployeeByEmail(user.getUsername() + "@company.com");
                 }
 
-                Employee employee = employeeDAO.getEmployeeByUserId(user.getId());
                 if (employee == null || employee.getId() != payroll.getEmployeeId()) {
                     request.setAttribute("errorMessage", "Access denied");
                     request.getRequestDispatcher("/WEB-INF/error.jsp").forward(request, response);

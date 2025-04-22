@@ -4,7 +4,7 @@ import com.example.hrms.dao.EmployeeDAO;
 import com.example.hrms.dao.UserDAO;
 import com.example.hrms.model.Employee;
 import com.example.hrms.model.User;
-import com.example.hrms.util.EmailUtil;
+import com.example.hrms.util.EmailService;
 import com.example.hrms.util.PasswordUtil;
 
 /**
@@ -67,7 +67,7 @@ public class UserService {
             employeeDAO.updateEmployee(employee);
 
             // Send email with credentials
-            EmailUtil.sendAccountCreationEmail(employee.getEmail(), username, password, role);
+            EmailService.sendAccountCreationNotification(employee.getEmail(), employee.getName(), username, password, role);
 
             return user;
         }

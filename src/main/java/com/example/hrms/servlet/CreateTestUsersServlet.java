@@ -4,6 +4,7 @@ import com.example.hrms.dao.EmployeeDAO;
 import com.example.hrms.dao.UserDAO;
 import com.example.hrms.model.Employee;
 import com.example.hrms.model.User;
+import com.example.hrms.util.EmailService;
 import com.example.hrms.util.PasswordUtil;
 
 import jakarta.servlet.ServletException;
@@ -47,6 +48,9 @@ public class CreateTestUsersServlet extends HttpServlet {
             hrUser.setRole("HR");
             userDAO.createUser(hrUser);
             hrUser = userDAO.getUserByUsername("hr");
+
+            // Send email notification
+            EmailService.sendAccountCreationNotification("hr@company.com", "HR Manager", "hr", "hr123", "HR");
         }
 
         // Create HR employee if it doesn't exist
@@ -74,6 +78,9 @@ public class CreateTestUsersServlet extends HttpServlet {
             empUser.setRole("EMPLOYEE");
             userDAO.createUser(empUser);
             empUser = userDAO.getUserByUsername("employee");
+
+            // Send email notification
+            EmailService.sendAccountCreationNotification("employee@company.com", "Test Employee", "employee", "emp123", "EMPLOYEE");
         }
 
         // Create Employee record if it doesn't exist

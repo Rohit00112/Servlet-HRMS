@@ -121,40 +121,15 @@ public class EmailService {
      * @param comments     Comments from reviewer
      * @return true if email was sent successfully, false otherwise
      */
-    public static boolean sendLeaveStatusNotification(String to, String employeeName, int leaveId, 
-                                                     String startDate, String endDate, 
+    public static boolean sendLeaveStatusNotification(String to, String employeeName, int leaveId,
+                                                     String startDate, String endDate,
                                                      String status, String comments) {
         String subject = "Leave Request " + status + " - HRMS";
-        
-        // Create HTML content
-        StringBuilder content = new StringBuilder();
-        content.append("<html><body style='font-family: Arial, sans-serif;'>");
-        content.append("<div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;'>");
-        content.append("<h2 style='color: #333;'>Leave Request ").append(status).append("</h2>");
-        content.append("<p>Dear ").append(employeeName).append(",</p>");
-        
-        if (status.equals("APPROVED")) {
-            content.append("<p>We're pleased to inform you that your leave request has been <strong style='color: green;'>approved</strong>.</p>");
-        } else {
-            content.append("<p>We regret to inform you that your leave request has been <strong style='color: red;'>rejected</strong>.</p>");
-        }
-        
-        content.append("<div style='background-color: #f9f9f9; padding: 15px; margin: 15px 0; border-left: 4px solid #0ea5e9;'>");
-        content.append("<h3 style='margin-top: 0;'>Leave Details</h3>");
-        content.append("<p><strong>Leave ID:</strong> ").append(leaveId).append("</p>");
-        content.append("<p><strong>Period:</strong> ").append(startDate).append(" to ").append(endDate).append("</p>");
-        content.append("<p><strong>Status:</strong> ").append(status).append("</p>");
-        
-        if (comments != null && !comments.isEmpty()) {
-            content.append("<p><strong>Comments:</strong> ").append(comments).append("</p>");
-        }
-        
-        content.append("</div>");
-        content.append("<p>You can view the details of your leave request by logging into the HRMS portal.</p>");
-        content.append("<p>Thank you,<br>HR Department</p>");
-        content.append("</div></body></html>");
-        
-        return sendEmail(to, subject, content.toString(), true);
+
+        // Get the HTML template
+        String content = EmailTemplates.getLeaveStatusTemplate(employeeName, leaveId, startDate, endDate, status, comments);
+
+        return sendEmail(to, subject, content, true);
     }
 
     /**
@@ -167,29 +142,33 @@ public class EmailService {
      * @param payrollId    Payroll ID
      * @return true if email was sent successfully, false otherwise
      */
-    public static boolean sendPayslipNotification(String to, String employeeName, String month, 
+    public static boolean sendPayslipNotification(String to, String employeeName, String month,
                                                  String netSalary, int payrollId) {
         String subject = "Your Payslip for " + month + " is Ready - HRMS";
-        
-        // Create HTML content
-        StringBuilder content = new StringBuilder();
-        content.append("<html><body style='font-family: Arial, sans-serif;'>");
-        content.append("<div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;'>");
-        content.append("<h2 style='color: #333;'>Your Payslip is Ready</h2>");
-        content.append("<p>Dear ").append(employeeName).append(",</p>");
-        content.append("<p>Your payslip for <strong>").append(month).append("</strong> has been generated and is now available for viewing.</p>");
-        
-        content.append("<div style='background-color: #f9f9f9; padding: 15px; margin: 15px 0; border-left: 4px solid #0ea5e9;'>");
-        content.append("<h3 style='margin-top: 0;'>Payslip Summary</h3>");
-        content.append("<p><strong>Month:</strong> ").append(month).append("</p>");
-        content.append("<p><strong>Net Salary:</strong> $").append(netSalary).append("</p>");
-        content.append("</div>");
-        
-        content.append("<p>Please log in to the HRMS portal to view your complete payslip details and download a copy for your records.</p>");
-        content.append("<p>If you have any questions regarding your payslip, please contact the HR department.</p>");
-        content.append("<p>Thank you,<br>HR Department</p>");
-        content.append("</div></body></html>");
-        
-        return sendEmail(to, subject, content.toString(), true);
+
+        // Get the HTML template
+        String content = EmailTemplates.getPayslipTemplate(employeeName, month, netSalary, payrollId);
+
+        return sendEmail(to, subject, content, true);
+    }
+
+    /**
+     * Send an account creation notification email
+     *
+     * @param to           Recipient email address
+     * @param employeeName Employee name
+     * @param username     Username
+     * @param password     Password
+     * @param role         User role
+     * @return true if email was sent successfully, false otherwise
+     */
+    public static boolean sendAccountCreationNotification(String to, String employeeName, String username,
+                                                        String password, String role) {
+        String subject = "Welcome to HRMS - Your Account Details";
+
+        // Get the HTML template
+        String content = EmailTemplates.getAccountCreationTemplate(employeeName, username, password, role);
+
+        return sendEmail(to, subject, content, true);
     }
 }

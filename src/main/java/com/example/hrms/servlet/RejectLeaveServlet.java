@@ -2,6 +2,7 @@ package com.example.hrms.servlet;
 
 import com.example.hrms.dao.EmployeeDAO;
 import com.example.hrms.dao.LeaveDAO;
+import com.example.hrms.dao.NotificationDAO;
 import com.example.hrms.model.Employee;
 import com.example.hrms.model.Leave;
 import com.example.hrms.util.EmailService;
@@ -20,11 +21,13 @@ import java.time.LocalDate;
 public class RejectLeaveServlet extends HttpServlet {
     private LeaveDAO leaveDAO;
     private EmployeeDAO employeeDAO;
+    private NotificationDAO notificationDAO;
 
     @Override
     public void init() {
         leaveDAO = new LeaveDAO();
         employeeDAO = new EmployeeDAO();
+        notificationDAO = new NotificationDAO();
     }
 
     @Override
@@ -83,32 +86,43 @@ public class RejectLeaveServlet extends HttpServlet {
             boolean success = leaveDAO.updateLeaveStatus(leaveId, "REJECTED", userId, Date.valueOf(LocalDate.now()), comments);
 
             if (success) {
-                // Send email notification
-                try {
-                    // Get employee details
-                    Employee employee = employeeDAO.getEmployeeById(leave.getEmployeeId());
-                    if (employee != null && employee.getEmail() != null) {
-                        // Format dates for email
-                        String startDateStr = leave.getStartDate().toLocalDate().toString();
-                        String endDateStr = leave.getEndDate().toLocalDate().toString();
+                // Get employee details
+                Employee employee = employeeDAO.getEmployeeById(leave.getEmployeeId());
 
-                        // Send email notification
-                        EmailService.sendLeaveStatusNotification(
-                            employee.getEmail(),
-                            employee.getName(),
-                            leave.getId(),
-                            startDateStr,
-                            endDateStr,
-                            "REJECTED",
-                            comments
-                        );
+                if (employee != null) {
+                    // Create notification
+                    notificationDAO.createLeaveStatusNotification(
+                        employee.getId(),
+                        "REJECTED",
+                        leave.getStartDate(),
+                        leave.getEndDate()
+                    );
 
-                        System.out.println("Leave rejection email sent to " + employee.getEmail());
+                    // Send email notification if email is available
+                    if (employee.getEmail() != null) {
+                        try {
+                            // Format dates for email
+                            String startDateStr = leave.getStartDate().toLocalDate().toString();
+                            String endDateStr = leave.getEndDate().toLocalDate().toString();
+
+                            // Send email notification
+                            EmailService.sendLeaveStatusNotification(
+                                employee.getEmail(),
+                                employee.getName(),
+                                leave.getId(),
+                                startDateStr,
+                                endDateStr,
+                                "REJECTED",
+                                comments
+                            );
+
+                            System.out.println("Leave rejection email sent to " + employee.getEmail());
+                        } catch (Exception e) {
+                            // Log the error but don't fail the request
+                            System.err.println("Error sending email notification: " + e.getMessage());
+                            e.printStackTrace();
+                        }
                     }
-                } catch (Exception e) {
-                    // Log the error but don't fail the request
-                    System.err.println("Error sending email notification: " + e.getMessage());
-                    e.printStackTrace();
                 }
 
                 request.getSession().setAttribute("successMessage", "Leave application rejected successfully");

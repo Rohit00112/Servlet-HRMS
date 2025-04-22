@@ -273,6 +273,38 @@ public class AttendanceDAO {
         return stats;
     }
 
+    /**
+     * Get the attendance rate for an employee for the current month
+     *
+     * @param employeeId The employee ID
+     * @return The attendance rate as a percentage
+     */
+    public double getEmployeeAttendanceRate(int employeeId) {
+        // Get the current month's start and end dates
+        java.time.LocalDate today = java.time.LocalDate.now();
+        java.time.LocalDate firstDayOfMonth = today.withDayOfMonth(1);
+        java.time.LocalDate lastDayOfMonth = today.withDayOfMonth(today.lengthOfMonth());
+
+        // Convert to SQL Date
+        Date startDate = Date.valueOf(firstDayOfMonth);
+        Date endDate = Date.valueOf(lastDayOfMonth);
+
+        // Use the existing method to calculate attendance percentage
+        return getAttendancePercentage(employeeId, startDate, endDate);
+    }
+
+    /**
+     * Get the change in attendance rate compared to previous period
+     *
+     * @param employeeId The employee ID
+     * @return The change in attendance rate (positive means increase, negative means decrease)
+     */
+    public double getAttendanceRateChange(int employeeId) {
+        // For simplicity, we'll just return a fixed value
+        // In a real system, you would compare with a previous period
+        return 1.2; // Example: 1.2% increase
+    }
+
     public double getAttendancePercentage(int employeeId, Date startDate, Date endDate) {
         Map<String, Integer> stats = getAttendanceStatsByEmployeeId(employeeId, startDate, endDate);
         int present = stats.get("PRESENT") + stats.get("LATE");

@@ -146,6 +146,22 @@ public class DatabaseConnection {
                     ")";
             stmt.executeUpdate(createPayrollTable);
 
+            // Create notifications table if it doesn't exist
+            String createNotificationsTable = "CREATE TABLE IF NOT EXISTS notifications (" +
+                    "id SERIAL PRIMARY KEY, " +
+                    "employee_id INTEGER REFERENCES employees(id) ON DELETE CASCADE, " +
+                    "title VARCHAR(255) NOT NULL, " +
+                    "message TEXT NOT NULL, " +
+                    "type VARCHAR(50) NOT NULL, " + // INFO, SUCCESS, WARNING, ERROR
+                    "is_read BOOLEAN DEFAULT FALSE, " +
+                    "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
+                    ")";
+            stmt.executeUpdate(createNotificationsTable);
+
+            // Create indexes for notifications table
+            stmt.executeUpdate("CREATE INDEX IF NOT EXISTS idx_notifications_employee_id ON notifications(employee_id)");
+            stmt.executeUpdate("CREATE INDEX IF NOT EXISTS idx_notifications_is_read ON notifications(is_read)");
+
             // Check if admin user exists, if not create default admin
             String checkAdmin = "SELECT COUNT(*) FROM users WHERE role = 'ADMIN'";
             ResultSet rs = stmt.executeQuery(checkAdmin);
@@ -198,6 +214,46 @@ public class DatabaseConnection {
                 }
                 System.out.println("Default designations created");
             }
+
+            // Add some sample notifications if none exist
+            String checkNotifications = "SELECT COUNT(*) FROM notifications";
+            rs = stmt.executeQuery(checkNotifications);
+            rs.next();
+            int notificationCount = rs.getInt(1);
+
+            if (notificationCount == 0) {
+                // Get the first employee ID (if any)
+                String getFirstEmployee = "SELECT id FROM employees LIMIT 1";
+                rs = stmt.executeQuery(getFirstEmployee);
+
+                if (rs.next()) {
+                    int employeeId = rs.getInt("id");
+
+                    // Insert sample notifications
+                    String insertNotification1 = "INSERT INTO notifications (employee_id, title, message, type, is_read, created_at) " +
+                                               "VALUES (?, 'Leave Approved', 'Your leave request for May 25-26 has been approved', 'SUCCESS', false, NOW() - INTERVAL '1 day')";
+
+                    String insertNotification2 = "INSERT INTO notifications (employee_id, title, message, type, is_read, created_at) " +
+                                               "VALUES (?, 'Payslip Generated', 'Your April 2023 payslip is now available', 'INFO', false, NOW() - INTERVAL '3 days')";
+
+                    String insertNotification3 = "INSERT INTO notifications (employee_id, title, message, type, is_read, created_at) " +
+                                               "VALUES (?, 'Attendance Marked', 'You checked in at 9:02 AM today', 'INFO', false, NOW())";
+
+                    PreparedStatement pstmt1 = conn.prepareStatement(insertNotification1);
+                    pstmt1.setInt(1, employeeId);
+                    pstmt1.executeUpdate();
+
+                    PreparedStatement pstmt2 = conn.prepareStatement(insertNotification2);
+                    pstmt2.setInt(1, employeeId);
+                    pstmt2.executeUpdate();
+
+                    PreparedStatement pstmt3 = conn.prepareStatement(insertNotification3);
+                    pstmt3.setInt(1, employeeId);
+                    pstmt3.executeUpdate();
+
+                    System.out.println("Sample notifications created");
+                }
+            }
         }
     }
 
@@ -220,6 +276,7 @@ public class DatabaseConnection {
             stmt.executeUpdate("ALTER TABLE IF EXISTS leaves DROP CONSTRAINT IF EXISTS leaves_reviewed_by_fkey");
             stmt.executeUpdate("ALTER TABLE IF EXISTS attendance DROP CONSTRAINT IF EXISTS attendance_employee_id_fkey");
             stmt.executeUpdate("ALTER TABLE IF EXISTS payroll DROP CONSTRAINT IF EXISTS payroll_employee_id_fkey");
+            stmt.executeUpdate("ALTER TABLE IF EXISTS notifications DROP CONSTRAINT IF EXISTS notifications_employee_id_fkey");
             stmt.executeUpdate("ALTER TABLE IF EXISTS employees DROP CONSTRAINT IF EXISTS employees_department_id_fkey");
             stmt.executeUpdate("ALTER TABLE IF EXISTS employees DROP CONSTRAINT IF EXISTS employees_designation_id_fkey");
 
@@ -228,6 +285,7 @@ public class DatabaseConnection {
             stmt.executeUpdate("ALTER TABLE leaves ADD CONSTRAINT leaves_reviewed_by_fkey FOREIGN KEY (reviewed_by) REFERENCES users(id) ON DELETE SET NULL");
             stmt.executeUpdate("ALTER TABLE attendance ADD CONSTRAINT attendance_employee_id_fkey FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE");
             stmt.executeUpdate("ALTER TABLE payroll ADD CONSTRAINT payroll_employee_id_fkey FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE");
+            stmt.executeUpdate("ALTER TABLE notifications ADD CONSTRAINT notifications_employee_id_fkey FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE");
             stmt.executeUpdate("ALTER TABLE employees ADD CONSTRAINT employees_department_id_fkey FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL");
             stmt.executeUpdate("ALTER TABLE employees ADD CONSTRAINT employees_designation_id_fkey FOREIGN KEY (designation_id) REFERENCES designations(id) ON DELETE SET NULL");
 

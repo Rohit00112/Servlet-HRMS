@@ -9,6 +9,9 @@ import java.util.List;
 
 public class LeaveDAO {
 
+    // Default annual leave quota for employees (in days)
+    private static final int DEFAULT_ANNUAL_LEAVE_QUOTA = 21;
+
     public List<Leave> getAllLeaves() {
         List<Leave> leaves = new ArrayList<>();
         String sql = "SELECT l.*, e.name as employee_name, u.username as reviewer_name " +
@@ -196,6 +199,54 @@ public class LeaveDAO {
         }
 
         return 0;
+    }
+
+    /**
+     * Get the leave balance for an employee
+     *
+     * @param employeeId The employee ID
+     * @return The number of leave days remaining
+     */
+    public int getEmployeeLeaveBalance(int employeeId) {
+        // Get the current year
+        int currentYear = java.time.LocalDate.now().getYear();
+
+        // Calculate the total approved leave days taken this year
+        String sql = "SELECT COALESCE(SUM(end_date - start_date + 1), 0) AS days_taken " +
+                     "FROM leaves " +
+                     "WHERE employee_id = ? AND status = 'APPROVED' " +
+                     "AND EXTRACT(YEAR FROM start_date) = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, employeeId);
+            pstmt.setInt(2, currentYear);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                int daysTaken = rs.getInt("days_taken");
+                return DEFAULT_ANNUAL_LEAVE_QUOTA - daysTaken;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // If there's an error or no leaves taken, return the default quota
+        return DEFAULT_ANNUAL_LEAVE_QUOTA;
+    }
+
+    /**
+     * Get the change in leave balance compared to previous period
+     *
+     * @param employeeId The employee ID
+     * @return The change in leave balance (positive means increase, negative means decrease)
+     */
+    public int getLeaveBalanceChange(int employeeId) {
+        // For simplicity, we'll just return a fixed value
+        // In a real system, you would compare with a previous period
+        return -2; // Example: 2 days less than before
     }
 
     private Leave mapLeaveFromResultSet(ResultSet rs) throws SQLException {

@@ -8,6 +8,8 @@ import com.example.hrms.model.Payroll;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -160,5 +162,44 @@ public class PayrollService {
     // Get count of payrolls by status and month
     public int getPayrollCountByStatus(String status, String month) throws SQLException {
         return payrollDAO.getPayrollCountByStatus(status, month);
+    }
+
+    /**
+     * Get the next payroll date
+     *
+     * @return The next payroll date as a string (e.g., "May 30")
+     */
+    public String getNextPayrollDate() {
+        // In a real system, this would be based on company policy or configuration
+        // For this example, we'll assume payroll is processed on the last day of each month
+
+        LocalDate today = LocalDate.now();
+        LocalDate lastDayOfMonth = today.withDayOfMonth(today.lengthOfMonth());
+
+        // If today is the last day or past the last day of the month, use the last day of next month
+        if (today.getDayOfMonth() >= lastDayOfMonth.getDayOfMonth()) {
+            lastDayOfMonth = today.plusMonths(1).withDayOfMonth(today.plusMonths(1).lengthOfMonth());
+        }
+
+        // Format the date as "Month Day" (e.g., "May 30")
+        return lastDayOfMonth.format(DateTimeFormatter.ofPattern("MMMM d"));
+    }
+
+    /**
+     * Get the number of days until the next payroll
+     *
+     * @return The number of days until the next payroll
+     */
+    public int getDaysUntilNextPayroll() {
+        LocalDate today = LocalDate.now();
+        LocalDate lastDayOfMonth = today.withDayOfMonth(today.lengthOfMonth());
+
+        // If today is the last day or past the last day of the month, use the last day of next month
+        if (today.getDayOfMonth() >= lastDayOfMonth.getDayOfMonth()) {
+            lastDayOfMonth = today.plusMonths(1).withDayOfMonth(today.plusMonths(1).lengthOfMonth());
+        }
+
+        // Calculate the number of days between today and the next payroll date
+        return (int) java.time.temporal.ChronoUnit.DAYS.between(today, lastDayOfMonth);
     }
 }

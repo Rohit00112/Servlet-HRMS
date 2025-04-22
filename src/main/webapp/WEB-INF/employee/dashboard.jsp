@@ -25,13 +25,13 @@
                             <jsp:param name="iconBgColor" value="primary" />
                             <jsp:param name="content" value="
                                 <div class='flex items-baseline'>
-                                    <div class='text-2xl font-semibold text-gray-900'>98.5%</div>
-                                    <div class='ml-2 flex items-baseline text-sm font-semibold text-green-600'>
-                                        <svg class='self-center flex-shrink-0 h-5 w-5 text-green-500' fill='currentColor' viewBox='0 0 20 20' aria-hidden='true'>
-                                            <path fill-rule='evenodd' d='M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z' clip-rule='evenodd' />
+                                    <div class='text-2xl font-semibold text-gray-900'>${String.format('%.1f', attendanceRate)}%</div>
+                                    <div class='ml-2 flex items-baseline text-sm font-semibold ${attendanceRateChange >= 0 ? 'text-green-600' : 'text-red-600'}'>
+                                        <svg class='self-center flex-shrink-0 h-5 w-5 ${attendanceRateChange >= 0 ? 'text-green-500' : 'text-red-500'}' fill='currentColor' viewBox='0 0 20 20' aria-hidden='true'>
+                                            <path fill-rule='evenodd' d='${attendanceRateChange >= 0 ? 'M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z' : 'M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z'}' clip-rule='evenodd' />
                                         </svg>
-                                        <span class='sr-only'>Increased by</span>
-                                        1.2%
+                                        <span class='sr-only'>${attendanceRateChange >= 0 ? 'Increased' : 'Decreased'} by</span>
+                                        ${Math.abs(attendanceRateChange)}%
                                     </div>
                                 </div>
                             " />
@@ -44,13 +44,13 @@
                             <jsp:param name="iconBgColor" value="purple" />
                             <jsp:param name="content" value="
                                 <div class='flex items-baseline'>
-                                    <div class='text-2xl font-semibold text-gray-900'>14 days</div>
-                                    <div class='ml-2 flex items-baseline text-sm font-semibold text-red-600'>
-                                        <svg class='self-center flex-shrink-0 h-5 w-5 text-red-500' fill='currentColor' viewBox='0 0 20 20' aria-hidden='true'>
-                                            <path fill-rule='evenodd' d='M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z' clip-rule='evenodd' />
+                                    <div class='text-2xl font-semibold text-gray-900'>${leaveBalance} days</div>
+                                    <div class='ml-2 flex items-baseline text-sm font-semibold ${leaveBalanceChange >= 0 ? 'text-green-600' : 'text-red-600'}'>
+                                        <svg class='self-center flex-shrink-0 h-5 w-5 ${leaveBalanceChange >= 0 ? 'text-green-500' : 'text-red-500'}' fill='currentColor' viewBox='0 0 20 20' aria-hidden='true'>
+                                            <path fill-rule='evenodd' d='${leaveBalanceChange >= 0 ? 'M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z' : 'M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z'}' clip-rule='evenodd' />
                                         </svg>
-                                        <span class='sr-only'>Decreased by</span>
-                                        2 days
+                                        <span class='sr-only'>${leaveBalanceChange >= 0 ? 'Increased' : 'Decreased'} by</span>
+                                        ${Math.abs(leaveBalanceChange)} days
                                     </div>
                                 </div>
                             " />
@@ -63,9 +63,9 @@
                             <jsp:param name="iconBgColor" value="green" />
                             <jsp:param name="content" value="
                                 <div class='flex items-baseline'>
-                                    <div class='text-2xl font-semibold text-gray-900'>May 30</div>
+                                    <div class='text-2xl font-semibold text-gray-900'>${nextPayrollDate}</div>
                                     <div class='ml-2 flex items-baseline text-sm font-semibold text-gray-600'>
-                                        <span>In 8 days</span>
+                                        <span>In ${daysUntilNextPayroll} days</span>
                                     </div>
                                 </div>
                             " />
@@ -78,7 +78,7 @@
                             <jsp:param name="iconBgColor" value="yellow" />
                             <jsp:param name="content" value="
                                 <div class='flex items-baseline'>
-                                    <div class='text-2xl font-semibold text-gray-900'>3</div>
+                                    <div class='text-2xl font-semibold text-gray-900'>${unreadNotificationCount}</div>
                                     <div class='ml-2 flex items-baseline text-sm font-semibold text-yellow-600'>
                                         <span>Unread</span>
                                     </div>

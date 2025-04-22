@@ -2,6 +2,7 @@ package com.example.hrms.servlet;
 
 import com.example.hrms.dao.AttendanceDAO;
 import com.example.hrms.dao.EmployeeDAO;
+import com.example.hrms.dao.NotificationDAO;
 import com.example.hrms.model.Attendance;
 import com.example.hrms.model.Employee;
 
@@ -21,11 +22,13 @@ import java.time.LocalTime;
 public class MarkAttendanceServlet extends HttpServlet {
     private AttendanceDAO attendanceDAO;
     private EmployeeDAO employeeDAO;
+    private NotificationDAO notificationDAO;
 
     @Override
     public void init() {
         attendanceDAO = new AttendanceDAO();
         employeeDAO = new EmployeeDAO();
+        notificationDAO = new NotificationDAO();
     }
 
     @Override
@@ -133,6 +136,9 @@ public class MarkAttendanceServlet extends HttpServlet {
             success = attendanceDAO.markAttendance(attendance);
 
             if (success) {
+                // Create notification for attendance
+                notificationDAO.createAttendanceNotification(employee.getId(), status, sqlNow);
+
                 request.getSession().setAttribute("successMessage", "Check-in recorded successfully at " + now);
             } else {
                 request.getSession().setAttribute("errorMessage", "Failed to record check-in");

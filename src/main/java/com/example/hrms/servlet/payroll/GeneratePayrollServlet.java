@@ -1,6 +1,7 @@
 package com.example.hrms.servlet.payroll;
 
 import com.example.hrms.dao.EmployeeDAO;
+import com.example.hrms.dao.NotificationDAO;
 import com.example.hrms.model.Employee;
 import com.example.hrms.model.Payroll;
 import com.example.hrms.service.PayrollService;
@@ -28,12 +29,14 @@ import java.util.List;
 public class GeneratePayrollServlet extends HttpServlet {
     private PayrollService payrollService;
     private EmployeeDAO employeeDAO;
+    private NotificationDAO notificationDAO;
 
     @Override
     public void init() throws ServletException {
         super.init();
         payrollService = new PayrollService();
         employeeDAO = new EmployeeDAO();
+        notificationDAO = new NotificationDAO();
     }
 
     @Override
@@ -168,36 +171,41 @@ public class GeneratePayrollServlet extends HttpServlet {
                 boolean success = payrollService.finalizePayroll(payrollId);
 
                 if (success) {
-                    // Send email notification
-                    try {
-                        // Get payroll details
-                        Payroll payroll = payrollService.getPayrollById(payrollId);
-                        if (payroll != null) {
-                            // Get employee details
-                            Employee employee = employeeDAO.getEmployeeById(payroll.getEmployeeId());
-                            if (employee != null && employee.getEmail() != null) {
-                                // Format month for display
-                                String formattedMonth = payroll.getFormattedMonth();
+                    // Get payroll details
+                    Payroll payroll = payrollService.getPayrollById(payrollId);
+                    if (payroll != null) {
+                        // Get employee details
+                        Employee employee = employeeDAO.getEmployeeById(payroll.getEmployeeId());
+                        if (employee != null) {
+                            // Format month for display
+                            String formattedMonth = payroll.getFormattedMonth();
 
-                                // Format net salary
-                                String netSalary = payroll.getNetSalary().toString();
+                            // Create notification
+                            notificationDAO.createPayslipNotification(employee.getId(), formattedMonth);
 
-                                // Send email notification
-                                EmailService.sendPayslipNotification(
-                                    employee.getEmail(),
-                                    employee.getName(),
-                                    formattedMonth,
-                                    netSalary,
-                                    payrollId
-                                );
+                            // Send email notification if email is available
+                            if (employee.getEmail() != null) {
+                                try {
+                                    // Format net salary
+                                    String netSalary = payroll.getNetSalary().toString();
 
-                                System.out.println("Payslip notification email sent to " + employee.getEmail());
+                                    // Send email notification
+                                    EmailService.sendPayslipNotification(
+                                        employee.getEmail(),
+                                        employee.getName(),
+                                        formattedMonth,
+                                        netSalary,
+                                        payrollId
+                                    );
+
+                                    System.out.println("Payslip notification email sent to " + employee.getEmail());
+                                } catch (Exception e) {
+                                    // Log the error but don't fail the request
+                                    System.err.println("Error sending email notification: " + e.getMessage());
+                                    e.printStackTrace();
+                                }
                             }
                         }
-                    } catch (Exception e) {
-                        // Log the error but don't fail the request
-                        System.err.println("Error sending email notification: " + e.getMessage());
-                        e.printStackTrace();
                     }
                 }
 

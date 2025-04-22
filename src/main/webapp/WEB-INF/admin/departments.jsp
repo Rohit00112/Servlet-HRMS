@@ -5,7 +5,7 @@
 
 <c:set var="mainContent">
     <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Department Management</h1>
+        <div></div> <!-- Empty div to maintain flex spacing -->
         <button onclick="openModal('addDepartmentModal')" class="inline-flex items-center px-5 py-3 border border-transparent text-sm font-medium rounded-lg shadow-md text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:hover:text-white transform transition-all duration-200 hover:translate-y-[-1px] hover:shadow-lg active:translate-y-[1px]">
             <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -14,13 +14,7 @@
         </button>
     </div>
 
-    <!-- Success/Error Messages -->
-    <jsp:include page="/WEB-INF/components/message.jsp">
-        <jsp:param name="successMessage" value="${successMessage}" />
-        <jsp:param name="errorMessage" value="${errorMessage}" />
-        <jsp:param name="infoMessage" value="${infoMessage}" />
-        <jsp:param name="warningMessage" value="${warningMessage}" />
-    </jsp:include>
+    <!-- Messages are handled by the alerts.jsp component in the layout -->
 
     <!-- Departments Table -->
     <div class="mt-6 bg-white dark:bg-gray-800 shadow-lg overflow-hidden sm:rounded-lg border border-gray-200 dark:border-gray-700">

@@ -131,7 +131,7 @@
             </div>
 
             <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2 text-center">Forgot Password</h1>
-            <p class="text-gray-600 dark:text-gray-300 mb-8 text-center">Enter your email address and we'll send you a password reset link</p>
+            <p class="text-gray-600 dark:text-gray-300 mb-8 text-center">Enter your email address or username to reset your password</p>
 
             <c:if test="${not empty error}">
                 <div class="mb-6 bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-r-md" role="alert">
@@ -164,7 +164,25 @@
             </c:if>
 
             <form action="${pageContext.request.contextPath}/forgot-password" method="post" class="space-y-6">
-                <div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Reset Password Using</label>
+                    <div class="flex space-x-4">
+                        <div class="flex items-center">
+                            <input type="radio" id="reset-email" name="reset-method" value="email" checked
+                                   class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded"
+                                   onclick="toggleResetMethod('email')">
+                            <label for="reset-email" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">Email</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="reset-username" name="reset-method" value="username"
+                                   class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded"
+                                   onclick="toggleResetMethod('username')">
+                            <label for="reset-username" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">Username</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="email-field">
                     <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email Address</label>
                     <div class="mt-1 relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -172,7 +190,20 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
                         </div>
-                        <input type="email" id="email" name="email" required
+                        <input type="email" id="email" name="email"
+                               class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150 ease-in-out">
+                    </div>
+                </div>
+
+                <div id="username-field" class="hidden">
+                    <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
+                    <div class="mt-1 relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </div>
+                        <input type="text" id="username" name="username"
                                class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150 ease-in-out">
                     </div>
                 </div>
@@ -227,6 +258,26 @@
                 setTheme('system');
             }
         });
+
+        // Function to toggle between email and username fields
+        function toggleResetMethod(method) {
+            const emailField = document.getElementById('email-field');
+            const usernameField = document.getElementById('username-field');
+            const emailInput = document.getElementById('email');
+            const usernameInput = document.getElementById('username');
+
+            if (method === 'email') {
+                emailField.classList.remove('hidden');
+                usernameField.classList.add('hidden');
+                emailInput.setAttribute('required', '');
+                usernameInput.removeAttribute('required');
+            } else {
+                emailField.classList.add('hidden');
+                usernameField.classList.remove('hidden');
+                emailInput.removeAttribute('required');
+                usernameInput.setAttribute('required', '');
+            }
+        }
     </script>
 </body>
 </html>

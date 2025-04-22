@@ -36,25 +36,60 @@ public class ForgotPasswordServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String resetMethod = request.getParameter("reset-method");
         String email = request.getParameter("email");
+        String username = request.getParameter("username");
 
-        // Validate input
-        if (email == null || email.trim().isEmpty()) {
-            request.setAttribute("error", "Email address is required");
+        Employee employee = null;
+        User user = null;
+
+        // Validate input and find user based on reset method
+        if ("email".equals(resetMethod)) {
+            if (email == null || email.trim().isEmpty()) {
+                request.setAttribute("error", "Email address is required");
+                request.getRequestDispatcher("/WEB-INF/forgot-password.jsp").forward(request, response);
+                return;
+            }
+
+            // Find employee by email
+            employee = employeeDAO.getEmployeeByEmail(email);
+            if (employee == null || employee.getUserId() == null) {
+                request.setAttribute("error", "No account found with this email address");
+                request.getRequestDispatcher("/WEB-INF/forgot-password.jsp").forward(request, response);
+                return;
+            }
+
+            // Get user account
+            user = userDAO.getUserById(employee.getUserId());
+        } else if ("username".equals(resetMethod)) {
+            if (username == null || username.trim().isEmpty()) {
+                request.setAttribute("error", "Username is required");
+                request.getRequestDispatcher("/WEB-INF/forgot-password.jsp").forward(request, response);
+                return;
+            }
+
+            // Find user by username
+            user = userDAO.getUserByUsername(username);
+            if (user == null) {
+                request.setAttribute("error", "No account found with this username");
+                request.getRequestDispatcher("/WEB-INF/forgot-password.jsp").forward(request, response);
+                return;
+            }
+
+            // Get employee details
+            employee = employeeDAO.getEmployeeByUserId(user.getId());
+            if (employee == null) {
+                request.setAttribute("error", "Employee details not found for this username");
+                request.getRequestDispatcher("/WEB-INF/forgot-password.jsp").forward(request, response);
+                return;
+            }
+        } else {
+            request.setAttribute("error", "Invalid reset method");
             request.getRequestDispatcher("/WEB-INF/forgot-password.jsp").forward(request, response);
             return;
         }
 
-        // Find employee by email
-        Employee employee = employeeDAO.getEmployeeByEmail(email);
-        if (employee == null || employee.getUserId() == null) {
-            request.setAttribute("error", "No account found with this email address");
-            request.getRequestDispatcher("/WEB-INF/forgot-password.jsp").forward(request, response);
-            return;
-        }
-
-        // Get user account
-        User user = userDAO.getUserById(employee.getUserId());
+        // Verify user account exists
         if (user == null) {
             request.setAttribute("error", "User account not found");
             request.getRequestDispatcher("/WEB-INF/forgot-password.jsp").forward(request, response);
@@ -77,8 +112,16 @@ public class ForgotPasswordServlet extends HttpServlet {
 
         // Send password reset email
         try {
+            // Get employee email for sending notification
+            String employeeEmail = employee.getEmail();
+            if (employeeEmail == null || employeeEmail.trim().isEmpty()) {
+                request.setAttribute("error", "Employee email not found. Please contact HR.");
+                request.getRequestDispatcher("/WEB-INF/forgot-password.jsp").forward(request, response);
+                return;
+            }
+
             EmailService.sendPasswordResetNotification(
-                email,
+                employeeEmail,
                 employee.getName(),
                 user.getUsername(),
                 newPassword

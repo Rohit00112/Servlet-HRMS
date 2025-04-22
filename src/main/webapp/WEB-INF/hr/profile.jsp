@@ -22,9 +22,7 @@
         </jsp:include>
     </c:if>
 
-    <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-semibold text-gray-900">My Profile</h1>
-    </div>
+    <!-- Page title is displayed by layout.jsp -->
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Profile Summary Card -->

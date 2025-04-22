@@ -29,36 +29,36 @@ Card Component Usage:
 <%-- Icon background color --%>
 <c:choose>
     <c:when test="${cardIconBgColor eq 'primary'}">
-        <c:set var="iconBgStyle" value="bg-primary-100" />
-        <c:set var="iconTextStyle" value="text-primary-600" />
+        <c:set var="iconBgStyle" value="bg-primary-100 dark:bg-primary-900/50" />
+        <c:set var="iconTextStyle" value="text-primary-600 dark:text-primary-300" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'blue'}">
-        <c:set var="iconBgStyle" value="bg-blue-100" />
-        <c:set var="iconTextStyle" value="text-blue-600" />
+        <c:set var="iconBgStyle" value="bg-blue-100 dark:bg-blue-900/50" />
+        <c:set var="iconTextStyle" value="text-blue-600 dark:text-blue-300" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'green'}">
-        <c:set var="iconBgStyle" value="bg-green-100" />
-        <c:set var="iconTextStyle" value="text-green-600" />
+        <c:set var="iconBgStyle" value="bg-green-100 dark:bg-green-900/50" />
+        <c:set var="iconTextStyle" value="text-green-600 dark:text-green-300" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'red'}">
-        <c:set var="iconBgStyle" value="bg-red-100" />
-        <c:set var="iconTextStyle" value="text-red-600" />
+        <c:set var="iconBgStyle" value="bg-red-100 dark:bg-red-900/50" />
+        <c:set var="iconTextStyle" value="text-red-600 dark:text-red-300" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'yellow'}">
-        <c:set var="iconBgStyle" value="bg-yellow-100" />
-        <c:set var="iconTextStyle" value="text-yellow-600" />
+        <c:set var="iconBgStyle" value="bg-yellow-100 dark:bg-yellow-900/50" />
+        <c:set var="iconTextStyle" value="text-yellow-600 dark:text-yellow-300" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'purple'}">
-        <c:set var="iconBgStyle" value="bg-purple-100" />
-        <c:set var="iconTextStyle" value="text-purple-600" />
+        <c:set var="iconBgStyle" value="bg-purple-100 dark:bg-purple-900/50" />
+        <c:set var="iconTextStyle" value="text-purple-600 dark:text-purple-300" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'gray'}">
-        <c:set var="iconBgStyle" value="bg-gray-100" />
-        <c:set var="iconTextStyle" value="text-gray-600" />
+        <c:set var="iconBgStyle" value="bg-gray-100 dark:bg-gray-800" />
+        <c:set var="iconTextStyle" value="text-gray-600 dark:text-gray-300" />
     </c:when>
     <c:otherwise>
-        <c:set var="iconBgStyle" value="bg-primary-100" />
-        <c:set var="iconTextStyle" value="text-primary-600" />
+        <c:set var="iconBgStyle" value="bg-primary-100 dark:bg-primary-900/50" />
+        <c:set var="iconTextStyle" value="text-primary-600 dark:text-primary-300" />
     </c:otherwise>
 </c:choose>
 
@@ -117,7 +117,7 @@ Card Component Usage:
     </c:when>
 </c:choose>
 
-<div class="bg-white overflow-hidden shadow rounded-lg w-full">
+<div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg w-full hover:shadow-md transition-all duration-300">
     <div class="p-5">
         <c:if test="${not empty cardTitle || not empty cardIcon}">
             <div class="flex items-center">
@@ -128,9 +128,9 @@ Card Component Usage:
                 </c:if>
                 <c:if test="${not empty cardTitle}">
                     <div class="ml-5 w-0 flex-1">
-                        <h3 class="text-lg font-medium text-gray-900 truncate">${cardTitle}</h3>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white truncate">${cardTitle}</h3>
                         <c:if test="${not empty cardSubtitle}">
-                            <p class="mt-1 text-sm text-gray-500">${cardSubtitle}</p>
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">${cardSubtitle}</p>
                         </c:if>
                     </div>
                 </c:if>
@@ -145,7 +145,7 @@ Card Component Usage:
     </div>
 
     <c:if test="${not empty cardFooterContent}">
-        <div class="bg-gray-50 px-5 py-3">
+        <div class="bg-gray-50 dark:bg-gray-700/50 px-5 py-3">
             ${cardFooterContent}
         </div>
     </c:if>

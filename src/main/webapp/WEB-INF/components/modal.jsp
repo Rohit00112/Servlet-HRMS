@@ -63,8 +63,8 @@ Modal Component Usage:
 <%-- Modal type styles --%>
 <c:choose>
     <c:when test="${modalType eq 'success'}">
-        <c:set var="iconBgClass" value="bg-green-100" />
-        <c:set var="iconColorClass" value="text-green-600" />
+        <c:set var="iconBgClass" value="bg-green-100 dark:bg-green-900/50" />
+        <c:set var="iconColorClass" value="text-green-600 dark:text-green-300" />
         <c:set var="primaryButtonClass" value="bg-green-600 hover:bg-green-700 focus:ring-green-500" />
         <c:set var="iconSvg">
             <svg class="h-6 w-6 ${iconColorClass}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -73,8 +73,8 @@ Modal Component Usage:
         </c:set>
     </c:when>
     <c:when test="${modalType eq 'warning'}">
-        <c:set var="iconBgClass" value="bg-yellow-100" />
-        <c:set var="iconColorClass" value="text-yellow-600" />
+        <c:set var="iconBgClass" value="bg-yellow-100 dark:bg-yellow-900/50" />
+        <c:set var="iconColorClass" value="text-yellow-600 dark:text-yellow-300" />
         <c:set var="primaryButtonClass" value="bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500" />
         <c:set var="iconSvg">
             <svg class="h-6 w-6 ${iconColorClass}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -83,8 +83,8 @@ Modal Component Usage:
         </c:set>
     </c:when>
     <c:when test="${modalType eq 'danger'}">
-        <c:set var="iconBgClass" value="bg-red-100" />
-        <c:set var="iconColorClass" value="text-red-600" />
+        <c:set var="iconBgClass" value="bg-red-100 dark:bg-red-900/50" />
+        <c:set var="iconColorClass" value="text-red-600 dark:text-red-300" />
         <c:set var="primaryButtonClass" value="bg-red-600 hover:bg-red-700 focus:ring-red-500" />
         <c:set var="iconSvg">
             <svg class="h-6 w-6 ${iconColorClass}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -93,8 +93,8 @@ Modal Component Usage:
         </c:set>
     </c:when>
     <c:otherwise>
-        <c:set var="iconBgClass" value="bg-blue-100" />
-        <c:set var="iconColorClass" value="text-blue-600" />
+        <c:set var="iconBgClass" value="bg-blue-100 dark:bg-blue-900/50" />
+        <c:set var="iconColorClass" value="text-blue-600 dark:text-blue-300" />
         <c:set var="primaryButtonClass" value="bg-primary-600 hover:bg-primary-700 focus:ring-primary-500" />
         <c:set var="iconSvg">
             <svg class="h-6 w-6 ${iconColorClass}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -107,14 +107,14 @@ Modal Component Usage:
 <div id="${modalId}" class="hidden fixed z-10 inset-0 overflow-y-auto" aria-labelledby="${modalId}-title" role="dialog" aria-modal="true">
     <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <!-- Background overlay -->
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-        
+        <div class="fixed inset-0 bg-gray-500 dark:bg-gray-800 bg-opacity-75 dark:bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+
         <!-- Center modal -->
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-        
+
         <!-- Modal panel -->
-        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle ${sizeClass} sm:w-full">
-            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle ${sizeClass} sm:w-full">
+            <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div class="sm:flex sm:items-start">
                     <c:if test="${not empty iconSvg}">
                         <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full ${iconBgClass} sm:mx-0 sm:h-10 sm:w-10">
@@ -122,7 +122,7 @@ Modal Component Usage:
                         </div>
                     </c:if>
                     <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left flex-1">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="${modalId}-title">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="${modalId}-title">
                             ${modalTitle}
                         </h3>
                         <div class="mt-2">
@@ -131,16 +131,16 @@ Modal Component Usage:
                     </div>
                 </div>
             </div>
-            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <c:if test="${not empty primaryButtonText}">
-                    <button type="button" 
+                    <button type="button"
                             class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 ${primaryButtonClass} text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                             onclick="${primaryButtonAction}">
                         ${primaryButtonText}
                     </button>
                 </c:if>
-                <button type="button" 
-                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                <button type="button"
+                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                         onclick="${secondaryButtonAction}">
                     ${secondaryButtonText}
                 </button>
@@ -154,7 +154,7 @@ Modal Component Usage:
     function openModal(modalId) {
         document.getElementById(modalId).classList.remove('hidden');
     }
-    
+
     // Function to close the modal
     function closeModal(modalId) {
         document.getElementById(modalId).classList.add('hidden');

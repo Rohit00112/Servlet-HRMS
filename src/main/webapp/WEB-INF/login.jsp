@@ -41,6 +41,7 @@
         .dark body {
             background-color: #111827;
             color: #f9fafb;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuXzAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDQ1KSI+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjUiIGhlaWdodD0iNSIgZmlsbD0icmdiYSg1MCw1MCw1MCwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzExMTgyNyIvPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcGF0dGVybl8wKSIvPjwvc3ZnPg==');
         }
         .dark .bg-white {
             background-color: #1f2937;
@@ -51,11 +52,20 @@
         .dark .text-gray-500 {
             color: #9ca3af;
         }
+        .dark .text-gray-400 {
+            color: #d1d5db;
+        }
+        .dark .text-gray-300 {
+            color: #e5e7eb;
+        }
         .dark .text-gray-900 {
             color: #f9fafb;
         }
         .dark .border-gray-200 {
             border-color: #374151;
+        }
+        .dark .border-gray-300 {
+            border-color: #4b5563;
         }
         .dark .shadow-sm {
             --tw-shadow-color: rgba(0, 0, 0, 0.3);
@@ -66,9 +76,22 @@
         .dark .bg-gray-100 {
             background-color: #1f2937;
         }
+        /* Hover states in dark mode */
+        .dark a:hover, .dark button:hover {
+            color: #f9fafb;
+        }
+        .dark .hover\:text-gray-900:hover {
+            color: #f9fafb !important;
+        }
+        .dark .hover\:text-gray-700:hover {
+            color: #f3f4f6 !important;
+        }
+        .dark .hover\:text-gray-500:hover {
+            color: #e5e7eb !important;
+        }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex">
+<body class="bg-slate-50 dark:bg-gray-900 min-h-screen flex">
     <!-- Left side with image -->
     <div class="hidden lg:block lg:w-1/2 relative">
         <div class="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-800 opacity-90"></div>
@@ -107,13 +130,13 @@
     <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative">
         <!-- Theme Toggle Button -->
         <div class="absolute top-4 right-4">
-            <button id="themeToggleBtn" class="flex items-center justify-center w-8 h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-label="Toggle theme">
+            <button id="themeToggleBtn" class="flex items-center justify-center w-8 h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="Toggle theme">
                 <!-- Sun icon (for dark mode) -->
-                <svg id="sunIcon" class="h-5 w-5 text-gray-500 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg id="sunIcon" class="h-5 w-5 text-gray-500 dark:text-gray-300 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
                 <!-- Moon icon (for light mode) -->
-                <svg id="moonIcon" class="h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg id="moonIcon" class="h-5 w-5 text-gray-500 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                 </svg>
             </button>
@@ -127,8 +150,8 @@
                 </div>
             </div>
 
-            <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center">Welcome Back</h1>
-            <p class="text-gray-600 mb-8 text-center">Sign in to your account</p>
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2 text-center">Welcome Back</h1>
+            <p class="text-gray-600 dark:text-gray-300 mb-8 text-center">Sign in to your account</p>
 
             <c:if test="${not empty error}">
                 <div class="mb-6 bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-r-md" role="alert">
@@ -147,7 +170,7 @@
 
             <form action="login" method="post" class="space-y-6">
                 <div>
-                    <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                    <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
                     <div class="mt-1 relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -155,12 +178,12 @@
                             </svg>
                         </div>
                         <input type="text" id="username" name="username" required
-                               class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150 ease-in-out">
+                               class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150 ease-in-out">
                     </div>
                 </div>
 
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
                     <div class="mt-1 relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -168,14 +191,14 @@
                             </svg>
                         </div>
                         <input type="password" id="password" name="password" required
-                               class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150 ease-in-out">
+                               class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-150 ease-in-out">
                     </div>
                 </div>
 
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <input id="remember_me" name="remember_me" type="checkbox" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                        <label for="remember_me" class="ml-2 block text-sm text-gray-700">Remember me</label>
+                        <input id="remember_me" name="remember_me" type="checkbox" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded">
+                        <label for="remember_me" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">Remember me</label>
                     </div>
                 </div>
 
@@ -187,7 +210,7 @@
                 </div>
             </form>
 
-            <div class="mt-6 text-center text-sm text-gray-600">
+            <div class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
                 <p class="mb-2">Default admin credentials: <strong>admin / admin123</strong></p>
                 <p>Employee and HR accounts are created by the admin in the Employee Management section.</p>
             </div>

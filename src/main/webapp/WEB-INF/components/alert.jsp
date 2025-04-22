@@ -31,36 +31,36 @@ Alert Component Usage:
 <%-- Alert styles based on type --%>
 <c:choose>
     <c:when test="${alertType eq 'success'}">
-        <c:set var="bgColor" value="bg-green-50" />
-        <c:set var="textColor" value="text-green-800" />
-        <c:set var="borderColor" value="border-green-400" />
-        <c:set var="iconBgColor" value="bg-green-400" />
+        <c:set var="bgColor" value="bg-green-50 dark:bg-green-900/30" />
+        <c:set var="textColor" value="text-green-800 dark:text-green-200" />
+        <c:set var="borderColor" value="border-green-400 dark:border-green-700" />
+        <c:set var="iconBgColor" value="bg-green-400 dark:bg-green-700" />
         <c:set var="iconColor" value="text-white" />
-        <c:set var="buttonColor" value="text-green-500 hover:bg-green-100" />
+        <c:set var="buttonColor" value="text-green-500 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-800" />
     </c:when>
     <c:when test="${alertType eq 'warning'}">
-        <c:set var="bgColor" value="bg-yellow-50" />
-        <c:set var="textColor" value="text-yellow-800" />
-        <c:set var="borderColor" value="border-yellow-400" />
-        <c:set var="iconBgColor" value="bg-yellow-400" />
+        <c:set var="bgColor" value="bg-yellow-50 dark:bg-yellow-900/30" />
+        <c:set var="textColor" value="text-yellow-800 dark:text-yellow-200" />
+        <c:set var="borderColor" value="border-yellow-400 dark:border-yellow-700" />
+        <c:set var="iconBgColor" value="bg-yellow-400 dark:bg-yellow-700" />
         <c:set var="iconColor" value="text-white" />
-        <c:set var="buttonColor" value="text-yellow-500 hover:bg-yellow-100" />
+        <c:set var="buttonColor" value="text-yellow-500 dark:text-yellow-300 hover:bg-yellow-100 dark:hover:bg-yellow-800" />
     </c:when>
     <c:when test="${alertType eq 'error'}">
-        <c:set var="bgColor" value="bg-red-50" />
-        <c:set var="textColor" value="text-red-800" />
-        <c:set var="borderColor" value="border-red-400" />
-        <c:set var="iconBgColor" value="bg-red-400" />
+        <c:set var="bgColor" value="bg-red-50 dark:bg-red-900/30" />
+        <c:set var="textColor" value="text-red-800 dark:text-red-200" />
+        <c:set var="borderColor" value="border-red-400 dark:border-red-700" />
+        <c:set var="iconBgColor" value="bg-red-400 dark:bg-red-700" />
         <c:set var="iconColor" value="text-white" />
-        <c:set var="buttonColor" value="text-red-500 hover:bg-red-100" />
+        <c:set var="buttonColor" value="text-red-500 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-800" />
     </c:when>
     <c:otherwise>
-        <c:set var="bgColor" value="bg-blue-50" />
-        <c:set var="textColor" value="text-blue-800" />
-        <c:set var="borderColor" value="border-blue-400" />
-        <c:set var="iconBgColor" value="bg-blue-400" />
+        <c:set var="bgColor" value="bg-blue-50 dark:bg-blue-900/30" />
+        <c:set var="textColor" value="text-blue-800 dark:text-blue-200" />
+        <c:set var="borderColor" value="border-blue-400 dark:border-blue-700" />
+        <c:set var="iconBgColor" value="bg-blue-400 dark:bg-blue-700" />
         <c:set var="iconColor" value="text-white" />
-        <c:set var="buttonColor" value="text-blue-500 hover:bg-blue-100" />
+        <c:set var="buttonColor" value="text-blue-500 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-800" />
     </c:otherwise>
 </c:choose>
 

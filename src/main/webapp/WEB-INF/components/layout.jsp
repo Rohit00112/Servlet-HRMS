@@ -66,6 +66,12 @@ Layout Component Usage:
         .dark .text-gray-500 {
             color: #9ca3af;
         }
+        .dark .text-gray-400 {
+            color: #d1d5db;
+        }
+        .dark .text-gray-300 {
+            color: #e5e7eb;
+        }
         .dark .text-gray-900 {
             color: #f9fafb;
         }
@@ -98,12 +104,29 @@ Layout Component Usage:
         .dark .bg-primary-600:hover {
             background-color: #0369a1;
         }
+        /* Hover states in dark mode */
+        .dark a:hover, .dark button:hover {
+            color: #f9fafb;
+        }
+        .dark .hover\:text-gray-900:hover {
+            color: #f9fafb !important;
+        }
+        .dark .hover\:text-gray-700:hover {
+            color: #f3f4f6 !important;
+        }
+        .dark .hover\:text-gray-500:hover {
+            color: #e5e7eb !important;
+        }
         /* Glassmorphism in dark mode */
         .dark .backdrop-blur-md.bg-blue-50\/80 {
             background-color: rgba(30, 41, 59, 0.8);
         }
         .dark .backdrop-blur-md.bg-blue-50\/70 {
             background-color: rgba(30, 41, 59, 0.7);
+        }
+        .dark .backdrop-blur-md.bg-blue-50\/80:hover,
+        .dark .backdrop-blur-md.bg-blue-50\/70:hover {
+            background-color: rgba(30, 41, 59, 0.9);
         }
     </style>
     <c:if test="${not empty param.additionalHead}">

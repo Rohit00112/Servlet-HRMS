@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<%-- 
+<%--
 Text Input:
 <jsp:include page="/WEB-INF/components/form-field.jsp">
     <jsp:param name="type" value="text" />
@@ -55,22 +55,22 @@ Textarea Input:
 <c:set var="placeholder" value="${not empty param.placeholder ? param.placeholder : ''}" />
 <c:set var="value" value="${not empty param.value ? param.value : ''}" />
 <c:set var="rows" value="${not empty param.rows ? param.rows : '3'}" />
-<c:set var="baseClass" value="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md" />
-<c:set var="readonlyClass" value="${param.readonly == 'true' ? 'bg-gray-100' : ''}" />
+<c:set var="baseClass" value="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" />
+<c:set var="readonlyClass" value="${param.readonly == 'true' ? 'bg-gray-100 dark:bg-gray-600' : ''}" />
 
 <div class="sm:col-span-${colSpan}">
     <c:choose>
         <c:when test="${param.type == 'checkbox'}">
             <div class="flex items-center">
-                <input type="checkbox" id="${param.name}" name="${param.name}" ${checked} ${disabled} class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                <label for="${param.name}" class="ml-2 block text-sm font-medium text-gray-700">${param.label}</label>
+                <input type="checkbox" id="${param.name}" name="${param.name}" ${checked} ${disabled} class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded">
+                <label for="${param.name}" class="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-300">${param.label}</label>
             </div>
             <c:if test="${not empty param.helpText}">
-                <p class="mt-1 text-sm text-gray-500">${param.helpText}</p>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">${param.helpText}</p>
             </c:if>
         </c:when>
         <c:otherwise>
-            <label for="${param.name}" class="block text-sm font-medium text-gray-700">${param.label}</label>
+            <label for="${param.name}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">${param.label}</label>
             <div class="mt-1">
                 <c:choose>
                     <c:when test="${param.type == 'textarea'}">
@@ -90,7 +90,7 @@ Textarea Input:
                 </c:choose>
             </div>
             <c:if test="${not empty param.helpText}">
-                <p class="mt-1 text-sm text-gray-500">${param.helpText}</p>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">${param.helpText}</p>
             </c:if>
         </c:otherwise>
     </c:choose>

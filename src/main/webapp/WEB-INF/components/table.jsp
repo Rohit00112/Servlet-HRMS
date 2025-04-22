@@ -31,9 +31,9 @@ Table Component:
 <div class="mt-6 flex flex-col">
     <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                <table class="min-w-full divide-y divide-gray-200" id="${param.tableId}">
-                    <thead class="bg-gray-50">
+            <div class="shadow overflow-hidden border-b border-gray-200 dark:border-gray-700 sm:rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700" id="${param.tableId}">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
                             <c:set var="columns" value="${param.columns}" />
                             <c:set var="columnWidths" value="${param.columnWidths}" />
@@ -46,18 +46,18 @@ Table Component:
                                         <c:set var="width" value="width: ${widths[status.index]};" />
                                     </c:if>
                                 </c:if>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="${width}">
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" style="${width}">
                                     ${column}
                                 </th>
                             </c:forEach>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         <c:set var="items" value="${requestScope[param.items]}" />
                         <c:choose>
                             <c:when test="${empty requestScope[param.items]}">
                                 <tr>
-                                    <td colspan="${columns.split(',').length}" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                                    <td colspan="${columns.split(',').length}" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-center">
                                         ${param.emptyMessage}
                                     </td>
                                 </tr>

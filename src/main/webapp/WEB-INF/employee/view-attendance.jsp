@@ -131,19 +131,23 @@
                         <div class="px-4 py-5 sm:p-6">
                             <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Filter by Date Range</h3>
                             <form action="${pageContext.request.contextPath}/employee/attendance/view" method="get" class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                                <div class="sm:col-span-3">
-                                    <label for="startDate" class="block text-sm font-medium text-gray-700">Start Date</label>
-                                    <div class="mt-1">
-                                        <input type="date" name="startDate" id="startDate" value="${startDate}" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                    </div>
-                                </div>
+                                <jsp:include page="/WEB-INF/components/enhanced-input.jsp">
+                                    <jsp:param name="id" value="startDate" />
+                                    <jsp:param name="name" value="startDate" />
+                                    <jsp:param name="type" value="date" />
+                                    <jsp:param name="label" value="Start Date" />
+                                    <jsp:param name="value" value="${startDate}" />
+                                    <jsp:param name="colSpan" value="3" />
+                                </jsp:include>
 
-                                <div class="sm:col-span-3">
-                                    <label for="endDate" class="block text-sm font-medium text-gray-700">End Date</label>
-                                    <div class="mt-1">
-                                        <input type="date" name="endDate" id="endDate" value="${endDate}" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                    </div>
-                                </div>
+                                <jsp:include page="/WEB-INF/components/enhanced-input.jsp">
+                                    <jsp:param name="id" value="endDate" />
+                                    <jsp:param name="name" value="endDate" />
+                                    <jsp:param name="type" value="date" />
+                                    <jsp:param name="label" value="End Date" />
+                                    <jsp:param name="value" value="${endDate}" />
+                                    <jsp:param name="colSpan" value="3" />
+                                </jsp:include>
 
                                 <div class="sm:col-span-6 flex justify-end">
                                     <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">

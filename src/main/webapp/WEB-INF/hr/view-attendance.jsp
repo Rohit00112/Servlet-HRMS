@@ -13,50 +13,50 @@
                             <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Filter Attendance Records</h3>
                             <form action="${pageContext.request.contextPath}/hr/attendance/view" method="get" class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                                 <!-- Employee Filter -->
-                                <div class="sm:col-span-2">
-                                    <label for="employeeId" class="block text-sm font-medium text-gray-700">Employee</label>
-                                    <div class="mt-1">
-                                        <select id="employeeId" name="employeeId" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                            <option value="">All Employees</option>
-                                            <c:forEach var="employee" items="${employees}">
-                                                <option value="${employee.id}" ${param.employeeId == employee.id ? 'selected' : ''}>
-                                                    ${employee.name}
-                                                </option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                </div>
+                                <c:set var="options" value="${employees}" scope="request" />
+                                <jsp:include page="/WEB-INF/components/enhanced-dropdown.jsp">
+                                    <jsp:param name="id" value="employeeId" />
+                                    <jsp:param name="name" value="employeeId" />
+                                    <jsp:param name="label" value="Employee" />
+                                    <jsp:param name="colSpan" value="2" />
+                                    <jsp:param name="placeholder" value="All Employees" />
+                                    <jsp:param name="selectedValue" value="${param.employeeId}" />
+                                    <jsp:param name="optionValue" value="id" />
+                                    <jsp:param name="optionText" value="name" />
+                                </jsp:include>
 
                                 <!-- Department Filter -->
-                                <div class="sm:col-span-2">
-                                    <label for="departmentId" class="block text-sm font-medium text-gray-700">Department</label>
-                                    <div class="mt-1">
-                                        <select id="departmentId" name="departmentId" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                            <option value="">All Departments</option>
-                                            <c:forEach var="department" items="${departments}">
-                                                <option value="${department.id}" ${param.departmentId == department.id ? 'selected' : ''}>
-                                                    ${department.name}
-                                                </option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                </div>
+                                <c:set var="options" value="${departments}" scope="request" />
+                                <jsp:include page="/WEB-INF/components/enhanced-dropdown.jsp">
+                                    <jsp:param name="id" value="departmentId" />
+                                    <jsp:param name="name" value="departmentId" />
+                                    <jsp:param name="label" value="Department" />
+                                    <jsp:param name="colSpan" value="2" />
+                                    <jsp:param name="placeholder" value="All Departments" />
+                                    <jsp:param name="selectedValue" value="${param.departmentId}" />
+                                    <jsp:param name="optionValue" value="id" />
+                                    <jsp:param name="optionText" value="name" />
+                                </jsp:include>
 
                                 <!-- Start Date Filter -->
-                                <div class="sm:col-span-1">
-                                    <label for="startDate" class="block text-sm font-medium text-gray-700">Start Date</label>
-                                    <div class="mt-1">
-                                        <input type="date" name="startDate" id="startDate" value="${startDate}" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                    </div>
-                                </div>
+                                <jsp:include page="/WEB-INF/components/enhanced-input.jsp">
+                                    <jsp:param name="id" value="startDate" />
+                                    <jsp:param name="name" value="startDate" />
+                                    <jsp:param name="type" value="date" />
+                                    <jsp:param name="label" value="Start Date" />
+                                    <jsp:param name="value" value="${startDate}" />
+                                    <jsp:param name="colSpan" value="1" />
+                                </jsp:include>
 
                                 <!-- End Date Filter -->
-                                <div class="sm:col-span-1">
-                                    <label for="endDate" class="block text-sm font-medium text-gray-700">End Date</label>
-                                    <div class="mt-1">
-                                        <input type="date" name="endDate" id="endDate" value="${endDate}" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                    </div>
-                                </div>
+                                <jsp:include page="/WEB-INF/components/enhanced-input.jsp">
+                                    <jsp:param name="id" value="endDate" />
+                                    <jsp:param name="name" value="endDate" />
+                                    <jsp:param name="type" value="date" />
+                                    <jsp:param name="label" value="End Date" />
+                                    <jsp:param name="value" value="${endDate}" />
+                                    <jsp:param name="colSpan" value="1" />
+                                </jsp:include>
 
                                 <!-- Apply Filter Button -->
                                 <div class="sm:col-span-6 flex justify-end">

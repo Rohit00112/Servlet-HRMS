@@ -92,8 +92,8 @@ public class DatabaseConnection {
                     "id SERIAL PRIMARY KEY, " +
                     "name VARCHAR(100) NOT NULL, " +
                     "email VARCHAR(100) UNIQUE NOT NULL, " +
-                    "department_id INTEGER REFERENCES departments(id), " +
-                    "designation_id INTEGER REFERENCES designations(id), " +
+                    "department_id INTEGER REFERENCES departments(id) ON DELETE SET NULL, " +
+                    "designation_id INTEGER REFERENCES designations(id) ON DELETE SET NULL, " +
                     "join_date DATE NOT NULL" +
                     ")";
             stmt.executeUpdate(createEmployeesTable);
@@ -101,13 +101,13 @@ public class DatabaseConnection {
             // Create leaves table if it doesn't exist
             String createLeavesTable = "CREATE TABLE IF NOT EXISTS leaves (" +
                     "id SERIAL PRIMARY KEY, " +
-                    "employee_id INTEGER REFERENCES employees(id), " +
+                    "employee_id INTEGER REFERENCES employees(id) ON DELETE CASCADE, " +
                     "start_date DATE NOT NULL, " +
                     "end_date DATE NOT NULL, " +
                     "reason TEXT NOT NULL, " +
                     "status VARCHAR(20) NOT NULL CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED')), " +
                     "applied_date DATE NOT NULL, " +
-                    "reviewed_by INTEGER REFERENCES users(id), " +
+                    "reviewed_by INTEGER REFERENCES users(id) ON DELETE SET NULL, " +
                     "reviewed_date DATE, " +
                     "comments TEXT" +
                     ")";
@@ -116,7 +116,7 @@ public class DatabaseConnection {
             // Create attendance table if it doesn't exist
             String createAttendanceTable = "CREATE TABLE IF NOT EXISTS attendance (" +
                     "id SERIAL PRIMARY KEY, " +
-                    "employee_id INTEGER REFERENCES employees(id), " +
+                    "employee_id INTEGER REFERENCES employees(id) ON DELETE CASCADE, " +
                     "date DATE NOT NULL, " +
                     "check_in_time TIME, " +
                     "check_out_time TIME, " +
@@ -129,7 +129,7 @@ public class DatabaseConnection {
             // Create payroll table if it doesn't exist
             String createPayrollTable = "CREATE TABLE IF NOT EXISTS payroll (" +
                     "id SERIAL PRIMARY KEY, " +
-                    "employee_id INTEGER REFERENCES employees(id), " +
+                    "employee_id INTEGER REFERENCES employees(id) ON DELETE CASCADE, " +
                     "month VARCHAR(7) NOT NULL, " + // Format: YYYY-MM
                     "base_salary DECIMAL(10, 2) NOT NULL, " +
                     "days_present INTEGER NOT NULL, " +
@@ -212,6 +212,24 @@ public class DatabaseConnection {
             // Update existing users to not require password change
             String updateExistingUsers = "UPDATE users SET password_change_required = FALSE WHERE password_change_required IS NULL";
             stmt.executeUpdate(updateExistingUsers);
+
+            // Execute the cascade delete update script
+
+            // Drop existing foreign key constraints
+            stmt.executeUpdate("ALTER TABLE IF EXISTS leaves DROP CONSTRAINT IF EXISTS leaves_employee_id_fkey");
+            stmt.executeUpdate("ALTER TABLE IF EXISTS leaves DROP CONSTRAINT IF EXISTS leaves_reviewed_by_fkey");
+            stmt.executeUpdate("ALTER TABLE IF EXISTS attendance DROP CONSTRAINT IF EXISTS attendance_employee_id_fkey");
+            stmt.executeUpdate("ALTER TABLE IF EXISTS payroll DROP CONSTRAINT IF EXISTS payroll_employee_id_fkey");
+            stmt.executeUpdate("ALTER TABLE IF EXISTS employees DROP CONSTRAINT IF EXISTS employees_department_id_fkey");
+            stmt.executeUpdate("ALTER TABLE IF EXISTS employees DROP CONSTRAINT IF EXISTS employees_designation_id_fkey");
+
+            // Re-add constraints with ON DELETE CASCADE or ON DELETE SET NULL as appropriate
+            stmt.executeUpdate("ALTER TABLE leaves ADD CONSTRAINT leaves_employee_id_fkey FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE");
+            stmt.executeUpdate("ALTER TABLE leaves ADD CONSTRAINT leaves_reviewed_by_fkey FOREIGN KEY (reviewed_by) REFERENCES users(id) ON DELETE SET NULL");
+            stmt.executeUpdate("ALTER TABLE attendance ADD CONSTRAINT attendance_employee_id_fkey FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE");
+            stmt.executeUpdate("ALTER TABLE payroll ADD CONSTRAINT payroll_employee_id_fkey FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE");
+            stmt.executeUpdate("ALTER TABLE employees ADD CONSTRAINT employees_department_id_fkey FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL");
+            stmt.executeUpdate("ALTER TABLE employees ADD CONSTRAINT employees_designation_id_fkey FOREIGN KEY (designation_id) REFERENCES designations(id) ON DELETE SET NULL");
 
             System.out.println("Database update scripts executed successfully");
         }

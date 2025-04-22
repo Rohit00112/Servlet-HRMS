@@ -5,21 +5,7 @@
 <c:set var="userRole" value="employee" scope="request" />
 
 <c:set var="mainContent">
-    <!-- Alert Message -->
-    <c:if test="${not empty successMessage}">
-        <jsp:include page="/WEB-INF/components/alert.jsp">
-            <jsp:param name="type" value="success" />
-            <jsp:param name="message" value="${successMessage}" />
-            <jsp:param name="dismissible" value="true" />
-        </jsp:include>
-    </c:if>
-    <c:if test="${not empty errorMessage}">
-        <jsp:include page="/WEB-INF/components/alert.jsp">
-            <jsp:param name="type" value="error" />
-            <jsp:param name="message" value="${errorMessage}" />
-            <jsp:param name="dismissible" value="true" />
-        </jsp:include>
-    </c:if>
+    <!-- Alerts are handled by layout.jsp -->
 
     <div class="flex items-center justify-between mb-6">
         <h1 class="text-2xl font-semibold text-gray-900">Settings</h1>

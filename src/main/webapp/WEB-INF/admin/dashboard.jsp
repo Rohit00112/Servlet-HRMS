@@ -139,7 +139,7 @@
                             <jsp:param name="iconBgColor" value="purple" />
                             <jsp:param name="title" value="Department Management" />
                             <jsp:param name="subtitle" value="Manage company departments and structure" />
-                            <jsp:param name="content" value="<div class='mt-4'><a href='#' class='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500'>Manage Departments</a></div>" />
+                            <jsp:param name="content" value="<div class='mt-4'><a href='${pageContext.request.contextPath}/admin/departments' class='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500'>Manage Departments</a></div>" />
                             <jsp:param name="blurIntensity" value="xl" />
                             <jsp:param name="bgOpacity" value="15" />
                         </jsp:include>

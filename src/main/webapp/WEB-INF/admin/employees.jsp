@@ -12,6 +12,14 @@
         </jsp:include>
     </div>
 
+    <!-- Messages -->
+    <jsp:include page="/WEB-INF/components/message.jsp">
+        <jsp:param name="successMessage" value="${successMessage}" />
+        <jsp:param name="errorMessage" value="${errorMessage}" />
+        <jsp:param name="infoMessage" value="${infoMessage}" />
+        <jsp:param name="warningMessage" value="${warningMessage}" />
+    </jsp:include>
+
     <!-- Search Form -->
     <jsp:include page="/WEB-INF/components/search-form.jsp">
         <jsp:param name="searchUrl" value="/admin/employees" />

@@ -100,9 +100,28 @@
     </script>
 </head>
 <body class="min-h-screen flex flex-col bg-fixed bg-white" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuXzAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDQ1KSI+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjUiIGhlaWdodD0iNSIgZmlsbD0icmdiYSgyMDAsMjE1LDI1MCwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm5fMCkiLz48L3N2Zz4='); background-size: cover; background-position: center; background-attachment: fixed;">
-    <div class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative">
+        <!-- Theme Toggle Button -->
+        <div class="absolute top-4 right-4">
+            <button id="themeToggleBtn" class="flex items-center justify-center w-8 h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="Toggle theme">
+                <!-- Sun icon (for dark mode) -->
+                <svg id="sunIcon" class="h-5 w-5 text-gray-500 dark:text-gray-300 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <!-- Moon icon (for light mode) -->
+                <svg id="moonIcon" class="h-5 w-5 text-gray-500 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+            </button>
+        </div>
         <div class="sm:mx-auto sm:w-full sm:max-w-md">
-            <img class="mx-auto h-16 w-auto" src="${pageContext.request.contextPath}/assets/img/logo.png" alt="HRMS Logo">
+            <div class="flex justify-center mb-6">
+                <div class="bg-primary-600 p-3 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
+            </div>
             <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
                 Change Your Password
             </h2>
@@ -171,5 +190,42 @@
             </div>
         </div>
     </div>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        // Check for saved theme preference or use system preference
+        const savedTheme = localStorage.getItem('theme');
+
+        // Function to set the theme
+        function setTheme(theme) {
+            if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('sunIcon').classList.remove('hidden');
+                document.getElementById('moonIcon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('sunIcon').classList.add('hidden');
+                document.getElementById('moonIcon').classList.remove('hidden');
+            }
+        }
+
+        // Set initial theme
+        setTheme(savedTheme || 'light');
+
+        // Toggle theme when button is clicked
+        document.getElementById('themeToggleBtn').addEventListener('click', function() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const newTheme = isDark ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            setTheme(newTheme);
+        });
+
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+            if (localStorage.getItem('theme') === 'system') {
+                setTheme('system');
+            }
+        });
+    </script>
 </body>
 </html>

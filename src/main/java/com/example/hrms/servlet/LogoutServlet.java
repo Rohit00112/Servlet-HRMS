@@ -5,6 +5,7 @@ import com.example.hrms.model.User;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,7 +45,29 @@ public class LogoutServlet extends HttpServlet {
             session.invalidate();
         }
 
+        // Clear remember me cookies
+        clearRememberMeCookies(response);
+
         // Redirect to login page
         response.sendRedirect("login");
+    }
+
+    /**
+     * Clear remember me cookies
+     *
+     * @param response The HTTP response
+     */
+    private void clearRememberMeCookies(HttpServletResponse response) {
+        Cookie usernameCookie = new Cookie("remember_username", "");
+        Cookie tokenCookie = new Cookie("remember_token", "");
+
+        usernameCookie.setMaxAge(0); // Expire immediately
+        tokenCookie.setMaxAge(0);     // Expire immediately
+
+        usernameCookie.setPath("/");
+        tokenCookie.setPath("/");
+
+        response.addCookie(usernameCookie);
+        response.addCookie(tokenCookie);
     }
 }

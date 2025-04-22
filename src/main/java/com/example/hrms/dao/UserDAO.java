@@ -112,4 +112,25 @@ public class UserDAO {
             return false;
         }
     }
+
+    public boolean updateUser(User user) {
+        String sql = "UPDATE users SET username = ?, password_hash = ?, role = ?, password_change_required = ? WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, user.getUsername());
+            pstmt.setString(2, user.getPasswordHash());
+            pstmt.setString(3, user.getRole());
+            pstmt.setBoolean(4, user.isPasswordChangeRequired());
+            pstmt.setInt(5, user.getId());
+
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

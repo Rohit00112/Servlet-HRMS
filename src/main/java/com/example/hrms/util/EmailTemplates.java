@@ -7,7 +7,7 @@ public class EmailTemplates {
 
     /**
      * Get the base HTML template with header and footer
-     * 
+     *
      * @param title The email title
      * @param content The email content
      * @return The complete HTML email template
@@ -66,7 +66,7 @@ public class EmailTemplates {
 
     /**
      * Get the leave status notification template
-     * 
+     *
      * @param employeeName Employee name
      * @param leaveId Leave ID
      * @param startDate Leave start date
@@ -78,10 +78,10 @@ public class EmailTemplates {
     public static String getLeaveStatusTemplate(String employeeName, int leaveId, String startDate, String endDate, String status, String comments) {
         String statusColor = status.equals("APPROVED") ? "#10b981" : "#ef4444";
         String statusBgColor = status.equals("APPROVED") ? "#d1fae5" : "#fee2e2";
-        String statusIcon = status.equals("APPROVED") 
-            ? "https://img.icons8.com/ios-filled/50/10b981/checkmark--v1.png" 
+        String statusIcon = status.equals("APPROVED")
+            ? "https://img.icons8.com/ios-filled/50/10b981/checkmark--v1.png"
             : "https://img.icons8.com/ios-filled/50/ef4444/multiply.png";
-        
+
         String content = "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
                 "    <tr>\n" +
                 "        <td>\n" +
@@ -131,14 +131,14 @@ public class EmailTemplates {
                 "                        <span style=\"display: inline-block; padding: 4px 8px; background-color: " + statusBgColor + "; color: " + statusColor + "; border-radius: 4px; font-size: 12px; font-weight: 600;\">" + status + "</span>\n" +
                 "                    </td>\n" +
                 "                </tr>\n";
-        
+
         if (comments != null && !comments.isEmpty()) {
             content += "                <tr>\n" +
                     "                    <td width=\"120\" style=\"color: #6b7280; font-size: 14px; vertical-align: top;\">Comments:</td>\n" +
                     "                    <td style=\"color: #1f2937; font-size: 14px;\">" + comments + "</td>\n" +
                     "                </tr>\n";
         }
-        
+
         content += "            </table>\n" +
                 "        </td>\n" +
                 "    </tr>\n" +
@@ -169,13 +169,13 @@ public class EmailTemplates {
                 "        </td>\n" +
                 "    </tr>\n" +
                 "</table>";
-        
+
         return getBaseTemplate("Leave Request " + status, content);
     }
 
     /**
      * Get the payslip notification template
-     * 
+     *
      * @param employeeName Employee name
      * @param month Payroll month
      * @param netSalary Net salary amount
@@ -264,13 +264,13 @@ public class EmailTemplates {
                 "        </td>\n" +
                 "    </tr>\n" +
                 "</table>";
-        
+
         return getBaseTemplate("Your Payslip for " + month + " is Ready", content);
     }
 
     /**
      * Get the account creation notification template
-     * 
+     *
      * @param employeeName Employee name
      * @param username Username
      * @param password Password
@@ -346,7 +346,82 @@ public class EmailTemplates {
                 "        </td>\n" +
                 "    </tr>\n" +
                 "</table>";
-        
+
         return getBaseTemplate("Welcome to HRMS - Your Account Details", content);
+    }
+
+    /**
+     * Get the password reset notification template
+     *
+     * @param employeeName Employee name
+     * @param username Username
+     * @param password New password
+     * @return The HTML email template for password reset notification
+     */
+    public static String getPasswordResetTemplate(String employeeName, String username, String password) {
+        String content = "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
+                "    <tr>\n" +
+                "        <td>\n" +
+                "            <h2 style=\"margin: 0 0 20px 0; color: #1f2937; font-weight: 600; font-size: 20px;\">Password Reset</h2>\n" +
+                "        </td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td>\n" +
+                "            <p style=\"margin: 0 0 20px 0; color: #4b5563; line-height: 1.5;\">Dear <span style=\"font-weight: 600;\">" + employeeName + "</span>,</p>\n" +
+                "            <p style=\"margin: 0 0 20px 0; color: #4b5563; line-height: 1.5;\">Your password has been reset as requested. Below are your new login credentials:</p>\n" +
+                "        </td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td style=\"padding: 20px; background-color: #f3f4f6; border-radius: 8px; margin-bottom: 20px;\">\n" +
+                "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse: separate; border-spacing: 0 8px;\">\n" +
+                "                <tr>\n" +
+                "                    <td width=\"120\" style=\"color: #6b7280; font-size: 14px;\">Username:</td>\n" +
+                "                    <td style=\"color: #1f2937; font-weight: 600; font-size: 14px;\">" + username + "</td>\n" +
+                "                </tr>\n" +
+                "                <tr>\n" +
+                "                    <td width=\"120\" style=\"color: #6b7280; font-size: 14px;\">New Password:</td>\n" +
+                "                    <td style=\"color: #1f2937; font-weight: 600; font-size: 14px;\">" + password + "</td>\n" +
+                "                </tr>\n" +
+                "            </table>\n" +
+                "        </td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td style=\"padding: 20px 0;\">\n" +
+                "            <div style=\"padding: 15px; border-left: 4px solid #fbbf24; background-color: #fffbeb;\">\n" +
+                "                <p style=\"margin: 0; color: #92400e; font-size: 14px;\">\n" +
+                "                    <strong>Important:</strong> For security reasons, you will be required to change your password when you log in with this temporary password.\n" +
+                "                </p>\n" +
+                "            </div>\n" +
+                "        </td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td style=\"padding-top: 10px;\">\n" +
+                "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
+                "                <tr>\n" +
+                "                    <td>\n" +
+                "                        <a href=\"#\" style=\"display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: #ffffff; text-decoration: none; font-weight: 600; border-radius: 6px; font-size: 14px; text-align: center;\">Login to HRMS</a>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "            </table>\n" +
+                "        </td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td style=\"padding-top: 30px;\">\n" +
+                "            <p style=\"margin: 0; color: #4b5563; line-height: 1.5;\">\n" +
+                "                If you did not request a password reset, please contact the HR department immediately.\n" +
+                "            </p>\n" +
+                "        </td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td style=\"padding-top: 20px;\">\n" +
+                "            <p style=\"margin: 0; color: #4b5563; line-height: 1.5;\">\n" +
+                "                Thank you,<br>\n" +
+                "                <span style=\"font-weight: 600;\">HR Department</span>\n" +
+                "            </p>\n" +
+                "        </td>\n" +
+                "    </tr>\n" +
+                "</table>";
+
+        return getBaseTemplate("Password Reset - HRMS", content);
     }
 }

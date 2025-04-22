@@ -171,4 +171,23 @@ public class EmailService {
 
         return sendEmail(to, subject, content, true);
     }
+
+    /**
+     * Send a password reset notification email
+     *
+     * @param to           Recipient email address
+     * @param employeeName Employee name
+     * @param username     Username
+     * @param password     New password
+     * @return true if email was sent successfully, false otherwise
+     */
+    public static boolean sendPasswordResetNotification(String to, String employeeName, String username,
+                                                      String password) {
+        String subject = "Password Reset - HRMS";
+
+        // Get the HTML template
+        String content = EmailTemplates.getPasswordResetTemplate(employeeName, username, password);
+
+        return sendEmail(to, subject, content, true);
+    }
 }

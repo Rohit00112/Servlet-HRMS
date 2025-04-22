@@ -3,7 +3,7 @@
 
 <c:set var="mainContentHtml">
     <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-semibold text-gray-900">Employee Management</h1>
+        <div></div> <!-- Empty div to maintain flex spacing -->
         <jsp:include page="/WEB-INF/components/button.jsp">
             <jsp:param name="type" value="primary" />
             <jsp:param name="text" value="Add Employee" />
@@ -11,14 +11,6 @@
             <jsp:param name="url" value="/admin/employees/add" />
         </jsp:include>
     </div>
-
-    <!-- Messages -->
-    <jsp:include page="/WEB-INF/components/message.jsp">
-        <jsp:param name="successMessage" value="${successMessage}" />
-        <jsp:param name="errorMessage" value="${errorMessage}" />
-        <jsp:param name="infoMessage" value="${infoMessage}" />
-        <jsp:param name="warningMessage" value="${warningMessage}" />
-    </jsp:include>
 
     <!-- Search Form -->
     <jsp:include page="/WEB-INF/components/search-form.jsp">

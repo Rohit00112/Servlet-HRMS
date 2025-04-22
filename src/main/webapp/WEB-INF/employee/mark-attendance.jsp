@@ -25,92 +25,8 @@
                             <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                             </svg>
-                            View Attendance
+                            View Attendance History
                         </a>
-                    </div>
-
-                    <!-- Success/Error Messages -->
-                    <c:if test="${not empty successMessage}">
-                        <div class="mt-4 bg-green-50 border-l-4 border-green-400 p-4">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm text-green-700">${successMessage}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </c:if>
-                    <c:if test="${not empty errorMessage}">
-                        <div class="mt-4 bg-red-50 border-l-4 border-red-400 p-4">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm text-red-700">${errorMessage}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </c:if>
-
-                    <!-- Attendance Rules -->
-                    <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-lg">
-                        <div class="px-4 py-5 sm:px-6 bg-blue-50">
-                            <h3 class="text-lg leading-6 font-medium text-blue-900">Attendance Rules</h3>
-                            <p class="mt-1 max-w-2xl text-sm text-blue-700">
-                                Please review the company attendance policy
-                            </p>
-                        </div>
-                        <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
-                            <div class="space-y-4 text-sm text-gray-600">
-                                <div class="flex items-start">
-                                    <div class="flex-shrink-0 mt-0.5">
-                                        <svg class="h-4 w-4 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </div>
-                                    <p class="ml-2">Working hours are from <span class="font-medium">9:00 AM to 5:00 PM</span>, Monday through Friday.</p>
-                                </div>
-                                <div class="flex items-start">
-                                    <div class="flex-shrink-0 mt-0.5">
-                                        <svg class="h-4 w-4 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </div>
-                                    <p class="ml-2">Check-in after <span class="font-medium">9:15 AM</span> will be marked as <span class="font-medium text-yellow-600">LATE</span>.</p>
-                                </div>
-                                <div class="flex items-start">
-                                    <div class="flex-shrink-0 mt-0.5">
-                                        <svg class="h-4 w-4 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </div>
-                                    <p class="ml-2">Working less than <span class="font-medium">6 hours</span> will be considered as <span class="font-medium text-orange-600">HALF DAY</span>.</p>
-                                </div>
-                                <div class="flex items-start">
-                                    <div class="flex-shrink-0 mt-0.5">
-                                        <svg class="h-4 w-4 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </div>
-                                    <p class="ml-2">Failure to check-in or check-out will result in <span class="font-medium text-red-600">ABSENT</span> status.</p>
-                                </div>
-                                <div class="flex items-start">
-                                    <div class="flex-shrink-0 mt-0.5">
-                                        <svg class="h-4 w-4 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </div>
-                                    <p class="ml-2">If you're working remotely, please mention it in the notes section.</p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Attendance Card -->
@@ -138,25 +54,42 @@
                                     <form action="${pageContext.request.contextPath}/employee/attendance/mark" method="post">
                                         <input type="hidden" name="action" value="check-in">
                                         <div class="space-y-6">
-                                            <div>
-                                                <label for="workType" class="block text-sm font-medium text-gray-700">Work Type</label>
-                                                <div class="mt-1">
-                                                    <select id="workType" name="workType" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                            <div class="sm:col-span-6">
+                                                <label for="workType" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Work Type</label>
+                                                <div class="relative">
+                                                    <select
+                                                        id="workType"
+                                                        name="workType"
+                                                        class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 transition-all duration-200 ease-in-out hover:border-primary-300 dark:hover:border-primary-700 appearance-none bg-white dark:bg-gray-700 pr-10 cursor-pointer"
+                                                    >
                                                         <option value="OFFICE">Office</option>
                                                         <option value="REMOTE">Remote</option>
                                                         <option value="HYBRID">Hybrid</option>
                                                         <option value="FIELD">Field Work</option>
                                                     </select>
+                                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 dark:text-gray-400">
+                                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                        </svg>
+                                                    </div>
                                                 </div>
-                                                <p class="mt-2 text-sm text-gray-500">Select your work location for today.</p>
+                                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Select your work location for today.</p>
                                             </div>
-                                            <div>
-                                                <label for="notes" class="block text-sm font-medium text-gray-700">Notes (Optional)</label>
-                                                <div class="mt-1">
-                                                    <textarea id="notes" name="notes" rows="3" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
+                                            
+                                            <div class="sm:col-span-6">
+                                                <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notes (Optional)</label>
+                                                <div class="relative">
+                                                    <textarea 
+                                                        id="notes" 
+                                                        name="notes" 
+                                                        rows="4" 
+                                                        class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 transition-all duration-200 ease-in-out hover:border-primary-300 dark:hover:border-primary-700 resize-none"
+                                                        placeholder="Enter any notes or comments about your work today..."
+                                                    ></textarea>
                                                 </div>
-                                                <p class="mt-2 text-sm text-gray-500">Brief note about your work for today.</p>
+                                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Brief note about your work for today.</p>
                                             </div>
+                                            
                                             <div>
                                                 <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
                                                     <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -186,29 +119,49 @@
                                     <form action="${pageContext.request.contextPath}/employee/attendance/mark" method="post">
                                         <input type="hidden" name="action" value="check-out">
                                         <div class="space-y-6">
-                                            <div>
-                                                <label for="workSummary" class="block text-sm font-medium text-gray-700">Work Summary</label>
-                                                <div class="mt-1">
-                                                    <textarea id="workSummary" name="workSummary" rows="3" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Summarize your work for today"></textarea>
+                                            <div class="sm:col-span-6">
+                                                <label for="workSummary" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Work Summary</label>
+                                                <div class="relative">
+                                                    <textarea
+                                                        id="workSummary"
+                                                        name="workSummary"
+                                                        rows="4"
+                                                        class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 transition-all duration-200 ease-in-out hover:border-primary-300 dark:hover:border-primary-700 resize-none"
+                                                        placeholder="Summarize your work for today"
+                                                    ></textarea>
                                                 </div>
-                                                <p class="mt-2 text-sm text-gray-500">Provide a summary of tasks completed today.</p>
+                                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Provide a summary of tasks completed today.</p>
                                             </div>
 
-                                            <div>
-                                                <label for="tasksCompleted" class="block text-sm font-medium text-gray-700">Tasks Completed</label>
-                                                <div class="mt-1">
-                                                    <input type="number" name="tasksCompleted" id="tasksCompleted" min="0" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Number of tasks completed">
+                                            <div class="sm:col-span-6">
+                                                <label for="tasksCompleted" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tasks Completed</label>
+                                                <div class="relative">
+                                                    <input
+                                                        type="number"
+                                                        name="tasksCompleted"
+                                                        id="tasksCompleted"
+                                                        min="0"
+                                                        class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 transition-all duration-200 ease-in-out hover:border-primary-300 dark:hover:border-primary-700"
+                                                        placeholder="Number of tasks completed"
+                                                    >
                                                 </div>
-                                                <p class="mt-2 text-sm text-gray-500">Enter the number of tasks you completed today.</p>
+                                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Enter the number of tasks you completed today.</p>
                                             </div>
 
-                                            <div>
-                                                <label for="notes" class="block text-sm font-medium text-gray-700">Notes (Optional)</label>
-                                                <div class="mt-1">
-                                                    <textarea id="notes" name="notes" rows="3" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">${todayAttendance.notes}</textarea>
+                                            <div class="sm:col-span-6">
+                                                <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notes (Optional)</label>
+                                                <div class="relative">
+                                                    <textarea 
+                                                        id="notes" 
+                                                        name="notes" 
+                                                        rows="4" 
+                                                        class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 transition-all duration-200 ease-in-out hover:border-primary-300 dark:hover:border-primary-700 resize-none"
+                                                        placeholder="Enter any notes or comments about your work today..."
+                                                    >${todayAttendance.notes}</textarea>
                                                 </div>
-                                                <p class="mt-2 text-sm text-gray-500">Additional notes or comments about your work day.</p>
+                                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Additional notes or comments about your work day.</p>
                                             </div>
+                                            
                                             <div>
                                                 <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                                                     <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

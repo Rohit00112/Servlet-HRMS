@@ -1,7 +1,10 @@
 package com.example.hrms.servlet;
 
+import com.example.hrms.dao.EmployeeDAO;
 import com.example.hrms.dao.UserDAO;
+import com.example.hrms.model.Employee;
 import com.example.hrms.model.User;
+import com.example.hrms.util.EmailService;
 import com.example.hrms.util.PasswordUtil;
 
 import jakarta.servlet.ServletException;
@@ -18,10 +21,12 @@ import java.io.IOException;
 @WebServlet(name = "firstLoginPasswordChangeServlet", value = "/first-login-password-change")
 public class FirstLoginPasswordChangeServlet extends HttpServlet {
     private UserDAO userDAO;
+    private EmployeeDAO employeeDAO;
 
     @Override
     public void init() {
         userDAO = new UserDAO();
+        employeeDAO = new EmployeeDAO();
     }
 
     @Override
@@ -84,10 +89,28 @@ public class FirstLoginPasswordChangeServlet extends HttpServlet {
         if (success) {
             // Update the user in the session
             session.setAttribute("user", user);
-            
+
             // Set success message
             session.setAttribute("successMessage", "Password changed successfully");
-            
+
+            // Send confirmation email
+            try {
+                // Get employee details
+                Employee employee = employeeDAO.getEmployeeByUserId(user.getId());
+                if (employee != null && employee.getEmail() != null && !employee.getEmail().isEmpty()) {
+                    // Send email confirmation
+                    EmailService.sendPasswordChangeConfirmation(
+                        employee.getEmail(),
+                        employee.getName(),
+                        user.getUsername()
+                    );
+                }
+            } catch (Exception e) {
+                // Log the error but continue with the flow
+                System.err.println("Error sending password change confirmation email: " + e.getMessage());
+                e.printStackTrace();
+            }
+
             // Redirect to dashboard
             redirectToDashboard(response, user.getRole());
         } else {

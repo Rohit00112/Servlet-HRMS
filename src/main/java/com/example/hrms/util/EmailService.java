@@ -190,4 +190,25 @@ public class EmailService {
 
         return sendEmail(to, subject, content, true);
     }
+
+    /**
+     * Send a password change confirmation email
+     *
+     * @param to           Recipient email address
+     * @param employeeName Employee name
+     * @param username     Username
+     * @return true if email was sent successfully, false otherwise
+     */
+    public static boolean sendPasswordChangeConfirmation(String to, String employeeName, String username) {
+        String subject = "Password Changed Successfully - HRMS";
+
+        // Format current timestamp
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMM dd, yyyy hh:mm a");
+        String timestamp = sdf.format(new java.util.Date());
+
+        // Get the HTML template
+        String content = EmailTemplates.getPasswordChangeConfirmationTemplate(employeeName, username, timestamp);
+
+        return sendEmail(to, subject, content, true);
+    }
 }

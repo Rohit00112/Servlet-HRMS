@@ -424,4 +424,93 @@ public class EmailTemplates {
 
         return getBaseTemplate("Password Reset - HRMS", content);
     }
+
+    /**
+     * Get the password change confirmation template
+     *
+     * @param employeeName Employee name
+     * @param username Username
+     * @param timestamp Timestamp of the password change
+     * @return The HTML email template for password change confirmation
+     */
+    public static String getPasswordChangeConfirmationTemplate(String employeeName, String username, String timestamp) {
+        String content = "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
+                "    <tr>\n" +
+                "        <td>\n" +
+                "            <h2 style=\"margin: 0 0 20px 0; color: #1f2937; font-weight: 600; font-size: 20px;\">Password Changed Successfully</h2>\n" +
+                "        </td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td>\n" +
+                "            <p style=\"margin: 0 0 20px 0; color: #4b5563; line-height: 1.5;\">Dear <span style=\"font-weight: 600;\">" + employeeName + "</span>,</p>\n" +
+                "            <p style=\"margin: 0 0 20px 0; color: #4b5563; line-height: 1.5;\">Your password has been successfully changed. Here's a confirmation of this action:</p>\n" +
+                "        </td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td style=\"padding: 20px; background-color: #d1fae5; border-radius: 8px; margin-bottom: 20px;\">\n" +
+                "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
+                "                <tr>\n" +
+                "                    <td width=\"60\" valign=\"top\">\n" +
+                "                        <img src=\"https://img.icons8.com/ios-filled/50/10b981/checkmark--v1.png\" alt=\"Success\" width=\"40\" height=\"40\" style=\"display: block;\">\n" +
+                "                    </td>\n" +
+                "                    <td valign=\"middle\">\n" +
+                "                        <p style=\"margin: 0; color: #10b981; font-weight: 600; font-size: 16px;\">\n" +
+                "                            Your password has been changed successfully\n" +
+                "                        </p>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "            </table>\n" +
+                "        </td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td style=\"padding: 20px 0;\">\n" +
+                "            <h3 style=\"margin: 0 0 15px 0; color: #1f2937; font-weight: 600; font-size: 16px;\">Action Details</h3>\n" +
+                "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse: separate; border-spacing: 0 8px;\">\n" +
+                "                <tr>\n" +
+                "                    <td width=\"120\" style=\"color: #6b7280; font-size: 14px;\">Username:</td>\n" +
+                "                    <td style=\"color: #1f2937; font-weight: 500; font-size: 14px;\">" + username + "</td>\n" +
+                "                </tr>\n" +
+                "                <tr>\n" +
+                "                    <td width=\"120\" style=\"color: #6b7280; font-size: 14px;\">Date & Time:</td>\n" +
+                "                    <td style=\"color: #1f2937; font-weight: 500; font-size: 14px;\">" + timestamp + "</td>\n" +
+                "                </tr>\n" +
+                "                <tr>\n" +
+                "                    <td width=\"120\" style=\"color: #6b7280; font-size: 14px;\">Action:</td>\n" +
+                "                    <td>\n" +
+                "                        <span style=\"display: inline-block; padding: 4px 8px; background-color: #d1fae5; color: #10b981; border-radius: 4px; font-size: 12px; font-weight: 600;\">Password Change</span>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "            </table>\n" +
+                "        </td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td style=\"padding: 20px; background-color: #f3f4f6; border-radius: 8px; margin-top: 20px;\">\n" +
+                "            <p style=\"margin: 0; color: #4b5563; font-size: 14px;\">\n" +
+                "                If you did not change your password, please contact the HR department immediately.\n" +
+                "            </p>\n" +
+                "        </td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td style=\"padding-top: 30px;\">\n" +
+                "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
+                "                <tr>\n" +
+                "                    <td>\n" +
+                "                        <a href=\"#\" style=\"display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: #ffffff; text-decoration: none; font-weight: 600; border-radius: 6px; font-size: 14px; text-align: center;\">Login to HRMS</a>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "            </table>\n" +
+                "        </td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td style=\"padding-top: 30px;\">\n" +
+                "            <p style=\"margin: 0; color: #4b5563; line-height: 1.5;\">\n" +
+                "                Thank you,<br>\n" +
+                "                <span style=\"font-weight: 600;\">HR Department</span>\n" +
+                "            </p>\n" +
+                "        </td>\n" +
+                "    </tr>\n" +
+                "</table>";
+
+        return getBaseTemplate("Password Changed Successfully - HRMS", content);
+    }
 }

@@ -63,11 +63,11 @@ public class ForgotPasswordServlet extends HttpServlet {
 
         // Generate a new random password
         String newPassword = PasswordUtil.generateRandomPassword(10);
-        
+
         // Update user password and set password change required flag
         user.setPasswordHash(PasswordUtil.hashPassword(newPassword));
         user.setPasswordChangeRequired(true);
-        
+
         boolean updated = userDAO.updateUser(user);
         if (!updated) {
             request.setAttribute("error", "Failed to reset password. Please try again later.");
@@ -83,9 +83,13 @@ public class ForgotPasswordServlet extends HttpServlet {
                 user.getUsername(),
                 newPassword
             );
-            
-            request.setAttribute("success", "Password reset successful! Check your email for the new password.");
-            request.getRequestDispatcher("/WEB-INF/forgot-password.jsp").forward(request, response);
+
+            // Set success message as a session attribute so it persists through the redirect
+            request.getSession().setAttribute("message", "Password reset successful! Check your email for the new password.");
+            request.getSession().setAttribute("messageType", "success");
+
+            // Redirect to login page
+            response.sendRedirect(request.getContextPath() + "/login");
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Failed to send password reset email. Please try again later.");

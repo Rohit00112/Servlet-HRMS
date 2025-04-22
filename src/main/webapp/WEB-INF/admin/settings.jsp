@@ -20,17 +20,17 @@
                     <div class='mt-4'>
                         <form action='${pageContext.request.contextPath}/settings' method='post' class='space-y-6'>
                             <div class='space-y-4'>
-                                <div>
-                                    <label for='theme' class='block text-sm font-medium text-gray-700 dark:text-gray-300'>Theme Mode</label>
-                                    <div class='mt-1'>
-                                        <select id='theme' name='theme' class='shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md'>
-                                            <option value='light' ${settings.theme == 'light' ? 'selected' : ''}>Light Mode</option>
-                                            <option value='dark' ${settings.theme == 'dark' ? 'selected' : ''}>Dark Mode</option>
-                                            <option value='system' ${settings.theme == 'system' ? 'selected' : ''}>System Default</option>
-                                        </select>
-                                    </div>
-                                    <p class='mt-2 text-sm text-gray-500 dark:text-gray-400'>Choose the theme mode for the application.</p>
-                                </div>
+                                <jsp:include page='/WEB-INF/components/form-field.jsp'>
+                                    <jsp:param name='type' value='select' />
+                                    <jsp:param name='name' value='theme' />
+                                    <jsp:param name='label' value='Theme Mode' />
+                                    <jsp:param name='helpText' value='Choose the theme mode for the application.' />
+                                    <jsp:param name='colSpan' value='6' />
+                                    <jsp:param name='options' value='themeOptions' />
+                                    <jsp:param name='optionValue' value='value' />
+                                    <jsp:param name='optionText' value='text' />
+                                    <jsp:param name='selectedValue' value='${settings.theme}' />
+                                </jsp:include>
                             </div>
 
                             <div class='flex justify-end'>
@@ -54,42 +54,47 @@
                     <div class='mt-4'>
                         <form action='${pageContext.request.contextPath}/settings' method='post' class='space-y-6'>
                             <div class='grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6'>
-                                <div class='sm:col-span-6'>
-                                    <div class='flex items-center'>
-                                        <input id='emailEnabled' name='emailEnabled' type='checkbox' ${settings.emailEnabled == 'true' ? 'checked' : ''} class='h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded'>
-                                        <label for='emailEnabled' class='ml-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>Enable Email Notifications</label>
-                                    </div>
-                                    <p class='mt-2 text-sm text-gray-500 dark:text-gray-400'>When enabled, the system will send email notifications for various events.</p>
-                                </div>
+                                <jsp:include page='/WEB-INF/components/form-field.jsp'>
+                                    <jsp:param name='type' value='checkbox' />
+                                    <jsp:param name='name' value='emailEnabled' />
+                                    <jsp:param name='label' value='Enable Email Notifications' />
+                                    <jsp:param name='checked' value='${settings.emailEnabled == "true"}' />
+                                    <jsp:param name='helpText' value='When enabled, the system will send email notifications for various events.' />
+                                    <jsp:param name='colSpan' value='6' />
+                                </jsp:include>
 
-                                <div class='sm:col-span-3'>
-                                    <label for='emailHost' class='block text-sm font-medium text-gray-700 dark:text-gray-300'>SMTP Host</label>
-                                    <div class='mt-1'>
-                                        <input type='text' name='emailHost' id='emailHost' value='${settings.emailHost}' class='shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md'>
-                                    </div>
-                                </div>
+                                <jsp:include page='/WEB-INF/components/form-field.jsp'>
+                                    <jsp:param name='type' value='text' />
+                                    <jsp:param name='name' value='emailHost' />
+                                    <jsp:param name='label' value='SMTP Host' />
+                                    <jsp:param name='value' value='${settings.emailHost}' />
+                                    <jsp:param name='colSpan' value='3' />
+                                </jsp:include>
 
-                                <div class='sm:col-span-3'>
-                                    <label for='emailPort' class='block text-sm font-medium text-gray-700 dark:text-gray-300'>SMTP Port</label>
-                                    <div class='mt-1'>
-                                        <input type='text' name='emailPort' id='emailPort' value='${settings.emailPort}' class='shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md'>
-                                    </div>
-                                </div>
+                                <jsp:include page='/WEB-INF/components/form-field.jsp'>
+                                    <jsp:param name='type' value='text' />
+                                    <jsp:param name='name' value='emailPort' />
+                                    <jsp:param name='label' value='SMTP Port' />
+                                    <jsp:param name='value' value='${settings.emailPort}' />
+                                    <jsp:param name='colSpan' value='3' />
+                                </jsp:include>
 
-                                <div class='sm:col-span-3'>
-                                    <label for='emailUsername' class='block text-sm font-medium text-gray-700 dark:text-gray-300'>Email Username</label>
-                                    <div class='mt-1'>
-                                        <input type='text' name='emailUsername' id='emailUsername' value='${settings.emailUsername}' class='shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md'>
-                                    </div>
-                                </div>
+                                <jsp:include page='/WEB-INF/components/form-field.jsp'>
+                                    <jsp:param name='type' value='text' />
+                                    <jsp:param name='name' value='emailUsername' />
+                                    <jsp:param name='label' value='Email Username' />
+                                    <jsp:param name='value' value='${settings.emailUsername}' />
+                                    <jsp:param name='colSpan' value='3' />
+                                </jsp:include>
 
-                                <div class='sm:col-span-3'>
-                                    <label for='emailPassword' class='block text-sm font-medium text-gray-700 dark:text-gray-300'>Email Password</label>
-                                    <div class='mt-1'>
-                                        <input type='password' name='emailPassword' id='emailPassword' placeholder='••••••••' class='shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md'>
-                                    </div>
-                                    <p class='mt-2 text-xs text-gray-500 dark:text-gray-400'>Leave blank to keep current password</p>
-                                </div>
+                                <jsp:include page='/WEB-INF/components/form-field.jsp'>
+                                    <jsp:param name='type' value='password' />
+                                    <jsp:param name='name' value='emailPassword' />
+                                    <jsp:param name='label' value='Email Password' />
+                                    <jsp:param name='placeholder' value='••••••••' />
+                                    <jsp:param name='helpText' value='Leave blank to keep current password' />
+                                    <jsp:param name='colSpan' value='3' />
+                                </jsp:include>
                             </div>
 
                             <div class='flex justify-end'>

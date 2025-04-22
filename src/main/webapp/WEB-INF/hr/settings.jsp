@@ -19,17 +19,17 @@
                 <jsp:param name="content" value="
                     <div class='mt-4'>
                         <div class='space-y-4'>
-                            <div>
-                                <label for='theme' class='block text-sm font-medium text-gray-700'>Theme Mode</label>
-                                <div class='mt-1'>
-                                    <select id='theme' name='theme' class='shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md'>
-                                        <option value='light' ${settings.theme == 'light' ? 'selected' : ''}>Light Mode</option>
-                                        <option value='dark' ${settings.theme == 'dark' ? 'selected' : ''}>Dark Mode</option>
-                                        <option value='system' ${settings.theme == 'system' ? 'selected' : ''}>System Default</option>
-                                    </select>
-                                </div>
-                                <p class='mt-2 text-sm text-gray-500'>Choose the theme mode for the application.</p>
-                            </div>
+                            <jsp:include page='/WEB-INF/components/form-field.jsp'>
+                                <jsp:param name='type' value='select' />
+                                <jsp:param name='name' value='theme' />
+                                <jsp:param name='label' value='Theme Mode' />
+                                <jsp:param name='helpText' value='Choose the theme mode for the application.' />
+                                <jsp:param name='colSpan' value='6' />
+                                <jsp:param name='options' value='themeOptions' />
+                                <jsp:param name='optionValue' value='value' />
+                                <jsp:param name='optionText' value='text' />
+                                <jsp:param name='selectedValue' value='${settings.theme}' />
+                            </jsp:include>
 
                             <div class='flex justify-end'>
                                 <button type='button' id='saveTheme' class='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'>
@@ -51,17 +51,23 @@
                 <jsp:param name="content" value="
                     <div class='mt-4'>
                         <div class='space-y-4'>
-                            <div class='flex items-center'>
-                                <input id='emailNotifications' name='emailNotifications' type='checkbox' checked class='h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded'>
-                                <label for='emailNotifications' class='ml-2 block text-sm font-medium text-gray-700'>Email Notifications</label>
-                            </div>
-                            <p class='text-sm text-gray-500'>Receive email notifications for leave requests, approvals, and other important updates.</p>
+                            <jsp:include page='/WEB-INF/components/form-field.jsp'>
+                                <jsp:param name='type' value='checkbox' />
+                                <jsp:param name='name' value='emailNotifications' />
+                                <jsp:param name='label' value='Email Notifications' />
+                                <jsp:param name='checked' value='true' />
+                                <jsp:param name='helpText' value='Receive email notifications for leave requests, approvals, and other important updates.' />
+                                <jsp:param name='colSpan' value='6' />
+                            </jsp:include>
 
-                            <div class='flex items-center'>
-                                <input id='browserNotifications' name='browserNotifications' type='checkbox' checked class='h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded'>
-                                <label for='browserNotifications' class='ml-2 block text-sm font-medium text-gray-700'>Browser Notifications</label>
-                            </div>
-                            <p class='text-sm text-gray-500'>Receive browser notifications when you're using the application.</p>
+                            <jsp:include page='/WEB-INF/components/form-field.jsp'>
+                                <jsp:param name='type' value='checkbox' />
+                                <jsp:param name='name' value='browserNotifications' />
+                                <jsp:param name='label' value='Browser Notifications' />
+                                <jsp:param name='checked' value='true' />
+                                <jsp:param name='helpText' value="Receive browser notifications when you're using the application." />
+                                <jsp:param name='colSpan' value='6' />
+                            </jsp:include>
 
                             <div class='flex justify-end'>
                                 <button type='button' id='saveNotifications' class='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'>

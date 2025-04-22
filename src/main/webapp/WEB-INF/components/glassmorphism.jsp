@@ -101,30 +101,30 @@ Glassmorphism Component Usage:
 <%-- Map icon background color --%>
 <c:choose>
     <c:when test="${cardIconBgColor eq 'primary'}">
-        <c:set var="iconBgClass" value="bg-primary-100 text-primary-600" />
+        <c:set var="iconBgClass" value="bg-primary-100 text-primary-600 dark:bg-primary-900/50 dark:text-primary-300" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'blue'}">
-        <c:set var="iconBgClass" value="bg-blue-100 text-blue-600" />
+        <c:set var="iconBgClass" value="bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'green'}">
-        <c:set var="iconBgClass" value="bg-green-100 text-green-600" />
+        <c:set var="iconBgClass" value="bg-green-100 text-green-600 dark:bg-green-900/50 dark:text-green-300" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'red'}">
-        <c:set var="iconBgClass" value="bg-red-100 text-red-600" />
+        <c:set var="iconBgClass" value="bg-red-100 text-red-600 dark:bg-red-900/50 dark:text-red-300" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'yellow'}">
-        <c:set var="iconBgClass" value="bg-yellow-100 text-yellow-600" />
+        <c:set var="iconBgClass" value="bg-yellow-100 text-yellow-600 dark:bg-yellow-900/50 dark:text-yellow-300" />
     </c:when>
     <c:when test="${cardIconBgColor eq 'purple'}">
-        <c:set var="iconBgClass" value="bg-purple-100 text-purple-600" />
+        <c:set var="iconBgClass" value="bg-purple-100 text-purple-600 dark:bg-purple-900/50 dark:text-purple-300" />
     </c:when>
     <c:otherwise>
-        <c:set var="iconBgClass" value="bg-gray-100 text-gray-600" />
+        <c:set var="iconBgClass" value="bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300" />
     </c:otherwise>
 </c:choose>
 
 <%-- Glassmorphism card --%>
-<div class="backdrop-blur-${blurIntensity} bg-gradient-to-br from-blue-50/80 to-indigo-50/80 border border-blue-100/50 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:from-blue-50/90 hover:to-indigo-50/90">
+<div class="backdrop-blur-${blurIntensity} bg-gradient-to-br from-blue-50/80 to-indigo-50/80 dark:from-gray-800/80 dark:to-gray-900/80 border border-blue-100/50 dark:border-gray-700/50 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:from-blue-50/90 hover:to-indigo-50/90 dark:hover:from-gray-800/90 dark:hover:to-gray-900/90">
     <c:if test="${not empty cardIcon or not empty cardTitle or not empty cardSubtitle}">
         <div class="flex items-center mb-4">
             <c:if test="${not empty cardIcon}">
@@ -135,10 +135,10 @@ Glassmorphism Component Usage:
             <c:if test="${not empty cardTitle or not empty cardSubtitle}">
                 <div class="ml-4">
                     <c:if test="${not empty cardTitle}">
-                        <h3 class="text-lg font-medium text-gray-900">${cardTitle}</h3>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white">${cardTitle}</h3>
                     </c:if>
                     <c:if test="${not empty cardSubtitle}">
-                        <p class="text-sm text-gray-500">${cardSubtitle}</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">${cardSubtitle}</p>
                     </c:if>
                 </div>
             </c:if>
@@ -152,7 +152,7 @@ Glassmorphism Component Usage:
     </c:if>
 
     <c:if test="${not empty cardFooterContent}">
-        <div class="mt-4 pt-4 border-t border-gray-200">
+        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
             ${cardFooterContent}
         </div>
     </c:if>

@@ -154,8 +154,44 @@
     </div>
 </c:set>
 
+<c:set var="additionalScripts">
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add event listener to theme select
+        const themeSelect = document.getElementById('theme');
+        if (themeSelect) {
+            themeSelect.addEventListener('change', function() {
+                const theme = this.value;
+                localStorage.setItem('theme', theme);
+                applyTheme(theme);
+            });
+
+            // Set initial value from localStorage
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                themeSelect.value = savedTheme;
+            }
+        }
+    });
+
+    function applyTheme(theme) {
+        const htmlElement = document.documentElement;
+        if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+            document.querySelectorAll('.theme-toggle #sunIcon').forEach(icon => icon.classList.remove('hidden'));
+            document.querySelectorAll('.theme-toggle #moonIcon').forEach(icon => icon.classList.add('hidden'));
+        } else {
+            htmlElement.classList.remove('dark');
+            document.querySelectorAll('.theme-toggle #sunIcon').forEach(icon => icon.classList.add('hidden'));
+            document.querySelectorAll('.theme-toggle #moonIcon').forEach(icon => icon.classList.remove('hidden'));
+        }
+    }
+</script>
+</c:set>
+
 <jsp:include page="/WEB-INF/components/layout.jsp">
     <jsp:param name="pageTitle" value="${pageTitle}" />
     <jsp:param name="userRole" value="${userRole}" />
     <jsp:param name="mainContent" value="${mainContent}" />
+    <jsp:param name="additionalScripts" value="${additionalScripts}" />
 </jsp:include>

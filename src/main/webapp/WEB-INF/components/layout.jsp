@@ -81,6 +81,30 @@ Layout Component Usage:
         .dark .bg-gray-100 {
             background-color: #1f2937;
         }
+        /* Form elements in dark mode */
+        .dark input, .dark select, .dark textarea {
+            background-color: #374151;
+            border-color: #4b5563;
+            color: #f9fafb;
+        }
+        .dark input:disabled, .dark select:disabled, .dark textarea:disabled {
+            background-color: #1f2937;
+            color: #9ca3af;
+        }
+        /* Buttons in dark mode */
+        .dark .bg-primary-600 {
+            background-color: #0284c7;
+        }
+        .dark .bg-primary-600:hover {
+            background-color: #0369a1;
+        }
+        /* Glassmorphism in dark mode */
+        .dark .backdrop-blur-md.bg-blue-50\/80 {
+            background-color: rgba(30, 41, 59, 0.8);
+        }
+        .dark .backdrop-blur-md.bg-blue-50\/70 {
+            background-color: rgba(30, 41, 59, 0.7);
+        }
     </style>
     <c:if test="${not empty param.additionalHead}">
         ${param.additionalHead}
@@ -102,10 +126,10 @@ Layout Component Usage:
                     <!-- Page Title and Back Button -->
                     <c:if test="${not empty param.pageTitle}">
                         <div class="flex items-center justify-between">
-                            <h1 class="text-2xl font-semibold text-gray-700 backdrop-blur-md bg-blue-50/80 inline-block px-4 py-2 rounded-lg shadow-sm border border-blue-100/50">${param.pageTitle}</h1>
+                            <h1 class="text-2xl font-semibold text-gray-700 dark:text-white backdrop-blur-md bg-blue-50/80 dark:bg-gray-800/80 inline-block px-4 py-2 rounded-lg shadow-sm border border-blue-100/50 dark:border-gray-700/50">${param.pageTitle}</h1>
                             <c:if test="${not empty param.backUrl}">
-                                <a href="${pageContext.request.contextPath}${param.backUrl}" class="inline-flex items-center px-4 py-2 border border-blue-100/50 text-sm font-medium rounded-md shadow-sm text-gray-700 backdrop-blur-md bg-blue-50/70 hover:bg-blue-50/90 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                                    <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <a href="${pageContext.request.contextPath}${param.backUrl}" class="inline-flex items-center px-4 py-2 border border-blue-100/50 dark:border-gray-700/50 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-200 backdrop-blur-md bg-blue-50/70 dark:bg-gray-800/70 hover:bg-blue-50/90 dark:hover:bg-gray-800/90 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                    <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                                     </svg>
                                     ${param.backLabel}

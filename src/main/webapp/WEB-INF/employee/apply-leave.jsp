@@ -8,9 +8,8 @@
 <c:set var="backLabel" value="Back to Leave Status" scope="request" />
 
 <c:set var="mainContent">
-                    <div class="flex items-center justify-between">
-                        <h1 class="text-2xl font-semibold text-gray-900">Apply for Leave</h1>
-                        <a href="${pageContext.request.contextPath}/employee/leave/status" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                    <div class="flex justify-end">
+                        <a href="${pageContext.request.contextPath}/employee/leave/status" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
                             <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                             </svg>
@@ -41,51 +40,63 @@
                         <form action="${pageContext.request.contextPath}/employee/leave/apply" method="post" class="p-6" id="leaveForm">
                             <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                                 <!-- Employee Info (Read-only) -->
-                                <div class="sm:col-span-3">
-                                    <label class="block text-sm font-medium text-gray-700">Employee Name</label>
-                                    <div class="mt-1">
-                                        <input type="text" value="${employee.name}" readonly class="bg-gray-100 shadow-sm block w-full sm:text-sm border-gray-300 rounded-md">
-                                    </div>
-                                </div>
+                                <jsp:include page="/WEB-INF/components/enhanced-input.jsp">
+                                    <jsp:param name="id" value="employeeName" />
+                                    <jsp:param name="name" value="employeeName" />
+                                    <jsp:param name="type" value="text" />
+                                    <jsp:param name="label" value="Employee Name" />
+                                    <jsp:param name="value" value="${employee.name}" />
+                                    <jsp:param name="readonly" value="true" />
+                                    <jsp:param name="colSpan" value="3" />
+                                </jsp:include>
 
-                                <div class="sm:col-span-3">
-                                    <label class="block text-sm font-medium text-gray-700">Email</label>
-                                    <div class="mt-1">
-                                        <input type="text" value="${employee.email}" readonly class="bg-gray-100 shadow-sm block w-full sm:text-sm border-gray-300 rounded-md">
-                                    </div>
-                                </div>
+                                <jsp:include page="/WEB-INF/components/enhanced-input.jsp">
+                                    <jsp:param name="id" value="employeeEmail" />
+                                    <jsp:param name="name" value="employeeEmail" />
+                                    <jsp:param name="type" value="email" />
+                                    <jsp:param name="label" value="Email" />
+                                    <jsp:param name="value" value="${employee.email}" />
+                                    <jsp:param name="readonly" value="true" />
+                                    <jsp:param name="colSpan" value="3" />
+                                </jsp:include>
 
                                 <!-- Start Date Field -->
-                                <div class="sm:col-span-3">
-                                    <label for="startDate" class="block text-sm font-medium text-gray-700">Start Date</label>
-                                    <div class="mt-1">
-                                        <input type="date" name="startDate" id="startDate" required class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                    </div>
-                                </div>
+                                <jsp:include page="/WEB-INF/components/enhanced-input.jsp">
+                                    <jsp:param name="id" value="startDate" />
+                                    <jsp:param name="name" value="startDate" />
+                                    <jsp:param name="type" value="date" />
+                                    <jsp:param name="label" value="Start Date" />
+                                    <jsp:param name="required" value="true" />
+                                    <jsp:param name="colSpan" value="3" />
+                                </jsp:include>
 
                                 <!-- End Date Field -->
-                                <div class="sm:col-span-3">
-                                    <label for="endDate" class="block text-sm font-medium text-gray-700">End Date</label>
-                                    <div class="mt-1">
-                                        <input type="date" name="endDate" id="endDate" required class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                    </div>
-                                </div>
+                                <jsp:include page="/WEB-INF/components/enhanced-input.jsp">
+                                    <jsp:param name="id" value="endDate" />
+                                    <jsp:param name="name" value="endDate" />
+                                    <jsp:param name="type" value="date" />
+                                    <jsp:param name="label" value="End Date" />
+                                    <jsp:param name="required" value="true" />
+                                    <jsp:param name="colSpan" value="3" />
+                                </jsp:include>
 
                                 <!-- Reason Field -->
-                                <div class="sm:col-span-6">
-                                    <label for="reason" class="block text-sm font-medium text-gray-700">Reason for Leave</label>
-                                    <div class="mt-1">
-                                        <textarea id="reason" name="reason" rows="4" required class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
-                                    </div>
-                                    <p class="mt-2 text-sm text-gray-500">Brief explanation for your leave request.</p>
-                                </div>
+                                <jsp:include page="/WEB-INF/components/enhanced-input.jsp">
+                                    <jsp:param name="id" value="reason" />
+                                    <jsp:param name="name" value="reason" />
+                                    <jsp:param name="type" value="textarea" />
+                                    <jsp:param name="label" value="Reason for Leave" />
+                                    <jsp:param name="required" value="true" />
+                                    <jsp:param name="colSpan" value="6" />
+                                    <jsp:param name="helpText" value="Brief explanation for your leave request." />
+                                </jsp:include>
                             </div>
 
                             <div class="mt-6 flex justify-end">
-                                <a href="${pageContext.request.contextPath}/employee/dashboard" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 mr-3">
+                                <a href="${pageContext.request.contextPath}/employee/dashboard" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 mr-3">
                                     Cancel
                                 </a>
-                                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
                                     Submit Leave Request
                                 </button>
                             </div>

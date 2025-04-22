@@ -1,6 +1,7 @@
 package com.example.hrms.servlet;
 
 import com.example.hrms.dao.UserDAO;
+import com.example.hrms.dao.UserActivityDAO;
 import com.example.hrms.model.User;
 
 import jakarta.servlet.ServletException;
@@ -14,10 +15,12 @@ import java.io.IOException;
 @WebServlet(name = "loginServlet", value = "/login")
 public class LoginServlet extends HttpServlet {
     private UserDAO userDAO;
+    private UserActivityDAO userActivityDAO;
 
     @Override
     public void init() {
         userDAO = new UserDAO();
+        userActivityDAO = new UserActivityDAO();
     }
 
     @Override
@@ -56,6 +59,18 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("user", user);
             session.setAttribute("username", user.getUsername());
             session.setAttribute("role", user.getRole());
+
+            // Log the login activity
+            userActivityDAO.logActivity(
+                user.getId(),
+                user.getUsername(),
+                user.getRole(),
+                "LOGIN",
+                user.getUsername() + " logged in",
+                "USER",
+                user.getId(),
+                request.getRemoteAddr()
+            );
 
             // Check if password change is required
             if (user.isPasswordChangeRequired()) {

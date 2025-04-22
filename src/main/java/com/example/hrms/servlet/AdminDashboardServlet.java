@@ -1,13 +1,16 @@
 package com.example.hrms.servlet;
 
+import com.example.hrms.dao.AttendanceDAO;
 import com.example.hrms.dao.EmployeeDAO;
 import com.example.hrms.dao.LeaveDAO;
+import com.example.hrms.dao.UserActivityDAO;
+import com.example.hrms.model.UserActivity;
 import com.example.hrms.service.PayrollService;
-import com.example.hrms.dao.AttendanceDAO;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -22,6 +25,7 @@ public class AdminDashboardServlet extends HttpServlet {
     private LeaveDAO leaveDAO;
     private PayrollService payrollService;
     private AttendanceDAO attendanceDAO;
+    private UserActivityDAO userActivityDAO;
 
     @Override
     public void init() {
@@ -29,6 +33,7 @@ public class AdminDashboardServlet extends HttpServlet {
         leaveDAO = new LeaveDAO();
         payrollService = new PayrollService();
         attendanceDAO = new AttendanceDAO();
+        userActivityDAO = new UserActivityDAO();
     }
 
     @Override
@@ -68,6 +73,10 @@ public class AdminDashboardServlet extends HttpServlet {
 
             int paidPayrollCount = payrollService.getPayrollCountByStatus("PAID", currentMonth);
             request.setAttribute("paidPayrollCount", paidPayrollCount);
+
+            // Get recent activities for admin dashboard
+            List<UserActivity> recentActivities = userActivityDAO.getRecentActivities(10);
+            request.setAttribute("recentActivities", recentActivities);
 
         } catch (SQLException e) {
             e.printStackTrace();

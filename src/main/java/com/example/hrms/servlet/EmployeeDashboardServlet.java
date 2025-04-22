@@ -4,9 +4,13 @@ import com.example.hrms.dao.AttendanceDAO;
 import com.example.hrms.dao.EmployeeDAO;
 import com.example.hrms.dao.LeaveDAO;
 import com.example.hrms.dao.NotificationDAO;
+import com.example.hrms.dao.UserActivityDAO;
 import com.example.hrms.model.Employee;
 import com.example.hrms.model.User;
+import com.example.hrms.model.UserActivity;
 import com.example.hrms.service.PayrollService;
+
+import java.util.List;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,6 +27,7 @@ public class EmployeeDashboardServlet extends HttpServlet {
     private AttendanceDAO attendanceDAO;
     private NotificationDAO notificationDAO;
     private PayrollService payrollService;
+    private UserActivityDAO userActivityDAO;
 
     @Override
     public void init() {
@@ -31,6 +36,7 @@ public class EmployeeDashboardServlet extends HttpServlet {
         attendanceDAO = new AttendanceDAO();
         notificationDAO = new NotificationDAO();
         payrollService = new PayrollService();
+        userActivityDAO = new UserActivityDAO();
     }
 
     @Override
@@ -122,6 +128,10 @@ public class EmployeeDashboardServlet extends HttpServlet {
                 // Get unread notification count
                 int unreadNotificationCount = notificationDAO.getUnreadNotificationCount(employee.getId());
                 request.setAttribute("unreadNotificationCount", unreadNotificationCount);
+
+                // Get recent activities for this user
+                List<UserActivity> recentActivities = userActivityDAO.getRecentActivitiesByUserId(user.getId(), 5);
+                request.setAttribute("recentActivities", recentActivities);
 
                 // Update the employee with the user ID for future reference
                 employee.setUserId(user.getId());

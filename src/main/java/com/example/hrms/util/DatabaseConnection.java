@@ -162,6 +162,26 @@ public class DatabaseConnection {
             stmt.executeUpdate("CREATE INDEX IF NOT EXISTS idx_notifications_employee_id ON notifications(employee_id)");
             stmt.executeUpdate("CREATE INDEX IF NOT EXISTS idx_notifications_is_read ON notifications(is_read)");
 
+            // Create user_activities table if it doesn't exist
+            String createUserActivitiesTable = "CREATE TABLE IF NOT EXISTS user_activities (" +
+                    "id SERIAL PRIMARY KEY, " +
+                    "user_id INTEGER REFERENCES users(id) ON DELETE CASCADE, " +
+                    "username VARCHAR(50) NOT NULL, " +
+                    "user_role VARCHAR(20) NOT NULL, " +
+                    "activity_type VARCHAR(50) NOT NULL, " + // LOGIN, LOGOUT, CREATE, UPDATE, DELETE, etc.
+                    "description TEXT NOT NULL, " +
+                    "entity_type VARCHAR(50), " + // EMPLOYEE, LEAVE, ATTENDANCE, PAYROLL, etc.
+                    "entity_id INTEGER, " + // ID of the related entity (if applicable)
+                    "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+                    "ip_address VARCHAR(50)" +
+                    ")";
+            stmt.executeUpdate(createUserActivitiesTable);
+
+            // Create indexes for user_activities table
+            stmt.executeUpdate("CREATE INDEX IF NOT EXISTS idx_user_activities_user_id ON user_activities(user_id)");
+            stmt.executeUpdate("CREATE INDEX IF NOT EXISTS idx_user_activities_timestamp ON user_activities(timestamp)");
+            stmt.executeUpdate("CREATE INDEX IF NOT EXISTS idx_user_activities_entity ON user_activities(entity_type, entity_id)");
+
             // Check if admin user exists, if not create default admin
             String checkAdmin = "SELECT COUNT(*) FROM users WHERE role = 'ADMIN'";
             ResultSet rs = stmt.executeQuery(checkAdmin);
@@ -254,6 +274,109 @@ public class DatabaseConnection {
                     System.out.println("Sample notifications created");
                 }
             }
+
+            // Add some sample user activities if none exist
+            String checkUserActivities = "SELECT COUNT(*) FROM user_activities";
+            rs = stmt.executeQuery(checkUserActivities);
+            rs.next();
+            int userActivityCount = rs.getInt(1);
+
+            if (userActivityCount == 0) {
+                // Get admin user ID
+                String getAdminUser = "SELECT id FROM users WHERE role = 'ADMIN' LIMIT 1";
+                rs = stmt.executeQuery(getAdminUser);
+
+                if (rs.next()) {
+                    int adminId = rs.getInt("id");
+
+                    // Insert sample admin activities
+                    String insertAdminActivity1 = "INSERT INTO user_activities (user_id, username, user_role, activity_type, description, entity_type, entity_id, timestamp, ip_address) " +
+                                                "VALUES (?, 'admin', 'ADMIN', 'LOGIN', 'admin logged in', 'USER', ?, NOW() - INTERVAL '1 hour', '127.0.0.1')";
+
+                    String insertAdminActivity2 = "INSERT INTO user_activities (user_id, username, user_role, activity_type, description, entity_type, entity_id, timestamp, ip_address) " +
+                                                "VALUES (?, 'admin', 'ADMIN', 'CREATE', 'Created a new department: IT', 'DEPARTMENT', 1, NOW() - INTERVAL '55 minutes', '127.0.0.1')";
+
+                    String insertAdminActivity3 = "INSERT INTO user_activities (user_id, username, user_role, activity_type, description, entity_type, entity_id, timestamp, ip_address) " +
+                                                "VALUES (?, 'admin', 'ADMIN', 'CREATE', 'Added a new employee: John Doe', 'EMPLOYEE', 1, NOW() - INTERVAL '45 minutes', '127.0.0.1')";
+
+                    PreparedStatement pstmtAdmin1 = conn.prepareStatement(insertAdminActivity1);
+                    pstmtAdmin1.setInt(1, adminId);
+                    pstmtAdmin1.setInt(2, adminId);
+                    pstmtAdmin1.executeUpdate();
+
+                    PreparedStatement pstmtAdmin2 = conn.prepareStatement(insertAdminActivity2);
+                    pstmtAdmin2.setInt(1, adminId);
+                    pstmtAdmin2.executeUpdate();
+
+                    PreparedStatement pstmtAdmin3 = conn.prepareStatement(insertAdminActivity3);
+                    pstmtAdmin3.setInt(1, adminId);
+                    pstmtAdmin3.executeUpdate();
+                }
+
+                // Get HR user ID
+                String getHrUser = "SELECT id FROM users WHERE role = 'HR' LIMIT 1";
+                rs = stmt.executeQuery(getHrUser);
+
+                if (rs.next()) {
+                    int hrId = rs.getInt("id");
+
+                    // Insert sample HR activities
+                    String insertHrActivity1 = "INSERT INTO user_activities (user_id, username, user_role, activity_type, description, entity_type, entity_id, timestamp, ip_address) " +
+                                             "VALUES (?, 'hr', 'HR', 'LOGIN', 'hr logged in', 'USER', ?, NOW() - INTERVAL '2 hours', '127.0.0.1')";
+
+                    String insertHrActivity2 = "INSERT INTO user_activities (user_id, username, user_role, activity_type, description, entity_type, entity_id, timestamp, ip_address) " +
+                                             "VALUES (?, 'hr', 'HR', 'VIEW', 'Viewed employee list', 'EMPLOYEE', NULL, NOW() - INTERVAL '1 hour 55 minutes', '127.0.0.1')";
+
+                    String insertHrActivity3 = "INSERT INTO user_activities (user_id, username, user_role, activity_type, description, entity_type, entity_id, timestamp, ip_address) " +
+                                             "VALUES (?, 'hr', 'HR', 'APPROVE', 'Approved leave request for: John Doe', 'LEAVE', 1, NOW() - INTERVAL '1 hour 35 minutes', '127.0.0.1')";
+
+                    PreparedStatement pstmtHr1 = conn.prepareStatement(insertHrActivity1);
+                    pstmtHr1.setInt(1, hrId);
+                    pstmtHr1.setInt(2, hrId);
+                    pstmtHr1.executeUpdate();
+
+                    PreparedStatement pstmtHr2 = conn.prepareStatement(insertHrActivity2);
+                    pstmtHr2.setInt(1, hrId);
+                    pstmtHr2.executeUpdate();
+
+                    PreparedStatement pstmtHr3 = conn.prepareStatement(insertHrActivity3);
+                    pstmtHr3.setInt(1, hrId);
+                    pstmtHr3.executeUpdate();
+                }
+
+                // Get employee user ID
+                String getEmployeeUser = "SELECT id FROM users WHERE role = 'EMPLOYEE' LIMIT 1";
+                rs = stmt.executeQuery(getEmployeeUser);
+
+                if (rs.next()) {
+                    int employeeId = rs.getInt("id");
+
+                    // Insert sample employee activities
+                    String insertEmployeeActivity1 = "INSERT INTO user_activities (user_id, username, user_role, activity_type, description, entity_type, entity_id, timestamp, ip_address) " +
+                                                   "VALUES (?, 'employee', 'EMPLOYEE', 'LOGIN', 'employee logged in', 'USER', ?, NOW() - INTERVAL '3 hours', '127.0.0.1')";
+
+                    String insertEmployeeActivity2 = "INSERT INTO user_activities (user_id, username, user_role, activity_type, description, entity_type, entity_id, timestamp, ip_address) " +
+                                                   "VALUES (?, 'employee', 'EMPLOYEE', 'MARK_ATTENDANCE', 'Marked attendance for today', 'ATTENDANCE', 1, NOW() - INTERVAL '2 hours 55 minutes', '127.0.0.1')";
+
+                    String insertEmployeeActivity3 = "INSERT INTO user_activities (user_id, username, user_role, activity_type, description, entity_type, entity_id, timestamp, ip_address) " +
+                                                   "VALUES (?, 'employee', 'EMPLOYEE', 'APPLY_LEAVE', 'Applied for leave from 2023-05-01 to 2023-05-03', 'LEAVE', 1, NOW() - INTERVAL '2 hours 45 minutes', '127.0.0.1')";
+
+                    PreparedStatement pstmtEmployee1 = conn.prepareStatement(insertEmployeeActivity1);
+                    pstmtEmployee1.setInt(1, employeeId);
+                    pstmtEmployee1.setInt(2, employeeId);
+                    pstmtEmployee1.executeUpdate();
+
+                    PreparedStatement pstmtEmployee2 = conn.prepareStatement(insertEmployeeActivity2);
+                    pstmtEmployee2.setInt(1, employeeId);
+                    pstmtEmployee2.executeUpdate();
+
+                    PreparedStatement pstmtEmployee3 = conn.prepareStatement(insertEmployeeActivity3);
+                    pstmtEmployee3.setInt(1, employeeId);
+                    pstmtEmployee3.executeUpdate();
+                }
+
+                System.out.println("Sample user activities created");
+            }
         }
     }
 
@@ -277,6 +400,7 @@ public class DatabaseConnection {
             stmt.executeUpdate("ALTER TABLE IF EXISTS attendance DROP CONSTRAINT IF EXISTS attendance_employee_id_fkey");
             stmt.executeUpdate("ALTER TABLE IF EXISTS payroll DROP CONSTRAINT IF EXISTS payroll_employee_id_fkey");
             stmt.executeUpdate("ALTER TABLE IF EXISTS notifications DROP CONSTRAINT IF EXISTS notifications_employee_id_fkey");
+            stmt.executeUpdate("ALTER TABLE IF EXISTS user_activities DROP CONSTRAINT IF EXISTS user_activities_user_id_fkey");
             stmt.executeUpdate("ALTER TABLE IF EXISTS employees DROP CONSTRAINT IF EXISTS employees_department_id_fkey");
             stmt.executeUpdate("ALTER TABLE IF EXISTS employees DROP CONSTRAINT IF EXISTS employees_designation_id_fkey");
 
@@ -286,6 +410,7 @@ public class DatabaseConnection {
             stmt.executeUpdate("ALTER TABLE attendance ADD CONSTRAINT attendance_employee_id_fkey FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE");
             stmt.executeUpdate("ALTER TABLE payroll ADD CONSTRAINT payroll_employee_id_fkey FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE");
             stmt.executeUpdate("ALTER TABLE notifications ADD CONSTRAINT notifications_employee_id_fkey FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE");
+            stmt.executeUpdate("ALTER TABLE user_activities ADD CONSTRAINT user_activities_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE");
             stmt.executeUpdate("ALTER TABLE employees ADD CONSTRAINT employees_department_id_fkey FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL");
             stmt.executeUpdate("ALTER TABLE employees ADD CONSTRAINT employees_designation_id_fkey FOREIGN KEY (designation_id) REFERENCES designations(id) ON DELETE SET NULL");
 

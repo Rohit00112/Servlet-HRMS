@@ -57,8 +57,14 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("username", user.getUsername());
             session.setAttribute("role", user.getRole());
 
-            // Redirect to appropriate dashboard based on role
-            redirectToDashboard(response, user.getRole());
+            // Check if password change is required
+            if (user.isPasswordChangeRequired()) {
+                // Redirect to password change page
+                response.sendRedirect(request.getContextPath() + "/first-login-password-change");
+            } else {
+                // Redirect to appropriate dashboard based on role
+                redirectToDashboard(response, user.getRole());
+            }
         } else {
             request.setAttribute("error", "Invalid username or password");
             request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);

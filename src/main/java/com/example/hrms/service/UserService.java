@@ -52,6 +52,7 @@ public class UserService {
         user.setUsername(username);
         user.setPasswordHash(PasswordUtil.hashPassword(password));
         user.setRole(role);
+        user.setPasswordChangeRequired(true); // Require password change on first login
 
         // Save the user
         boolean success = userDAO.createUser(user);

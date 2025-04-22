@@ -26,6 +26,7 @@ public class UserDAO {
                 user.setUsername(rs.getString("username"));
                 user.setPasswordHash(rs.getString("password_hash"));
                 user.setRole(rs.getString("role"));
+                user.setPasswordChangeRequired(rs.getBoolean("password_change_required"));
             }
 
         } catch (SQLException e) {
@@ -36,7 +37,7 @@ public class UserDAO {
     }
 
     public boolean createUser(User user) {
-        String sql = "INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO users (username, password_hash, role, password_change_required) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -44,6 +45,7 @@ public class UserDAO {
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getPasswordHash());
             pstmt.setString(3, user.getRole());
+            pstmt.setBoolean(4, user.isPasswordChangeRequired());
 
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
@@ -83,6 +85,7 @@ public class UserDAO {
                 user.setUsername(rs.getString("username"));
                 user.setPasswordHash(rs.getString("password_hash"));
                 user.setRole(rs.getString("role"));
+                user.setPasswordChangeRequired(rs.getBoolean("password_change_required"));
             }
 
         } catch (SQLException e) {
@@ -93,7 +96,7 @@ public class UserDAO {
     }
 
     public boolean updateUserPassword(int userId, String newPasswordHash) {
-        String sql = "UPDATE users SET password_hash = ? WHERE id = ?";
+        String sql = "UPDATE users SET password_hash = ?, password_change_required = false WHERE id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

@@ -30,6 +30,7 @@ public class DatabaseConnection {
             // Initialize database
             createDatabaseIfNotExists();
             createTablesIfNotExist();
+            executeUpdateScripts();
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -197,6 +198,22 @@ public class DatabaseConnection {
                 }
                 System.out.println("Default designations created");
             }
+        }
+    }
+
+    private static void executeUpdateScripts() throws SQLException {
+        try (Connection conn = getConnection()) {
+            Statement stmt = conn.createStatement();
+
+            // Execute the password change required update script
+            String addPasswordChangeRequiredColumn = "ALTER TABLE users ADD COLUMN IF NOT EXISTS password_change_required BOOLEAN DEFAULT FALSE";
+            stmt.executeUpdate(addPasswordChangeRequiredColumn);
+
+            // Update existing users to not require password change
+            String updateExistingUsers = "UPDATE users SET password_change_required = FALSE WHERE password_change_required IS NULL";
+            stmt.executeUpdate(updateExistingUsers);
+
+            System.out.println("Database update scripts executed successfully");
         }
     }
 }

@@ -98,6 +98,29 @@ Textarea Input:
                                         <option value="${option[param.optionValue]}" ${option[param.optionValue] eq param.selectedValue ? 'selected' : ''}>${option[param.optionText]}</option>
                                     </c:forEach>
                                 </c:if>
+                                <!-- Handle JSON string options -->
+                                <c:if test="${param.options != null && param.options.startsWith('[') && param.options.endsWith(']')}">
+                                    <script>
+                                        try {
+                                            const optionsJson = ${param.options};
+                                            const selectElement = document.getElementById('${param.name}');
+
+                                            if (selectElement && optionsJson && optionsJson.length > 0) {
+                                                optionsJson.forEach(option => {
+                                                    const optionElement = document.createElement('option');
+                                                    optionElement.value = option.value;
+                                                    optionElement.textContent = option.text;
+                                                    if (option.value === '${param.selectedValue}') {
+                                                        optionElement.selected = true;
+                                                    }
+                                                    selectElement.appendChild(optionElement);
+                                                });
+                                            }
+                                        } catch (error) {
+                                            console.error('Error parsing options JSON:', error);
+                                        }
+                                    </script>
+                                </c:if>
                                 <!-- Fallback options if the list is empty -->
                                 <c:if test="${empty requestScope[param.options] && param.name == 'theme'}">
                                     <option value="light" ${param.selectedValue eq 'light' ? 'selected' : ''}>Light Mode</option>

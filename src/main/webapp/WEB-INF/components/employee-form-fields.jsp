@@ -94,13 +94,24 @@
 
     <!-- User Role Field -->
     <div class="sm:col-span-3" id="roleFieldContainer" style="display: none;">
-        <jsp:include page="/WEB-INF/components/form-field.jsp">
-            <jsp:param name="type" value="select" />
-            <jsp:param name="name" value="role" />
-            <jsp:param name="label" value="User Role" />
-            <jsp:param name="colSpan" value="3" />
-            <jsp:param name="options" value="[{\"value\":\"EMPLOYEE\",\"text\":\"Employee\"},{\"value\":\"HR\",\"text\":\"HR Manager\"}]" />
-        </jsp:include>
+        <label for="role" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">User Role <span class="text-red-500">*</span></label>
+        <div class="relative">
+            <select
+                id="role"
+                name="role"
+                class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 transition-all duration-200 ease-in-out hover:border-primary-300 dark:hover:border-primary-700 appearance-none bg-white dark:bg-gray-700 pr-10 cursor-pointer"
+            >
+                <option value="">Select User Role</option>
+                <option value="EMPLOYEE">Employee</option>
+                <option value="HR">HR Manager</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 dark:text-gray-400">
+                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+            </div>
+        </div>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Select the role for this user account</p>
     </div>
 </c:if>
 

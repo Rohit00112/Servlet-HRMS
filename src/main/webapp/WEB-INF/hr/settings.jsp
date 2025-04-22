@@ -65,7 +65,7 @@
                                 <jsp:param name='name' value='browserNotifications' />
                                 <jsp:param name='label' value='Browser Notifications' />
                                 <jsp:param name='checked' value='true' />
-                                <jsp:param name='helpText' value="Receive browser notifications when you're using the application." />
+                                <jsp:param name='helpText' value='Receive browser notifications when you are using the application.' />
                                 <jsp:param name='colSpan' value='6' />
                             </jsp:include>
 

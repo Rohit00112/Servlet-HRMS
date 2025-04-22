@@ -58,7 +58,7 @@
                                     <jsp:param name='type' value='checkbox' />
                                     <jsp:param name='name' value='emailEnabled' />
                                     <jsp:param name='label' value='Enable Email Notifications' />
-                                    <jsp:param name='checked' value='${settings.emailEnabled == "true"}' />
+                                    <jsp:param name='checked' value='${settings.emailEnabled eq "true"}' />
                                     <jsp:param name='helpText' value='When enabled, the system will send email notifications for various events.' />
                                     <jsp:param name='colSpan' value='6' />
                                 </jsp:include>

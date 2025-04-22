@@ -125,7 +125,7 @@ Layout Component Usage:
                 <div class="w-full">
                     <!-- Page Title and Back Button -->
                     <c:if test="${not empty param.pageTitle}">
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between mb-8">
                             <h1 class="text-2xl font-semibold text-gray-700 dark:text-white backdrop-blur-md bg-blue-50/80 dark:bg-gray-800/80 inline-block px-4 py-2 rounded-lg shadow-sm border border-blue-100/50 dark:border-gray-700/50">${param.pageTitle}</h1>
                             <c:if test="${not empty param.backUrl}">
                                 <a href="${pageContext.request.contextPath}${param.backUrl}" class="inline-flex items-center px-4 py-2 border border-blue-100/50 dark:border-gray-700/50 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-200 backdrop-blur-md bg-blue-50/70 dark:bg-gray-800/70 hover:bg-blue-50/90 dark:hover:bg-gray-800/90 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">

@@ -124,7 +124,7 @@ Glassmorphism Component Usage:
 </c:choose>
 
 <%-- Glassmorphism card --%>
-<div class="backdrop-blur-${blurIntensity} bg-gradient-to-br from-blue-50/80 to-indigo-50/80 dark:from-gray-800/80 dark:to-gray-900/80 border border-blue-100/50 dark:border-gray-700/50 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:from-blue-50/90 hover:to-indigo-50/90 dark:hover:from-gray-800/90 dark:hover:to-gray-900/90">
+<div class="backdrop-blur-${blurIntensity} bg-gradient-to-br from-blue-50/80 to-indigo-50/80 dark:from-gray-800/80 dark:to-gray-900/80 border border-blue-100/50 dark:border-gray-700/50 rounded-xl shadow-lg p-7 hover:shadow-xl transition-all duration-300 hover:from-blue-50/90 hover:to-indigo-50/90 dark:hover:from-gray-800/90 dark:hover:to-gray-900/90">
     <c:if test="${not empty cardIcon or not empty cardTitle or not empty cardSubtitle}">
         <div class="flex items-center mb-4">
             <c:if test="${not empty cardIcon}">
@@ -133,7 +133,7 @@ Glassmorphism Component Usage:
                 </div>
             </c:if>
             <c:if test="${not empty cardTitle or not empty cardSubtitle}">
-                <div class="ml-4">
+                <div class="ml-5">
                     <c:if test="${not empty cardTitle}">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-white">${cardTitle}</h3>
                     </c:if>

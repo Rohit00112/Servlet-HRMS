@@ -9,7 +9,7 @@
 
     <!-- Page title is displayed by layout.jsp -->
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Theme Settings Card -->
         <div class="lg:col-span-1">
             <jsp:include page="/WEB-INF/components/glassmorphism.jsp">
@@ -76,7 +76,7 @@
     </div>
 
     <!-- Help & Support Card -->
-    <div class="mt-6">
+    <div class="mt-10">
         <jsp:include page="/WEB-INF/components/glassmorphism.jsp">
             <jsp:param name="icon" value="question" />
             <jsp:param name="iconBgColor" value="gray" />

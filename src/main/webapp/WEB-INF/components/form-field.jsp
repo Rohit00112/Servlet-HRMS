@@ -51,7 +51,8 @@ Textarea Input:
 <c:set var="required" value="${param.required == 'true' ? 'required' : ''}" />
 <c:set var="readonly" value="${param.readonly == 'true' ? 'readonly' : ''}" />
 <c:set var="disabled" value="${param.disabled == 'true' ? 'disabled' : ''}" />
-<c:set var="checked" value="${param.checked == 'true' ? 'checked' : ''}" />
+<c:set var="checked" value="${param.checked eq 'true' ? 'checked' : ''}" />
+<c:if test="${param.checked eq true}"><c:set var="checked" value="checked" /></c:if>
 <c:set var="placeholder" value="${not empty param.placeholder ? param.placeholder : ''}" />
 <c:set var="value" value="${not empty param.value ? param.value : ''}" />
 <c:set var="rows" value="${not empty param.rows ? param.rows : '3'}" />
@@ -63,6 +64,11 @@ Textarea Input:
 <div class="sm:col-span-${colSpan}">
     <c:choose>
         <c:when test="${param.type == 'checkbox'}">
+            <!-- Debug info -->
+            <div class="text-xs text-gray-500 mb-1">
+                Checked param: ${param.checked}
+                Checked value: ${checked}
+            </div>
             <div class="flex items-center">
                 <input type="checkbox" id="${param.name}" name="${param.name}" ${checked} ${disabled} class="${checkboxClass}">
                 <label for="${param.name}" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">${param.label}</label>
@@ -80,11 +86,24 @@ Textarea Input:
                     </c:when>
                     <c:when test="${param.type == 'select'}">
                         <div class="relative">
+                            <!-- Debug info -->
+                            <div class="text-xs text-gray-500 mb-1">
+                                Options: ${not empty requestScope[param.options] ? 'Available' : 'Not Available'}
+                                Selected: ${param.selectedValue}
+                            </div>
                             <select id="${param.name}" name="${param.name}" ${required} ${disabled} class="${baseClass} ${selectClass}">
                                 <option value="">Select ${param.label}</option>
-                                <c:forEach var="option" items="${requestScope[param.options]}">
-                                    <option value="${option[param.optionValue]}" ${option[param.optionValue] == param.selectedValue ? 'selected' : ''}>${option[param.optionText]}</option>
-                                </c:forEach>
+                                <c:if test="${not empty requestScope[param.options]}">
+                                    <c:forEach var="option" items="${requestScope[param.options]}">
+                                        <option value="${option[param.optionValue]}" ${option[param.optionValue] eq param.selectedValue ? 'selected' : ''}>${option[param.optionText]}</option>
+                                    </c:forEach>
+                                </c:if>
+                                <!-- Fallback options if the list is empty -->
+                                <c:if test="${empty requestScope[param.options] && param.name == 'theme'}">
+                                    <option value="light" ${param.selectedValue eq 'light' ? 'selected' : ''}>Light Mode</option>
+                                    <option value="dark" ${param.selectedValue eq 'dark' ? 'selected' : ''}>Dark Mode</option>
+                                    <option value="system" ${param.selectedValue eq 'system' ? 'selected' : ''}>System Default</option>
+                                </c:if>
                             </select>
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 dark:text-gray-400">
                                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

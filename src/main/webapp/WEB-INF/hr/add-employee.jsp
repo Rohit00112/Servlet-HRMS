@@ -12,7 +12,7 @@
 <c:set var="mainContent">
 
         <!-- Add Employee Form -->
-        <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="mt-6 bg-white dark:bg-gray-800 shadow-lg overflow-hidden sm:rounded-lg border border-gray-200 dark:border-gray-700">
             <form action="${pageContext.request.contextPath}/hr/employees/add" method="post" class="p-6" id="employeeForm">
                 <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                     <jsp:include page="/WEB-INF/components/employee-form-fields.jsp" />

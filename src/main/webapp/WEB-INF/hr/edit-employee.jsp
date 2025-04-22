@@ -12,7 +12,7 @@
 <c:set var="mainContent">
 
     <!-- Edit Employee Form -->
-    <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="mt-6 bg-white dark:bg-gray-800 shadow-lg overflow-hidden sm:rounded-lg border border-gray-200 dark:border-gray-700">
         <form action="${pageContext.request.contextPath}/hr/employees/edit" method="post" class="p-6" id="employeeForm">
             <input type="hidden" name="id" value="${employee.id}">
 

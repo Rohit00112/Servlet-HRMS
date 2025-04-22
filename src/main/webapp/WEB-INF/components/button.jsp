@@ -23,25 +23,25 @@ Secondary Button:
 
 <c:choose>
     <c:when test="${param.type == 'primary'}">
-        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:hover:text-white" />
+        <c:set var="buttonClass" value="inline-flex items-center px-5 py-3 border border-transparent text-sm font-medium rounded-lg shadow-md text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:hover:text-white transform transition-all duration-200 hover:translate-y-[-1px] hover:shadow-lg active:translate-y-[1px]" />
     </c:when>
     <c:when test="${param.type == 'secondary'}">
-        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" />
+        <c:set var="buttonClass" value="inline-flex items-center px-5 py-3 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg shadow-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transform transition-all duration-200 hover:translate-y-[-1px] hover:shadow-lg active:translate-y-[1px]" />
     </c:when>
     <c:when test="${param.type == 'danger'}">
-        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" />
+        <c:set var="buttonClass" value="inline-flex items-center px-5 py-3 border border-transparent text-sm font-medium rounded-lg shadow-md text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transform transition-all duration-200 hover:translate-y-[-1px] hover:shadow-lg active:translate-y-[1px]" />
     </c:when>
     <c:when test="${param.type == 'success'}">
-        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" />
+        <c:set var="buttonClass" value="inline-flex items-center px-5 py-3 border border-transparent text-sm font-medium rounded-lg shadow-md text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transform transition-all duration-200 hover:translate-y-[-1px] hover:shadow-lg active:translate-y-[1px]" />
     </c:when>
     <c:when test="${param.type == 'warning'}">
-        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500" />
+        <c:set var="buttonClass" value="inline-flex items-center px-5 py-3 border border-transparent text-sm font-medium rounded-lg shadow-md text-white bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transform transition-all duration-200 hover:translate-y-[-1px] hover:shadow-lg active:translate-y-[1px]" />
     </c:when>
     <c:when test="${param.type == 'info'}">
-        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" />
+        <c:set var="buttonClass" value="inline-flex items-center px-5 py-3 border border-transparent text-sm font-medium rounded-lg shadow-md text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition-all duration-200 hover:translate-y-[-1px] hover:shadow-lg active:translate-y-[1px]" />
     </c:when>
     <c:otherwise>
-        <c:set var="buttonClass" value="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" />
+        <c:set var="buttonClass" value="inline-flex items-center px-5 py-3 border border-gray-300 text-sm font-medium rounded-lg shadow-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transform transition-all duration-200 hover:translate-y-[-1px] hover:shadow-lg active:translate-y-[1px]" />
     </c:otherwise>
 </c:choose>
 

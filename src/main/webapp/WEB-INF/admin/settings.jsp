@@ -4,6 +4,9 @@
 <c:set var="pageTitle" value="System Settings" scope="request" />
 <c:set var="userRole" value="admin" scope="request" />
 
+<!-- Set variables for form fields -->
+<c:set var="emailEnabledChecked" value="${settings.emailEnabled eq 'true' ? 'true' : 'false'}" />
+
 <c:set var="mainContent">
     <!-- Alerts are handled by layout.jsp -->
 
@@ -58,7 +61,7 @@
                                     <jsp:param name='type' value='checkbox' />
                                     <jsp:param name='name' value='emailEnabled' />
                                     <jsp:param name='label' value='Enable Email Notifications' />
-                                    <jsp:param name='checked' value='${settings.emailEnabled eq "true"}' />
+                                    <jsp:param name='checked' value='${emailEnabledChecked}' />
                                     <jsp:param name='helpText' value='When enabled, the system will send email notifications for various events.' />
                                     <jsp:param name='colSpan' value='6' />
                                 </jsp:include>

@@ -45,6 +45,7 @@ public class ViewPayslipServlet extends HttpServlet {
 
         try {
             String idParam = request.getParameter("id");
+            String action = request.getParameter("action");
 
             if (idParam != null && !idParam.isEmpty()) {
                 // View a specific payslip
@@ -72,6 +73,14 @@ public class ViewPayslipServlet extends HttpServlet {
                     Employee employee = employeeDAO.getEmployeeById(payroll.getEmployeeId());
                     request.setAttribute("employee", employee);
                     request.setAttribute("payroll", payroll);
+
+                    // Check if this is an edit request
+                    if ("edit".equals(action) && !role.equals("EMPLOYEE") && !"PAID".equals(payroll.getStatus())) {
+                        // Forward to the edit payslip form
+                        String editJspPath = "/WEB-INF/" + role.toLowerCase() + "/edit-payslip.jsp";
+                        request.getRequestDispatcher(editJspPath).forward(request, response);
+                        return;
+                    }
 
                     // Forward to the payslip view
                     String jspPath = "/WEB-INF/" + role.toLowerCase() + "/view-payslip.jsp";

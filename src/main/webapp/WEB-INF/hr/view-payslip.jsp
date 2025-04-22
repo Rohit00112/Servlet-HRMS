@@ -4,6 +4,7 @@
 <%@ page import="java.math.BigDecimal" %>
 
 <c:set var="pageTitle" value="View Payslip" scope="request" />
+<c:set var="userRole" value="hr" scope="request" />
 
 <c:set var="additionalStyles">
     <style>
@@ -77,21 +78,21 @@
                                 </svg>
                                 Print Payslip
                             </button>
-                            <a href="${pageContext.request.contextPath}/admin/payroll/download?id=${payroll.id}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">
+                            <a href="${pageContext.request.contextPath}/hr/payroll/download?id=${payroll.id}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">
                                 <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
                                 Download PDF
                             </a>
                             <c:if test="${payroll.status ne 'PAID'}">
-                                <a href="${pageContext.request.contextPath}/admin/payroll/view?id=${payroll.id}&action=edit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+                                <a href="${pageContext.request.contextPath}/hr/payroll/view?id=${payroll.id}&action=edit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
                                     <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
                                     Edit Payslip
                                 </a>
                             </c:if>
-                            <a href="${pageContext.request.contextPath}/admin/payroll/generate" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            <a href="${pageContext.request.contextPath}/hr/payroll/generate" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                                 Back to Payroll List
                             </a>
                         </div>
@@ -314,7 +315,7 @@
                         </div>
                     </c:if>
 
-                    <!-- Admin Actions -->
+                    <!-- HR Actions -->
                     <c:if test="${payroll.status ne 'PAID'}">
                         <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-lg print:hidden">
                             <div class="px-4 py-5 sm:px-6 bg-gray-50">
@@ -323,7 +324,7 @@
                             <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
                                 <div class="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
                                     <c:if test="${payroll.status eq 'DRAFT'}">
-                                        <form action="${pageContext.request.contextPath}/admin/payroll/generate" method="post">
+                                        <form action="${pageContext.request.contextPath}/hr/payroll/generate" method="post">
                                             <input type="hidden" name="action" value="finalize">
                                             <input type="hidden" name="payrollId" value="${payroll.id}">
                                             <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
@@ -331,7 +332,7 @@
                                             </button>
                                         </form>
 
-                                        <form action="${pageContext.request.contextPath}/admin/payroll/generate" method="post" onsubmit="return confirm('Are you sure you want to delete this payroll record?');">
+                                        <form action="${pageContext.request.contextPath}/hr/payroll/generate" method="post" onsubmit="return confirm('Are you sure you want to delete this payroll record?');">
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="payrollId" value="${payroll.id}">
                                             <input type="hidden" name="month" value="${payroll.month}">
@@ -342,7 +343,7 @@
                                     </c:if>
 
                                     <c:if test="${payroll.status eq 'FINALIZED'}">
-                                        <form action="${pageContext.request.contextPath}/admin/payroll/generate" method="post">
+                                        <form action="${pageContext.request.contextPath}/hr/payroll/generate" method="post">
                                             <input type="hidden" name="action" value="markPaid">
                                             <input type="hidden" name="payrollId" value="${payroll.id}">
                                             <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
@@ -359,6 +360,7 @@
 
 <jsp:include page="/WEB-INF/components/layout.jsp">
     <jsp:param name="pageTitle" value="${pageTitle}" />
+    <jsp:param name="userRole" value="${userRole}" />
     <jsp:param name="mainContent" value="${mainContent}" />
     <jsp:param name="additionalStyles" value="${additionalStyles}" />
 </jsp:include>

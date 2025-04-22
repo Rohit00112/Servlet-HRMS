@@ -20,29 +20,38 @@
                                 <input type="hidden" name="action" value="generate">
 
                                 <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                                    <div class="sm:col-span-3">
-                                        <label for="month" class="block text-sm font-medium text-gray-700">Month</label>
-                                        <div class="mt-1">
-                                            <select id="month" name="month" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                                <c:forEach var="month" items="${months}">
-                                                    <option value="${month}" ${month eq previousMonth ? 'selected' : ''}>${month}</option>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                        <p class="mt-2 text-sm text-gray-500">Select the month for which to generate payroll</p>
-                                    </div>
+                                    <c:set var="options" value="${months}" scope="request" />
+                                    <jsp:include page="/WEB-INF/components/enhanced-dropdown.jsp">
+                                        <jsp:param name="id" value="month" />
+                                        <jsp:param name="name" value="month" />
+                                        <jsp:param name="label" value="Month" />
+                                        <jsp:param name="helpText" value="Select the month for which to generate payroll" />
+                                        <jsp:param name="colSpan" value="3" />
+                                        <jsp:param name="required" value="true" />
+                                        <jsp:param name="selectedValue" value="${previousMonth}" />
+                                    </jsp:include>
 
                                     <div class="sm:col-span-3">
-                                        <label for="employeeId" class="block text-sm font-medium text-gray-700">Employee</label>
-                                        <div class="mt-1">
-                                            <select id="employeeId" name="employeeId" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                        <label for="employeeId" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Employee <span class="text-red-500">*</span></label>
+                                        <div class="relative">
+                                            <select
+                                                id="employeeId"
+                                                name="employeeId"
+                                                class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 transition-all duration-200 ease-in-out hover:border-primary-300 dark:hover:border-primary-700 appearance-none bg-white dark:bg-gray-700 pr-10 cursor-pointer"
+                                                required
+                                            >
                                                 <option value="all">All Employees</option>
                                                 <c:forEach var="employee" items="${employees}">
                                                     <option value="${employee.id}">${employee.name}</option>
                                                 </c:forEach>
                                             </select>
+                                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 dark:text-gray-400">
+                                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                </svg>
+                                            </div>
                                         </div>
-                                        <p class="mt-2 text-sm text-gray-500">Select an employee or generate for all</p>
+                                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Select an employee or generate for all</p>
                                     </div>
 
                                     <div class="sm:col-span-6">

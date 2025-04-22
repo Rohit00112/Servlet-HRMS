@@ -76,13 +76,34 @@ public class SettingsServlet extends HttpServlet {
             return;
         }
 
-        // Only admin can change system settings
-        if (!user.getRole().equals("ADMIN")) {
-            session.setAttribute("errorMessage", "You don't have permission to change system settings");
+        // Handle different roles
+        String role = user.getRole();
+
+        if (role.equals("ADMIN")) {
+            // Admin can change all system settings
+            handleAdminSettings(request, session);
+        } else if (role.equals("HR") || role.equals("EMPLOYEE")) {
+            // HR and Employee can only change theme
+            String theme = request.getParameter("theme");
+            if (theme != null && !theme.isEmpty()) {
+                // Update theme in session
+                session.setAttribute("theme", theme);
+                // Save theme to application scope
+                getServletContext().setAttribute("theme", theme);
+            }
+        } else {
+            session.setAttribute("errorMessage", "You don't have permission to change settings");
             response.sendRedirect(request.getContextPath() + "/settings");
             return;
         }
 
+        // In a real application, you would save these settings to a database or properties file
+
+        session.setAttribute("successMessage", "Settings updated successfully");
+        response.sendRedirect(request.getContextPath() + "/settings");
+    }
+
+    private void handleAdminSettings(HttpServletRequest request, HttpSession session) {
         // Get form parameters
         String theme = request.getParameter("theme");
         String emailEnabled = request.getParameter("emailEnabled") != null ? "true" : "false";
@@ -115,11 +136,6 @@ public class SettingsServlet extends HttpServlet {
         if (emailPassword != null && !emailPassword.isEmpty()) {
             getServletContext().setAttribute("emailPassword", emailPassword);
         }
-
-        // In a real application, you would save these settings to a database or properties file
-
-        session.setAttribute("successMessage", "Settings updated successfully");
-        response.sendRedirect(request.getContextPath() + "/settings");
     }
 
     private Map<String, String> loadSettings() {

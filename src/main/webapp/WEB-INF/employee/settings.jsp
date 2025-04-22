@@ -18,25 +18,32 @@
                 <jsp:param name="title" value="Theme Settings" />
                 <jsp:param name="content" value="
                     <div class='mt-4'>
-                        <div class='space-y-4'>
-                            <jsp:include page='/WEB-INF/components/form-field.jsp'>
-                                <jsp:param name='type' value='select' />
-                                <jsp:param name='name' value='theme' />
-                                <jsp:param name='label' value='Theme Mode' />
-                                <jsp:param name='helpText' value='Choose the theme mode for the application.' />
-                                <jsp:param name='colSpan' value='6' />
-                                <jsp:param name='options' value='themeOptions' />
-                                <jsp:param name='optionValue' value='value' />
-                                <jsp:param name='optionText' value='text' />
-                                <jsp:param name='selectedValue' value='${settings.theme}' />
-                            </jsp:include>
+                        <form action='${pageContext.request.contextPath}/settings' method='post' class='space-y-6'>
+                            <div class='grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6'>
+                                <div class='sm:col-span-6'>
+                                    <label for='theme' class='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>Theme Mode</label>
+                                    <div class='relative'>
+                                        <select id='theme' name='theme' class='shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 transition-all duration-200 ease-in-out hover:border-primary-300 dark:hover:border-primary-700 appearance-none bg-white dark:bg-gray-700 pr-10 cursor-pointer'>
+                                            <option value='light' ${settings.theme == 'light' ? 'selected' : ''}>Light Mode</option>
+                                            <option value='dark' ${settings.theme == 'dark' ? 'selected' : ''}>Dark Mode</option>
+                                            <option value='system' ${settings.theme == 'system' ? 'selected' : ''}>System Default</option>
+                                        </select>
+                                        <div class='pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 dark:text-gray-400'>
+                                            <svg class='h-5 w-5' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor' aria-hidden='true'>
+                                                <path fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd' />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <p class='mt-1 text-sm text-gray-500 dark:text-gray-400'>Choose the theme mode for the application.</p>
+                                </div>
 
-                            <div class='flex justify-end'>
-                                <button type='button' id='saveTheme' class='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'>
-                                    Save Theme
-                                </button>
+                                <div class='flex justify-end sm:col-span-6'>
+                                    <button type='submit' class='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'>
+                                        Save Changes
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 " />
             </jsp:include>
@@ -50,31 +57,31 @@
                 <jsp:param name="title" value="Notification Settings" />
                 <jsp:param name="content" value="
                     <div class='mt-4'>
-                        <div class='space-y-4'>
-                            <jsp:include page='/WEB-INF/components/form-field.jsp'>
-                                <jsp:param name='type' value='checkbox' />
-                                <jsp:param name='name' value='emailNotifications' />
-                                <jsp:param name='label' value='Email Notifications' />
-                                <jsp:param name='checked' value='true' />
-                                <jsp:param name='helpText' value='Receive email notifications for leave approvals, payslips, and other important updates.' />
-                                <jsp:param name='colSpan' value='6' />
-                            </jsp:include>
+                        <form action='${pageContext.request.contextPath}/settings' method='post' class='space-y-6'>
+                            <div class='grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6'>
+                                <div class='sm:col-span-6 mb-4'>
+                                    <div class='flex items-center'>
+                                        <input id='emailNotifications' name='emailNotifications' type='checkbox' checked class='h-5 w-5 text-primary-600 focus:ring-primary-500 focus:ring-offset-1 border-gray-300 dark:border-gray-600 rounded transition-all duration-200 ease-in-out cursor-pointer'>
+                                        <label for='emailNotifications' class='ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer'>Email Notifications</label>
+                                    </div>
+                                    <p class='mt-1 text-sm text-gray-500 dark:text-gray-400'>Receive email notifications for leave approvals, payslips, and other important updates.</p>
+                                </div>
 
-                            <jsp:include page='/WEB-INF/components/form-field.jsp'>
-                                <jsp:param name='type' value='checkbox' />
-                                <jsp:param name='name' value='browserNotifications' />
-                                <jsp:param name='label' value='Browser Notifications' />
-                                <jsp:param name='checked' value='true' />
-                                <jsp:param name='helpText' value='Receive browser notifications when you are using the application.' />
-                                <jsp:param name='colSpan' value='6' />
-                            </jsp:include>
+                                <div class='sm:col-span-6 mb-4'>
+                                    <div class='flex items-center'>
+                                        <input id='browserNotifications' name='browserNotifications' type='checkbox' checked class='h-5 w-5 text-primary-600 focus:ring-primary-500 focus:ring-offset-1 border-gray-300 dark:border-gray-600 rounded transition-all duration-200 ease-in-out cursor-pointer'>
+                                        <label for='browserNotifications' class='ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer'>Browser Notifications</label>
+                                    </div>
+                                    <p class='mt-1 text-sm text-gray-500 dark:text-gray-400'>Receive browser notifications when you are using the application.</p>
+                                </div>
 
-                            <div class='flex justify-end'>
-                                <button type='button' id='saveNotifications' class='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'>
-                                    Save Preferences
-                                </button>
+                                <div class='flex justify-end sm:col-span-6'>
+                                    <button type='submit' class='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'>
+                                        Save Changes
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 " />
             </jsp:include>
@@ -112,32 +119,6 @@
     </div>
 
     <script>
-        document.getElementById('saveTheme').addEventListener('click', function() {
-            const theme = document.getElementById('theme').value;
-            localStorage.setItem('theme', theme);
-            applyTheme(theme);
-            showToast('Theme settings saved successfully');
-        });
-
-        document.getElementById('saveNotifications').addEventListener('click', function() {
-            const emailNotifications = document.getElementById('emailNotifications').checked;
-            const browserNotifications = document.getElementById('browserNotifications').checked;
-            localStorage.setItem('emailNotifications', emailNotifications);
-            localStorage.setItem('browserNotifications', browserNotifications);
-            showToast('Notification preferences saved successfully');
-        });
-
-        function showToast(message) {
-            // Simple toast notification
-            const toast = document.createElement('div');
-            toast.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        }
-
         function applyTheme(theme) {
             const htmlElement = document.documentElement;
             if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -156,6 +137,7 @@
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) {
                 document.getElementById('theme').value = savedTheme;
+                applyTheme(savedTheme);
             }
 
             const emailNotifications = localStorage.getItem('emailNotifications');

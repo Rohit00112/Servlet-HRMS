@@ -10,8 +10,10 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.DayOfWeek;
 import java.time.format.TextStyle;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -377,6 +379,16 @@ public class AttendanceDAO {
         attendance.setEmployeeName(rs.getString("employee_name"));
         attendance.setDepartmentName(rs.getString("department_name"));
 
+        // Try to get designation if available
+        try {
+            attendance.setDesignation(rs.getString("designation"));
+        } catch (SQLException e) {
+            // Ignore if the column doesn't exist
+        }
+
+        // Calculate late and early departure status
+        calculateAttendanceMetrics(attendance);
+
         return attendance;
     }
 
@@ -508,5 +520,194 @@ public class AttendanceDAO {
         }
 
         return trendData;
+    }
+
+    /**
+     * Calculate attendance metrics like late arrival, early departure, and overtime
+     *
+     * @param attendance The attendance object to update
+     */
+    private void calculateAttendanceMetrics(Attendance attendance) {
+        // Standard work hours (9:00 AM to 5:00 PM)
+        LocalTime standardStartTime = LocalTime.of(9, 0);
+        LocalTime standardEndTime = LocalTime.of(17, 0);
+
+        // Check for late arrival
+        if (attendance.getCheckInTime() != null) {
+            LocalTime checkInTime = attendance.getCheckInTime().toLocalTime();
+            if (checkInTime.isAfter(standardStartTime.plusMinutes(15))) { // 15 minutes grace period
+                attendance.setLate(true);
+            }
+        }
+
+        // Check for early departure
+        if (attendance.getCheckOutTime() != null) {
+            LocalTime checkOutTime = attendance.getCheckOutTime().toLocalTime();
+            if (checkOutTime.isBefore(standardEndTime)) {
+                attendance.setEarlyDeparture(true);
+            }
+        }
+
+        // Calculate overtime
+        if (attendance.getCheckInTime() != null && attendance.getCheckOutTime() != null) {
+            LocalTime checkOutTime = attendance.getCheckOutTime().toLocalTime();
+            if (checkOutTime.isAfter(standardEndTime)) {
+                long overtimeMinutes = ChronoUnit.MINUTES.between(standardEndTime, checkOutTime);
+                attendance.setOvertimeMinutes((int) overtimeMinutes);
+            }
+        }
+    }
+
+    /**
+     * Get attendance report with advanced metrics
+     *
+     * @param startDate The start date
+     * @param endDate The end date
+     * @param departmentId The department ID (optional, use 0 for all departments)
+     * @return List of attendance records with advanced metrics
+     */
+    public List<Attendance> getAttendanceReport(Date startDate, Date endDate, int departmentId) {
+        List<Attendance> attendanceList = new ArrayList<>();
+
+        String sql = "SELECT a.*, e.name as employee_name, d.name as department_name, des.name as designation " +
+                     "FROM attendance a " +
+                     "JOIN employees e ON a.employee_id = e.id " +
+                     "LEFT JOIN departments d ON e.department_id = d.id " +
+                     "LEFT JOIN designations des ON e.designation_id = des.id " +
+                     "WHERE a.date BETWEEN ? AND ? ";
+
+        if (departmentId > 0) {
+            sql += "AND e.department_id = ? ";
+        }
+
+        sql += "ORDER BY a.date DESC, e.name ASC";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setDate(1, startDate);
+            pstmt.setDate(2, endDate);
+
+            if (departmentId > 0) {
+                pstmt.setInt(3, departmentId);
+            }
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Attendance attendance = mapAttendanceFromResultSet(rs);
+                attendanceList.add(attendance);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return attendanceList;
+    }
+
+    /**
+     * Get attendance summary statistics
+     *
+     * @param startDate The start date
+     * @param endDate The end date
+     * @param departmentId The department ID (optional, use 0 for all departments)
+     * @return Map with summary statistics
+     */
+    public Map<String, Object> getAttendanceSummary(Date startDate, Date endDate, int departmentId) {
+        Map<String, Object> summary = new HashMap<>();
+
+        // Initialize counters
+        int totalAttendance = 0;
+        int presentCount = 0;
+        int absentCount = 0;
+        int lateCount = 0;
+        int halfDayCount = 0;
+        int overtimeCount = 0;
+        int totalOvertimeMinutes = 0;
+
+        // Get attendance data
+        List<Attendance> attendanceList = getAttendanceReport(startDate, endDate, departmentId);
+
+        // Calculate statistics
+        for (Attendance attendance : attendanceList) {
+            totalAttendance++;
+
+            if ("PRESENT".equals(attendance.getStatus())) {
+                presentCount++;
+            } else if ("ABSENT".equals(attendance.getStatus())) {
+                absentCount++;
+            } else if ("LATE".equals(attendance.getStatus())) {
+                lateCount++;
+            } else if ("HALF_DAY".equals(attendance.getStatus())) {
+                halfDayCount++;
+            }
+
+            if (attendance.getOvertimeMinutes() > 0) {
+                overtimeCount++;
+                totalOvertimeMinutes += attendance.getOvertimeMinutes();
+            }
+        }
+
+        // Calculate percentages
+        double presentPercentage = totalAttendance > 0 ? (double) presentCount / totalAttendance * 100 : 0;
+        double absentPercentage = totalAttendance > 0 ? (double) absentCount / totalAttendance * 100 : 0;
+        double latePercentage = totalAttendance > 0 ? (double) lateCount / totalAttendance * 100 : 0;
+        double halfDayPercentage = totalAttendance > 0 ? (double) halfDayCount / totalAttendance * 100 : 0;
+
+        // Add statistics to summary
+        summary.put("totalAttendance", totalAttendance);
+        summary.put("presentCount", presentCount);
+        summary.put("absentCount", absentCount);
+        summary.put("lateCount", lateCount);
+        summary.put("halfDayCount", halfDayCount);
+        summary.put("overtimeCount", overtimeCount);
+        summary.put("totalOvertimeMinutes", totalOvertimeMinutes);
+        summary.put("presentPercentage", presentPercentage);
+        summary.put("absentPercentage", absentPercentage);
+        summary.put("latePercentage", latePercentage);
+        summary.put("halfDayPercentage", halfDayPercentage);
+
+        return summary;
+    }
+
+    /**
+     * Get attendance by employee with advanced metrics for a specific date range
+     *
+     * @param employeeId The employee ID
+     * @param startDate The start date
+     * @param endDate The end date
+     * @return List of attendance records with advanced metrics
+     */
+    public List<Attendance> getAdvancedAttendanceByEmployee(int employeeId, Date startDate, Date endDate) {
+        List<Attendance> attendanceList = new ArrayList<>();
+
+        String sql = "SELECT a.*, e.name as employee_name, d.name as department_name, des.name as designation " +
+                     "FROM attendance a " +
+                     "JOIN employees e ON a.employee_id = e.id " +
+                     "LEFT JOIN departments d ON e.department_id = d.id " +
+                     "LEFT JOIN designations des ON e.designation_id = des.id " +
+                     "WHERE a.employee_id = ? AND a.date BETWEEN ? AND ? " +
+                     "ORDER BY a.date DESC";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, employeeId);
+            pstmt.setDate(2, startDate);
+            pstmt.setDate(3, endDate);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Attendance attendance = mapAttendanceFromResultSet(rs);
+                attendanceList.add(attendance);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return attendanceList;
     }
 }

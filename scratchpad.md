@@ -17,7 +17,7 @@ This document tracks potential features and enhancements for the HRMS system. Us
 ### High Priority
 - [x] Dashboard Analytics and Reporting
   - [x] Attendance trends visualization
-  - [ ] Leave usage charts
+  - [x] Leave usage charts
   - [ ] Department statistics
   - [ ] Exportable reports (PDF/Excel)
 
@@ -116,7 +116,7 @@ For each feature, consider:
 
 | Feature | Requested By | Priority | Complexity | Status | Notes |
 |---------|-------------|----------|------------|--------|-------|
-| Dashboard Analytics | | High | Medium | In Progress | Attendance analytics implemented for employee dashboard |
+| Dashboard Analytics | | High | Medium | In Progress | Attendance and leave analytics implemented for employee dashboard |
 | Document Management | | Medium | High | Planned | |
 | Mobile Responsiveness | | High | Medium | Completed | Improved layout, header, sidebar, and notification components for mobile devices |
 | Performance Management | | Medium | High | Planned | |

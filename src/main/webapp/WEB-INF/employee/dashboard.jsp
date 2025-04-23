@@ -5,8 +5,9 @@
 <c:set var="userRole" value="employee" scope="request" />
 
 <c:set var="additionalHead">
-    <!-- Chart.js -->
+    <!-- Chart.js and plugins -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 </c:set>
 
 <c:set var="mainContent">
@@ -341,6 +342,8 @@
 <c:set var="additionalScripts">
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Register Chart.js DataLabels plugin
+        Chart.register(ChartDataLabels);
         // Function to set chart colors based on status
         function getStatusColor(status) {
             switch(status) {
@@ -376,6 +379,31 @@
                 const backgroundColors = statuses.map(status => getStatusColor(status));
                 const borderColors = statuses.map(status => getStatusBorderColor(status));
 
+                // Create a legend for status colors
+                const statusLegend = document.createElement('div');
+                statusLegend.className = 'flex flex-wrap gap-3 mt-2 justify-center';
+
+                const uniqueStatuses = [...new Set(statuses)];
+                uniqueStatuses.forEach(status => {
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'flex items-center';
+
+                    const colorBox = document.createElement('div');
+                    colorBox.className = 'w-4 h-4 mr-1 rounded';
+                    colorBox.style.backgroundColor = getStatusColor(status);
+
+                    const label = document.createElement('span');
+                    label.className = 'text-xs font-medium';
+                    label.textContent = status;
+
+                    legendItem.appendChild(colorBox);
+                    legendItem.appendChild(label);
+                    statusLegend.appendChild(legendItem);
+                });
+
+                // Add the legend below the chart
+                document.getElementById('weeklyAttendanceChart').parentNode.appendChild(statusLegend);
+
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -391,31 +419,44 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        indexAxis: 'y', // Horizontal bar chart for better readability
                         scales: {
+                            x: {
+                                display: false // Hide x-axis
+                            },
                             y: {
-                                beginAtZero: true,
-                                max: 1,
-                                ticks: {
-                                    stepSize: 1,
-                                    callback: function(value) {
-                                        return value === 1 ? 'Status' : '';
-                                    }
+                                grid: {
+                                    display: false // Hide grid lines
                                 }
                             }
                         },
                         plugins: {
                             tooltip: {
                                 callbacks: {
+                                    title: function(context) {
+                                        return labels[context[0].dataIndex];
+                                    },
                                     label: function(context) {
-                                        return statuses[context.dataIndex];
+                                        return 'Status: ' + statuses[context.dataIndex];
                                     }
                                 }
                             },
                             legend: {
                                 display: false
+                            },
+                            // Add status text directly on the bars
+                            datalabels: {
+                                color: '#fff',
+                                font: {
+                                    weight: 'bold'
+                                },
+                                formatter: function(value, context) {
+                                    return statuses[context.dataIndex];
+                                }
                             }
                         }
-                    }
+                    },
+                    plugins: [ChartDataLabels]
                 });
             })
             .catch(error => console.error('Error loading weekly attendance data:', error));
@@ -434,10 +475,19 @@
                 const backgroundColors = labels.map(status => getStatusColor(status));
                 const borderColors = labels.map(status => getStatusBorderColor(status));
 
+                // Calculate total for percentage
+                const total = values.reduce((sum, value) => sum + value, 0);
+
+                // Create percentage labels
+                const percentageLabels = labels.map((label, index) => {
+                    const percentage = total > 0 ? Math.round((values[index] / total) * 100) : 0;
+                    return `${label}: ${values[index]} (${percentage}%)`;
+                });
+
                 new Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: labels,
+                        labels: percentageLabels,
                         datasets: [{
                             data: values,
                             backgroundColor: backgroundColors,
@@ -450,10 +500,37 @@
                         maintainAspectRatio: false,
                         plugins: {
                             legend: {
-                                position: 'right'
+                                position: 'right',
+                                labels: {
+                                    font: {
+                                        size: 11
+                                    },
+                                    padding: 15,
+                                    boxWidth: 15
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.parsed;
+                                        const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                                        return `${context.label.split(':')[0]}: ${value} days (${percentage}%)`;
+                                    }
+                                }
+                            },
+                            datalabels: {
+                                color: '#fff',
+                                font: {
+                                    weight: 'bold',
+                                    size: 11
+                                },
+                                formatter: function(value, context) {
+                                    return value > 0 ? value : '';
+                                }
                             }
                         }
-                    }
+                    },
+                    plugins: [ChartDataLabels]
                 });
             })
             .catch(error => console.error('Error loading monthly attendance data:', error));
@@ -467,6 +544,12 @@
                 // Convert data to arrays
                 const labels = Object.keys(data.labels);
                 const values = Object.values(data.data);
+
+                // Add a title above the chart
+                const chartTitle = document.createElement('div');
+                chartTitle.className = 'text-sm text-center text-gray-500 mb-2';
+                chartTitle.textContent = 'Your attendance rate over the last 6 months';
+                document.getElementById('attendanceTrendChart').parentNode.insertBefore(chartTitle, document.getElementById('attendanceTrendChart'));
 
                 new Chart(ctx, {
                     type: 'line',
@@ -497,6 +580,22 @@
                                     callback: function(value) {
                                         return value + '%';
                                     }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Attendance Rate (%)',
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Month',
+                                    font: {
+                                        size: 12
+                                    }
                                 }
                             }
                         },
@@ -507,9 +606,24 @@
                                         return context.parsed.y.toFixed(1) + '%';
                                     }
                                 }
+                            },
+                            datalabels: {
+                                align: 'top',
+                                anchor: 'end',
+                                color: function(context) {
+                                    return context.dataset.borderColor;
+                                },
+                                font: {
+                                    weight: 'bold',
+                                    size: 10
+                                },
+                                formatter: function(value) {
+                                    return value.toFixed(0) + '%';
+                                }
                             }
                         }
-                    }
+                    },
+                    plugins: [ChartDataLabels]
                 });
             })
             .catch(error => console.error('Error loading attendance trend data:', error));
@@ -523,6 +637,20 @@
                 // Convert data to arrays
                 const labels = Object.keys(data.labels);
                 const values = Object.values(data.data);
+
+                // Add a title above the chart
+                const chartTitle = document.createElement('div');
+                chartTitle.className = 'text-sm text-center text-gray-500 mb-2';
+                chartTitle.textContent = 'Number of leave days taken each month this year';
+                document.getElementById('leaveUsageByMonthChart').parentNode.insertBefore(chartTitle, document.getElementById('leaveUsageByMonthChart'));
+
+                // Calculate total leave days
+                const totalLeaveDays = values.reduce((sum, value) => sum + value, 0);
+
+                // Add a summary below the chart
+                const chartSummary = document.createElement('div');
+                chartSummary.className = 'text-sm text-center font-medium mt-2';
+                chartSummary.textContent = `Total leave days taken this year: ${totalLeaveDays}`;
 
                 new Chart(ctx, {
                     type: 'bar',
@@ -545,6 +673,22 @@
                                 ticks: {
                                     precision: 0,
                                     stepSize: 1
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Days',
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Month',
+                                    font: {
+                                        size: 12
+                                    }
                                 }
                             }
                         },
@@ -556,10 +700,27 @@
                                         return value + (value === 1 ? ' day' : ' days');
                                     }
                                 }
+                            },
+                            datalabels: {
+                                align: 'top',
+                                anchor: 'end',
+                                color: function(context) {
+                                    return context.dataset.data[context.dataIndex] > 0 ? 'rgba(16, 185, 129, 1)' : 'transparent';
+                                },
+                                font: {
+                                    weight: 'bold'
+                                },
+                                formatter: function(value) {
+                                    return value > 0 ? value : '';
+                                }
                             }
                         }
-                    }
+                    },
+                    plugins: [ChartDataLabels]
                 });
+
+                // Add the summary after the chart
+                document.getElementById('leaveUsageByMonthChart').parentNode.appendChild(chartSummary);
             })
             .catch(error => console.error('Error loading leave usage by month data:', error));
 
@@ -588,10 +749,25 @@
                     'rgba(107, 114, 128, 1)'
                 ];
 
+                // Add a title above the chart
+                const chartTitle = document.createElement('div');
+                chartTitle.className = 'text-sm text-center text-gray-500 mb-2';
+                chartTitle.textContent = 'Distribution of leave days by type';
+                document.getElementById('leaveUsageByTypeChart').parentNode.insertBefore(chartTitle, document.getElementById('leaveUsageByTypeChart'));
+
+                // Calculate total for percentage
+                const total = values.reduce((sum, value) => sum + value, 0);
+
+                // Create percentage labels
+                const percentageLabels = labels.map((label, index) => {
+                    const percentage = total > 0 ? Math.round((values[index] / total) * 100) : 0;
+                    return `${label}: ${values[index]} (${percentage}%)`;
+                });
+
                 new Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: labels,
+                        labels: percentageLabels,
                         datasets: [{
                             data: values,
                             backgroundColor: backgroundColors,
@@ -604,20 +780,48 @@
                         maintainAspectRatio: false,
                         plugins: {
                             legend: {
-                                position: 'right'
+                                position: 'right',
+                                labels: {
+                                    font: {
+                                        size: 11
+                                    },
+                                    padding: 15,
+                                    boxWidth: 15
+                                }
                             },
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
                                         const value = context.parsed;
-                                        const label = context.label;
-                                        return label + ': ' + value + (value === 1 ? ' day' : ' days');
+                                        const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                                        return `${context.label.split(':')[0]}: ${value} days (${percentage}%)`;
                                     }
+                                }
+                            },
+                            datalabels: {
+                                color: '#fff',
+                                font: {
+                                    weight: 'bold',
+                                    size: 11
+                                },
+                                formatter: function(value, context) {
+                                    if (value === 0) return '';
+                                    const percentage = Math.round((value / total) * 100);
+                                    return percentage > 5 ? percentage + '%' : '';
                                 }
                             }
                         }
-                    }
+                    },
+                    plugins: [ChartDataLabels]
                 });
+
+                // Add a summary below the chart
+                if (total > 0) {
+                    const chartSummary = document.createElement('div');
+                    chartSummary.className = 'text-sm text-center font-medium mt-2';
+                    chartSummary.textContent = `Total leave days by type: ${total}`;
+                    document.getElementById('leaveUsageByTypeChart').parentNode.appendChild(chartSummary);
+                }
             })
             .catch(error => console.error('Error loading leave usage by type data:', error));
 
@@ -648,11 +852,29 @@
                 const backgroundColor = labels.map(label => backgroundColors[label] || 'rgba(107, 114, 128, 0.7)');
                 const borderColor = labels.map(label => borderColors[label] || 'rgba(107, 114, 128, 1)');
 
+                // Add a title above the chart
+                const chartTitle = document.createElement('div');
+                chartTitle.className = 'text-sm text-center text-gray-500 mb-2';
+                chartTitle.textContent = 'Status of your leave requests this year';
+                document.getElementById('leaveStatusDistributionChart').parentNode.insertBefore(chartTitle, document.getElementById('leaveStatusDistributionChart'));
+
+                // Calculate total leave requests
+                const totalRequests = values.reduce((sum, value) => sum + value, 0);
+
+                // Create a status description map
+                const statusDescriptions = {
+                    'APPROVED': 'Approved leave requests',
+                    'PENDING': 'Pending leave requests',
+                    'REJECTED': 'Rejected leave requests'
+                };
+
+                // Create a horizontal bar chart for better readability
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: labels,
+                        labels: labels.map(label => statusDescriptions[label] || label),
                         datasets: [{
+                            axis: 'y',
                             label: 'Number of Leaves',
                             data: values,
                             backgroundColor: backgroundColor,
@@ -661,14 +883,22 @@
                         }]
                     },
                     options: {
+                        indexAxis: 'y',
                         responsive: true,
                         maintainAspectRatio: false,
                         scales: {
-                            y: {
+                            x: {
                                 beginAtZero: true,
                                 ticks: {
                                     precision: 0,
                                     stepSize: 1
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Number of Requests',
+                                    font: {
+                                        size: 12
+                                    }
                                 }
                             }
                         },
@@ -679,14 +909,36 @@
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
-                                        const value = context.parsed.y;
-                                        return value + (value === 1 ? ' leave request' : ' leave requests');
+                                        const value = context.parsed.x;
+                                        return value + (value === 1 ? ' request' : ' requests');
                                     }
+                                }
+                            },
+                            datalabels: {
+                                align: 'end',
+                                anchor: 'end',
+                                color: function(context) {
+                                    return context.dataset.borderColor[context.dataIndex];
+                                },
+                                font: {
+                                    weight: 'bold'
+                                },
+                                formatter: function(value) {
+                                    return value > 0 ? value : '';
                                 }
                             }
                         }
-                    }
+                    },
+                    plugins: [ChartDataLabels]
                 });
+
+                // Add a summary below the chart
+                if (totalRequests > 0) {
+                    const chartSummary = document.createElement('div');
+                    chartSummary.className = 'text-sm text-center font-medium mt-2';
+                    chartSummary.textContent = `Total leave requests this year: ${totalRequests}`;
+                    document.getElementById('leaveStatusDistributionChart').parentNode.appendChild(chartSummary);
+                }
             })
             .catch(error => console.error('Error loading leave status distribution data:', error));
     });

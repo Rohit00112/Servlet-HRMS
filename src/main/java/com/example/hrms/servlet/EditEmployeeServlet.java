@@ -3,6 +3,7 @@ package com.example.hrms.servlet;
 import com.example.hrms.dao.DepartmentDAO;
 import com.example.hrms.dao.DesignationDAO;
 import com.example.hrms.dao.EmployeeDAO;
+import com.example.hrms.dao.UserActivityDAO;
 import com.example.hrms.model.Department;
 import com.example.hrms.model.Designation;
 import com.example.hrms.model.Employee;
@@ -14,6 +15,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
@@ -24,6 +26,7 @@ public class EditEmployeeServlet extends HttpServlet {
     private DepartmentDAO departmentDAO;
     private DesignationDAO designationDAO;
     private UserService userService;
+    private UserActivityDAO userActivityDAO;
 
     @Override
     public void init() {
@@ -31,6 +34,7 @@ public class EditEmployeeServlet extends HttpServlet {
         departmentDAO = new DepartmentDAO();
         designationDAO = new DesignationDAO();
         userService = new UserService();
+        userActivityDAO = new UserActivityDAO();
     }
 
     @Override
@@ -170,6 +174,20 @@ public class EditEmployeeServlet extends HttpServlet {
                         User user = userService.createUserForEmployee(employee, role);
 
                         if (user != null) {
+                            // Log the activity
+                            HttpSession session = request.getSession();
+                            User currentUser = (User) session.getAttribute("user");
+                            userActivityDAO.logActivity(
+                                currentUser.getId(),
+                                currentUser.getUsername(),
+                                currentUser.getRole(),
+                                "UPDATE",
+                                currentUser.getUsername() + " updated employee: " + name + " and created user account",
+                                "EMPLOYEE",
+                                employee.getId(),
+                                request.getRemoteAddr()
+                            );
+
                             request.getSession().setAttribute("successMessage", "Employee updated successfully with new user account");
                         } else {
                             request.getSession().setAttribute("successMessage", "Employee updated successfully, but failed to create user account");
@@ -178,6 +196,20 @@ public class EditEmployeeServlet extends HttpServlet {
                         request.getSession().setAttribute("successMessage", "Employee updated successfully, but no role specified for user account");
                     }
                 } else {
+                    // Log the activity
+                    HttpSession session = request.getSession();
+                    User currentUser = (User) session.getAttribute("user");
+                    userActivityDAO.logActivity(
+                        currentUser.getId(),
+                        currentUser.getUsername(),
+                        currentUser.getRole(),
+                        "UPDATE",
+                        currentUser.getUsername() + " updated employee: " + name,
+                        "EMPLOYEE",
+                        employee.getId(),
+                        request.getRemoteAddr()
+                    );
+
                     request.getSession().setAttribute("successMessage", "Employee updated successfully");
                 }
             } else {

@@ -3,6 +3,7 @@ package com.example.hrms.servlet;
 import com.example.hrms.dao.DepartmentDAO;
 import com.example.hrms.dao.DesignationDAO;
 import com.example.hrms.dao.EmployeeDAO;
+import com.example.hrms.dao.UserActivityDAO;
 import com.example.hrms.model.Department;
 import com.example.hrms.model.Designation;
 import com.example.hrms.model.Employee;
@@ -25,6 +26,7 @@ public class AddEmployeeServlet extends HttpServlet {
     private DepartmentDAO departmentDAO;
     private DesignationDAO designationDAO;
     private UserService userService;
+    private UserActivityDAO userActivityDAO;
 
     @Override
     public void init() {
@@ -32,6 +34,7 @@ public class AddEmployeeServlet extends HttpServlet {
         departmentDAO = new DepartmentDAO();
         designationDAO = new DesignationDAO();
         userService = new UserService();
+        userActivityDAO = new UserActivityDAO();
     }
 
     @Override
@@ -108,6 +111,20 @@ public class AddEmployeeServlet extends HttpServlet {
                         User user = userService.createUserForEmployee(employee, role);
 
                         if (user != null) {
+                            // Log the activity
+                            HttpSession session = request.getSession();
+                            User currentUser = (User) session.getAttribute("user");
+                            userActivityDAO.logActivity(
+                                currentUser.getId(),
+                                currentUser.getUsername(),
+                                currentUser.getRole(),
+                                "CREATE",
+                                currentUser.getUsername() + " added new employee: " + name + " with user account",
+                                "EMPLOYEE",
+                                employee.getId(),
+                                request.getRemoteAddr()
+                            );
+
                             request.getSession().setAttribute("successMessage", "Employee added successfully with user account");
                         } else {
                             request.getSession().setAttribute("successMessage", "Employee added successfully, but failed to create user account");
@@ -116,6 +133,20 @@ public class AddEmployeeServlet extends HttpServlet {
                         request.getSession().setAttribute("successMessage", "Employee added successfully, but no role specified for user account");
                     }
                 } else {
+                    // Log the activity
+                    HttpSession session = request.getSession();
+                    User currentUser = (User) session.getAttribute("user");
+                    userActivityDAO.logActivity(
+                        currentUser.getId(),
+                        currentUser.getUsername(),
+                        currentUser.getRole(),
+                        "CREATE",
+                        currentUser.getUsername() + " added new employee: " + name,
+                        "EMPLOYEE",
+                        employee.getId(),
+                        request.getRemoteAddr()
+                    );
+
                     request.getSession().setAttribute("successMessage", "Employee added successfully");
                 }
             } else {

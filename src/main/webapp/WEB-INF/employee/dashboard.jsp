@@ -235,8 +235,8 @@
                     </div>
 
                     <!-- Leave Analytics -->
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Leave Analytics</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4 mt-8">Leave Analytics</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <!-- Leave Usage by Month Chart -->
                         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
                             <div class="flex justify-between items-center mb-4">
@@ -259,6 +259,7 @@
                             <div class="h-64">
                                 <canvas id="leaveUsageByMonthChart"></canvas>
                             </div>
+                            <div class="h-4"></div> <!-- Add spacing at the bottom -->
                         </div>
 
                         <!-- Leave Usage by Type Chart -->
@@ -283,10 +284,11 @@
                             <div class="h-64">
                                 <canvas id="leaveUsageByTypeChart"></canvas>
                             </div>
+                            <div class="h-4"></div> <!-- Add spacing at the bottom -->
                         </div>
 
                         <!-- Leave Status Distribution Chart -->
-                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md md:col-span-2">
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md md:col-span-2 mt-4">
                             <div class="flex justify-between items-center mb-4">
                                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Leave Status Distribution</h3>
                                 <div class="flex space-x-2">
@@ -307,12 +309,13 @@
                             <div class="h-64">
                                 <canvas id="leaveStatusDistributionChart"></canvas>
                             </div>
+                            <div class="h-4"></div> <!-- Add spacing at the bottom -->
                         </div>
                     </div>
                 </div>
 
                 <!-- Recent Activity -->
-                <div class="mt-8 w-full">
+                <div class="mt-12 w-full">
                     <h2 class="text-xl font-semibold text-gray-900 mb-4">Recent Activity</h2>
                     <div class="mt-4 bg-white shadow-md overflow-hidden sm:rounded-lg w-full max-w-full">
                         <ul class="divide-y divide-gray-200">
@@ -798,20 +801,17 @@
                 const labels = Object.keys(data.labels);
                 const values = Object.values(data.data);
 
-                // Define colors for different leave types
-                const backgroundColors = [
-                    'rgba(79, 70, 229, 0.7)',  // Indigo for Annual
-                    'rgba(239, 68, 68, 0.7)',  // Red for Sick
-                    'rgba(245, 158, 11, 0.7)', // Amber for Personal
-                    'rgba(107, 114, 128, 0.7)' // Gray for Other
-                ];
+                // Define colors for different leave types with consistent order
+                const leaveTypeColors = {
+                    'Annual': { bg: 'rgba(79, 70, 229, 0.7)', border: 'rgba(79, 70, 229, 1)' },   // Indigo
+                    'Sick': { bg: 'rgba(239, 68, 68, 0.7)', border: 'rgba(239, 68, 68, 1)' },      // Red
+                    'Personal': { bg: 'rgba(245, 158, 11, 0.7)', border: 'rgba(245, 158, 11, 1)' }, // Amber
+                    'Other': { bg: 'rgba(107, 114, 128, 0.7)', border: 'rgba(107, 114, 128, 1)' }   // Gray
+                };
 
-                const borderColors = [
-                    'rgba(79, 70, 229, 1)',
-                    'rgba(239, 68, 68, 1)',
-                    'rgba(245, 158, 11, 1)',
-                    'rgba(107, 114, 128, 1)'
-                ];
+                // Map colors based on labels to ensure consistency
+                const backgroundColors = labels.map(label => leaveTypeColors[label]?.bg || 'rgba(107, 114, 128, 0.7)');
+                const borderColors = labels.map(label => leaveTypeColors[label]?.border || 'rgba(107, 114, 128, 1)');
 
                 // Add a title above the chart
                 const chartTitle = document.createElement('div');
@@ -921,28 +921,46 @@
                 const labels = Object.keys(data.labels);
                 const values = Object.values(data.data);
 
-                // Define colors for different status types
-                const backgroundColors = {
-                    'APPROVED': 'rgba(16, 185, 129, 0.7)',  // Green
-                    'PENDING': 'rgba(245, 158, 11, 0.7)',  // Amber
-                    'REJECTED': 'rgba(239, 68, 68, 0.7)'   // Red
+                // Define colors for different status types with consistent order
+                const statusColors = {
+                    'APPROVED': { bg: 'rgba(16, 185, 129, 0.7)', border: 'rgba(16, 185, 129, 1)' },  // Green
+                    'PENDING': { bg: 'rgba(245, 158, 11, 0.7)', border: 'rgba(245, 158, 11, 1)' },   // Amber
+                    'REJECTED': { bg: 'rgba(239, 68, 68, 0.7)', border: 'rgba(239, 68, 68, 1)' }     // Red
                 };
 
-                const borderColors = {
-                    'APPROVED': 'rgba(16, 185, 129, 1)',
-                    'PENDING': 'rgba(245, 158, 11, 1)',
-                    'REJECTED': 'rgba(239, 68, 68, 1)'
-                };
+                // Create a legend for status colors
+                const statusLegend = document.createElement('div');
+                statusLegend.className = 'flex flex-wrap gap-3 mt-4 justify-center';
+
+                Object.entries(statusColors).forEach(([status, colors]) => {
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'flex items-center';
+
+                    const colorBox = document.createElement('div');
+                    colorBox.className = 'w-4 h-4 mr-1 rounded';
+                    colorBox.style.backgroundColor = colors.bg;
+
+                    const label = document.createElement('span');
+                    label.className = 'text-xs font-medium';
+                    label.textContent = status;
+
+                    legendItem.appendChild(colorBox);
+                    legendItem.appendChild(label);
+                    statusLegend.appendChild(legendItem);
+                });
 
                 // Create datasets with colors matching status
-                const backgroundColor = labels.map(label => backgroundColors[label] || 'rgba(107, 114, 128, 0.7)');
-                const borderColor = labels.map(label => borderColors[label] || 'rgba(107, 114, 128, 1)');
+                const backgroundColor = labels.map(label => statusColors[label]?.bg || 'rgba(107, 114, 128, 0.7)');
+                const borderColor = labels.map(label => statusColors[label]?.border || 'rgba(107, 114, 128, 1)');
 
                 // Add a title above the chart
                 const chartTitle = document.createElement('div');
                 chartTitle.className = 'text-sm text-center text-gray-500 mb-2';
                 chartTitle.textContent = 'Status of your leave requests this year';
                 document.getElementById('leaveStatusDistributionChart').parentNode.insertBefore(chartTitle, document.getElementById('leaveStatusDistributionChart'));
+
+                // Add the status legend below the chart
+                document.getElementById('leaveStatusDistributionChart').parentNode.appendChild(statusLegend);
 
                 // Calculate total leave requests
                 const totalRequests = values.reduce((sum, value) => sum + value, 0);

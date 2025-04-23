@@ -88,6 +88,10 @@ public class EmployeeDashboardServlet extends HttpServlet {
             // Get unread notification count
             int unreadNotificationCount = notificationDAO.getUnreadNotificationCount(employee.getId());
             request.setAttribute("unreadNotificationCount", unreadNotificationCount);
+
+            // Get recent activities for this user
+            List<UserActivity> recentActivities = userActivityDAO.getRecentActivitiesByUserId(user.getId(), 5);
+            request.setAttribute("recentActivities", recentActivities);
         } else {
             // If employee not found, try to find by email (username)
             String username = user.getUsername();

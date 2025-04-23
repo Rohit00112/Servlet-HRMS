@@ -18,7 +18,10 @@ Layout Component Usage:
 <html class="light">
 <head>
     <title>HRMS - ${param.pageTitle}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0ea5e9">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -42,6 +45,9 @@ Layout Component Usage:
                             800: '#075985',
                             900: '#0c4a6e',
                         }
+                    },
+                    screens: {
+                        'xs': '475px',
                     }
                 }
             }
@@ -133,7 +139,7 @@ Layout Component Usage:
         ${param.additionalHead}
     </c:if>
 </head>
-<body class="min-h-screen flex flex-col bg-fixed bg-white" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuXzAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDQ1KSI+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjUiIGhlaWdodD0iNSIgZmlsbD0icmdiYSgyMDAsMjE1LDI1MCwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm5fMCkiLz48L3N2Zz4='); background-size: cover; background-position: center; background-attachment: fixed;">
+<body class="min-h-screen flex flex-col bg-fixed bg-white touch-manipulation" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuXzAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDQ1KSI+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjUiIGhlaWdodD0iNSIgZmlsbD0icmdiYSgyMDAsMjE1LDI1MCwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm5fMCkiLz48L3N2Zz4='); background-size: cover; background-position: center; background-attachment: fixed;">
     <div class="flex flex-1 w-full">
         <!-- Sidebar -->
         <jsp:include page="/WEB-INF/components/sidebar.jsp" />
@@ -144,14 +150,14 @@ Layout Component Usage:
             <jsp:include page="/WEB-INF/components/header.jsp" />
 
             <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto py-6 px-6 w-full">
-                <div class="w-full">
+            <main class="flex-1 overflow-y-auto py-4 px-4 sm:py-6 sm:px-6 w-full">
+                <div class="w-full max-w-7xl mx-auto">
                     <!-- Page Title and Back Button -->
                     <c:if test="${not empty param.pageTitle}">
-                        <div class="flex items-center justify-between mb-8">
-                            <h1 class="text-2xl font-semibold text-gray-700 dark:text-white backdrop-blur-md bg-blue-50/80 dark:bg-gray-800/80 inline-block px-4 py-2 rounded-lg shadow-sm border border-blue-100/50 dark:border-gray-700/50">${param.pageTitle}</h1>
+                        <div class="flex flex-col xs:flex-row items-start xs:items-center justify-between mb-6 sm:mb-8 gap-4">
+                            <h1 class="text-xl sm:text-2xl font-semibold text-gray-700 dark:text-white backdrop-blur-md bg-blue-50/80 dark:bg-gray-800/80 inline-block px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg shadow-sm border border-blue-100/50 dark:border-gray-700/50">${param.pageTitle}</h1>
                             <c:if test="${not empty param.backUrl}">
-                                <a href="${pageContext.request.contextPath}${param.backUrl}" class="inline-flex items-center px-4 py-2 border border-blue-100/50 dark:border-gray-700/50 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-200 backdrop-blur-md bg-blue-50/70 dark:bg-gray-800/70 hover:bg-blue-50/90 dark:hover:bg-gray-800/90 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                <a href="${pageContext.request.contextPath}${param.backUrl}" class="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 border border-blue-100/50 dark:border-gray-700/50 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-200 backdrop-blur-md bg-blue-50/70 dark:bg-gray-800/70 hover:bg-blue-50/90 dark:hover:bg-gray-800/90 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
                                     <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                                     </svg>

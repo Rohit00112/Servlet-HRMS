@@ -51,16 +51,16 @@
     </button>
 
     <!-- Notification Dropdown -->
-    <div class="hidden origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-20 max-h-96 overflow-hidden flex flex-col" id="notification-dropdown">
-        <div class="py-2 px-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
-            <h3 class="text-sm font-medium text-gray-700">Notifications</h3>
+    <div class="hidden origin-top-right absolute right-0 mt-2 w-full sm:w-80 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-20 max-h-96 overflow-hidden flex flex-col" id="notification-dropdown">
+        <div class="py-2 px-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center">
+            <h3 class="text-sm font-medium text-gray-700 dark:text-gray-200">Notifications</h3>
             <div class="flex space-x-2">
                 <% if (unreadCount > 0) { %>
-                <button type="button" id="mark-all-read-btn" class="text-xs text-primary-600 hover:text-primary-800">
+                <button type="button" id="mark-all-read-btn" class="text-xs text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300">
                     Mark all as read
                 </button>
                 <% } %>
-                <a href="${pageContext.request.contextPath}/notifications" class="text-xs text-gray-600 hover:text-gray-800">
+                <a href="${pageContext.request.contextPath}/notifications" class="text-xs text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100">
                     View all
                 </a>
             </div>
@@ -68,7 +68,7 @@
 
         <div class="overflow-y-auto max-h-80" id="notification-list">
             <% if (notifications == null || notifications.isEmpty()) { %>
-                <div class="py-4 px-4 text-center text-sm text-gray-500">
+                <div class="py-4 px-4 text-center text-sm text-gray-500 dark:text-gray-400">
                     No new notifications
                 </div>
             <% } else { %>

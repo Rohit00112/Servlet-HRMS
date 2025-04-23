@@ -4,19 +4,19 @@
 <%-- Get the current URI for active link highlighting --%>
 <c:set var="currentUri" value="${pageContext.request.servletPath}" />
 
-<div id="mobile-sidebar" class="fixed inset-0 flex z-40 md:hidden" style="display: none;">
-    <div class="fixed inset-0 bg-gray-600 bg-opacity-75" id="mobile-sidebar-backdrop"></div>
-    
-    <div class="relative flex-1 flex flex-col max-w-xs w-full bg-white">
+<div id="mobile-sidebar" class="fixed inset-0 flex z-50 md:hidden" style="display: none;">
+    <div class="fixed inset-0 bg-gray-600 bg-opacity-75 backdrop-blur-sm" id="mobile-sidebar-backdrop"></div>
+
+    <div class="relative flex-1 flex flex-col max-w-xs w-full bg-white dark:bg-gray-800 overflow-hidden">
         <div class="absolute top-0 right-0 -mr-12 pt-2">
-            <button id="close-mobile-sidebar" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+            <button id="close-mobile-sidebar" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-label="Close sidebar">
                 <span class="sr-only">Close sidebar</span>
                 <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
-        
+
         <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
             <div class="flex-shrink-0 flex items-center px-4 bg-primary-700 text-white py-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -24,7 +24,7 @@
                 </svg>
                 <span class="text-xl font-semibold">HRMS</span>
             </div>
-            <nav class="mt-5 px-2 space-y-1">
+            <nav class="mt-5 px-2 space-y-1 pb-20">
                 <c:choose>
                     <c:when test="${sessionScope.role eq 'ADMIN'}">
                         <div class="px-2 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
@@ -138,7 +138,7 @@
                         </a>
                     </c:when>
                 </c:choose>
-                
+
                 <div class="px-2 py-2 mt-6 text-xs font-semibold text-gray-400 uppercase tracking-wider">
                     SETTINGS
                 </div>

@@ -38,6 +38,32 @@ public class NotificationDAO {
     }
 
     /**
+     * Get count of unread notifications for an employee
+     *
+     * @param employeeId The employee ID
+     * @return Count of unread notifications
+     */
+    public int getUnreadNotificationCount(int employeeId) {
+        String sql = "SELECT COUNT(*) FROM notifications WHERE employee_id = ? AND is_read = false";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, employeeId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    /**
      * Get all notifications for an employee with pagination
      *
      * @param employeeId The employee ID
@@ -95,25 +121,7 @@ public class NotificationDAO {
         return 0;
     }
 
-    public int getUnreadNotificationCount(int employeeId) {
-        String sql = "SELECT COUNT(*) FROM notifications WHERE employee_id = ? AND is_read = false";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setInt(1, employeeId);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return 0;
-    }
 
     /**
      * Mark a notification as read

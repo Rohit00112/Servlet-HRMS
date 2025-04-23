@@ -189,29 +189,58 @@
 
                 <!-- Analytics Section -->
                 <div class="mt-8 w-full">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Attendance Analytics</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Attendance Analytics -->
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Attendance Analytics</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <!-- Weekly Attendance Chart -->
-                        <div class="bg-white p-6 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Weekly Attendance</h3>
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Weekly Attendance</h3>
                             <div class="h-64">
                                 <canvas id="weeklyAttendanceChart"></canvas>
                             </div>
                         </div>
 
                         <!-- Monthly Attendance Chart -->
-                        <div class="bg-white p-6 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Monthly Attendance</h3>
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Monthly Attendance</h3>
                             <div class="h-64">
                                 <canvas id="monthlyAttendanceChart"></canvas>
                             </div>
                         </div>
 
                         <!-- Attendance Trend Chart -->
-                        <div class="bg-white p-6 rounded-lg shadow-md md:col-span-2">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Attendance Trend (Last 6 Months)</h3>
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md md:col-span-2">
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Attendance Trend (Last 6 Months)</h3>
                             <div class="h-64">
                                 <canvas id="attendanceTrendChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Leave Analytics -->
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Leave Analytics</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Leave Usage by Month Chart -->
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Leave Usage by Month</h3>
+                            <div class="h-64">
+                                <canvas id="leaveUsageByMonthChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Leave Usage by Type Chart -->
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Leave Usage by Type</h3>
+                            <div class="h-64">
+                                <canvas id="leaveUsageByTypeChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Leave Status Distribution Chart -->
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md md:col-span-2">
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Leave Status Distribution</h3>
+                            <div class="h-64">
+                                <canvas id="leaveStatusDistributionChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -484,6 +513,182 @@
                 });
             })
             .catch(error => console.error('Error loading attendance trend data:', error));
+
+        // Load Leave Usage by Month Data
+        fetch('${pageContext.request.contextPath}/dashboard/analytics?type=leave-usage-by-month')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('leaveUsageByMonthChart').getContext('2d');
+
+                // Convert data to arrays
+                const labels = Object.keys(data.labels);
+                const values = Object.values(data.data);
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Leave Days Taken',
+                            data: values,
+                            backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0,
+                                    stepSize: 1
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.parsed.y;
+                                        return value + (value === 1 ? ' day' : ' days');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error loading leave usage by month data:', error));
+
+        // Load Leave Usage by Type Data
+        fetch('${pageContext.request.contextPath}/dashboard/analytics?type=leave-usage-by-type')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('leaveUsageByTypeChart').getContext('2d');
+
+                // Convert data to arrays
+                const labels = Object.keys(data.labels);
+                const values = Object.values(data.data);
+
+                // Define colors for different leave types
+                const backgroundColors = [
+                    'rgba(79, 70, 229, 0.7)',  // Indigo for Annual
+                    'rgba(239, 68, 68, 0.7)',  // Red for Sick
+                    'rgba(245, 158, 11, 0.7)', // Amber for Personal
+                    'rgba(107, 114, 128, 0.7)' // Gray for Other
+                ];
+
+                const borderColors = [
+                    'rgba(79, 70, 229, 1)',
+                    'rgba(239, 68, 68, 1)',
+                    'rgba(245, 158, 11, 1)',
+                    'rgba(107, 114, 128, 1)'
+                ];
+
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: values,
+                            backgroundColor: backgroundColors,
+                            borderColor: borderColors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.parsed;
+                                        const label = context.label;
+                                        return label + ': ' + value + (value === 1 ? ' day' : ' days');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error loading leave usage by type data:', error));
+
+        // Load Leave Status Distribution Data
+        fetch('${pageContext.request.contextPath}/dashboard/analytics?type=leave-status-distribution')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('leaveStatusDistributionChart').getContext('2d');
+
+                // Convert data to arrays
+                const labels = Object.keys(data.labels);
+                const values = Object.values(data.data);
+
+                // Define colors for different status types
+                const backgroundColors = {
+                    'APPROVED': 'rgba(16, 185, 129, 0.7)',  // Green
+                    'PENDING': 'rgba(245, 158, 11, 0.7)',  // Amber
+                    'REJECTED': 'rgba(239, 68, 68, 0.7)'   // Red
+                };
+
+                const borderColors = {
+                    'APPROVED': 'rgba(16, 185, 129, 1)',
+                    'PENDING': 'rgba(245, 158, 11, 1)',
+                    'REJECTED': 'rgba(239, 68, 68, 1)'
+                };
+
+                // Create datasets with colors matching status
+                const backgroundColor = labels.map(label => backgroundColors[label] || 'rgba(107, 114, 128, 0.7)');
+                const borderColor = labels.map(label => borderColors[label] || 'rgba(107, 114, 128, 1)');
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Number of Leaves',
+                            data: values,
+                            backgroundColor: backgroundColor,
+                            borderColor: borderColor,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0,
+                                    stepSize: 1
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.parsed.y;
+                                        return value + (value === 1 ? ' leave request' : ' leave requests');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error loading leave status distribution data:', error));
     });
 </script>
 </c:set>

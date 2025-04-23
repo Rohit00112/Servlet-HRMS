@@ -43,21 +43,21 @@ public class DashboardAnalyticsServlet extends HttpServlet {
 
         User user = (User) session.getAttribute("user");
         String dataType = request.getParameter("type");
-        
+
         // Get employee ID
         Employee employee = employeeDAO.getEmployeeByUserId(user.getId());
         if (employee == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-        
+
         int employeeId = employee.getId();
-        
+
         // Set response type to JSON
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
         JSONObject jsonResponse = new JSONObject();
-        
+
         try {
             switch (dataType) {
                 case "weekly-attendance":
@@ -66,21 +66,42 @@ public class DashboardAnalyticsServlet extends HttpServlet {
                     jsonResponse.put("labels", weeklyData.keySet());
                     jsonResponse.put("data", weeklyData.values());
                     break;
-                    
+
                 case "monthly-attendance":
                     // Get monthly attendance data
                     Map<String, Integer> monthlyData = attendanceDAO.getMonthlyAttendanceData(employeeId);
                     jsonResponse.put("labels", monthlyData.keySet());
                     jsonResponse.put("data", monthlyData.values());
                     break;
-                    
+
                 case "attendance-trend":
                     // Get attendance trend data
                     Map<String, Double> trendData = attendanceDAO.getAttendanceTrendData(employeeId);
                     jsonResponse.put("labels", trendData.keySet());
                     jsonResponse.put("data", trendData.values());
                     break;
-                    
+
+                case "leave-usage-by-month":
+                    // Get leave usage by month
+                    Map<String, Integer> leaveByMonth = leaveDAO.getLeaveUsageByMonth(employeeId);
+                    jsonResponse.put("labels", leaveByMonth.keySet());
+                    jsonResponse.put("data", leaveByMonth.values());
+                    break;
+
+                case "leave-usage-by-type":
+                    // Get leave usage by type
+                    Map<String, Integer> leaveByType = leaveDAO.getLeaveUsageByType(employeeId);
+                    jsonResponse.put("labels", leaveByType.keySet());
+                    jsonResponse.put("data", leaveByType.values());
+                    break;
+
+                case "leave-status-distribution":
+                    // Get leave status distribution
+                    Map<String, Integer> leaveStatus = leaveDAO.getLeaveStatusDistribution(employeeId);
+                    jsonResponse.put("labels", leaveStatus.keySet());
+                    jsonResponse.put("data", leaveStatus.values());
+                    break;
+
                 default:
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     jsonResponse.put("error", "Invalid data type");
@@ -90,7 +111,7 @@ public class DashboardAnalyticsServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             jsonResponse.put("error", e.getMessage());
         }
-        
+
         out.print(jsonResponse.toString());
     }
 }

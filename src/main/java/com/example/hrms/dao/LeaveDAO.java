@@ -4,8 +4,15 @@ import com.example.hrms.model.Leave;
 import com.example.hrms.util.DatabaseConnection;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class LeaveDAO {
 
@@ -244,9 +251,55 @@ public class LeaveDAO {
      * @return The change in leave balance (positive means increase, negative means decrease)
      */
     public int getLeaveBalanceChange(int employeeId) {
-        // For simplicity, we'll just return a fixed value
-        // In a real system, you would compare with a previous period
-        return -2; // Example: 2 days less than before
+        // Get the current year and previous year
+        int currentYear = java.time.LocalDate.now().getYear();
+        int previousYear = currentYear - 1;
+
+        // Calculate the total approved leave days taken this year
+        String currentYearSql = "SELECT COALESCE(SUM(end_date - start_date + 1), 0) AS days_taken " +
+                         "FROM leaves " +
+                         "WHERE employee_id = ? AND status = 'APPROVED' " +
+                         "AND EXTRACT(YEAR FROM start_date) = ?";
+
+        // Calculate the total approved leave days taken last year
+        String previousYearSql = "SELECT COALESCE(SUM(end_date - start_date + 1), 0) AS days_taken " +
+                         "FROM leaves " +
+                         "WHERE employee_id = ? AND status = 'APPROVED' " +
+                         "AND EXTRACT(YEAR FROM start_date) = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement currentYearStmt = conn.prepareStatement(currentYearSql);
+             PreparedStatement previousYearStmt = conn.prepareStatement(previousYearSql)) {
+
+            // Get current year leave days
+            currentYearStmt.setInt(1, employeeId);
+            currentYearStmt.setInt(2, currentYear);
+            ResultSet currentYearRs = currentYearStmt.executeQuery();
+
+            // Get previous year leave days
+            previousYearStmt.setInt(1, employeeId);
+            previousYearStmt.setInt(2, previousYear);
+            ResultSet previousYearRs = previousYearStmt.executeQuery();
+
+            int currentYearDaysTaken = 0;
+            int previousYearDaysTaken = 0;
+
+            if (currentYearRs.next()) {
+                currentYearDaysTaken = currentYearRs.getInt("days_taken");
+            }
+
+            if (previousYearRs.next()) {
+                previousYearDaysTaken = previousYearRs.getInt("days_taken");
+            }
+
+            // Calculate the difference (positive means more leave days available)
+            return previousYearDaysTaken - currentYearDaysTaken;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 
     private Leave mapLeaveFromResultSet(ResultSet rs) throws SQLException {
@@ -269,5 +322,158 @@ public class LeaveDAO {
         leave.setReviewerName(rs.getString("reviewer_name"));
 
         return leave;
+    }
+
+    /**
+     * Get leave usage by month for the current year
+     *
+     * @param employeeId The employee ID
+     * @return Map with month names as keys and leave days taken as values
+     */
+    public Map<String, Integer> getLeaveUsageByMonth(int employeeId) {
+        Map<String, Integer> leaveUsage = new LinkedHashMap<>();
+
+        // Initialize with all months
+        for (int i = 0; i < 12; i++) {
+            Month month = Month.of(i + 1);
+            String monthName = month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+            leaveUsage.put(monthName, 0);
+        }
+
+        // Get the current year
+        int currentYear = java.time.LocalDate.now().getYear();
+
+        // Query to get leave days taken by month for the current year
+        String sql = "SELECT EXTRACT(MONTH FROM start_date) AS month, " +
+                     "SUM(end_date - start_date + 1) AS days_taken " +
+                     "FROM leaves " +
+                     "WHERE employee_id = ? AND status = 'APPROVED' " +
+                     "AND EXTRACT(YEAR FROM start_date) = ? " +
+                     "GROUP BY EXTRACT(MONTH FROM start_date) " +
+                     "ORDER BY EXTRACT(MONTH FROM start_date)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, employeeId);
+            pstmt.setInt(2, currentYear);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                int monthNum = rs.getInt("month");
+                int daysTaken = rs.getInt("days_taken");
+
+                Month month = Month.of(monthNum);
+                String monthName = month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+
+                leaveUsage.put(monthName, daysTaken);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return leaveUsage;
+    }
+
+    /**
+     * Get leave usage by type for the current year
+     *
+     * @param employeeId The employee ID
+     * @return Map with leave types as keys and counts as values
+     */
+    public Map<String, Integer> getLeaveUsageByType(int employeeId) {
+        Map<String, Integer> leaveTypes = new HashMap<>();
+
+        // Initialize with common leave types
+        leaveTypes.put("Annual", 0);
+        leaveTypes.put("Sick", 0);
+        leaveTypes.put("Personal", 0);
+        leaveTypes.put("Other", 0);
+
+        // Get the current year
+        int currentYear = java.time.LocalDate.now().getYear();
+
+        // For this example, we'll categorize leaves based on the reason field
+        // In a real system, you would have a separate leave_type field
+        String sql = "SELECT reason, SUM(end_date - start_date + 1) AS days_taken " +
+                     "FROM leaves " +
+                     "WHERE employee_id = ? AND status = 'APPROVED' " +
+                     "AND EXTRACT(YEAR FROM start_date) = ? " +
+                     "GROUP BY reason";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, employeeId);
+            pstmt.setInt(2, currentYear);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                String reason = rs.getString("reason").toLowerCase();
+                int daysTaken = rs.getInt("days_taken");
+
+                // Categorize based on keywords in the reason
+                if (reason.contains("sick") || reason.contains("illness") || reason.contains("medical")) {
+                    leaveTypes.put("Sick", leaveTypes.get("Sick") + daysTaken);
+                } else if (reason.contains("vacation") || reason.contains("holiday") || reason.contains("annual")) {
+                    leaveTypes.put("Annual", leaveTypes.get("Annual") + daysTaken);
+                } else if (reason.contains("personal") || reason.contains("family")) {
+                    leaveTypes.put("Personal", leaveTypes.get("Personal") + daysTaken);
+                } else {
+                    leaveTypes.put("Other", leaveTypes.get("Other") + daysTaken);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return leaveTypes;
+    }
+
+    /**
+     * Get leave status distribution for an employee
+     *
+     * @param employeeId The employee ID
+     * @return Map with status types as keys and counts as values
+     */
+    public Map<String, Integer> getLeaveStatusDistribution(int employeeId) {
+        Map<String, Integer> statusDistribution = new HashMap<>();
+
+        // Initialize with all status types
+        statusDistribution.put("APPROVED", 0);
+        statusDistribution.put("PENDING", 0);
+        statusDistribution.put("REJECTED", 0);
+
+        // Get the current year
+        int currentYear = java.time.LocalDate.now().getYear();
+
+        // Query to get leave count by status for the current year
+        String sql = "SELECT status, COUNT(*) as count " +
+                     "FROM leaves " +
+                     "WHERE employee_id = ? " +
+                     "AND EXTRACT(YEAR FROM start_date) = ? " +
+                     "GROUP BY status";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, employeeId);
+            pstmt.setInt(2, currentYear);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                String status = rs.getString("status");
+                int count = rs.getInt("count");
+
+                statusDistribution.put(status, count);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return statusDistribution;
     }
 }

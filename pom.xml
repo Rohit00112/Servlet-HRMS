@@ -74,6 +74,13 @@
             <artifactId>layout</artifactId>
             <version>7.2.5</version>
         </dependency>
+
+        <!-- JSON for API responses -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20240303</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -4,6 +4,11 @@
 <c:set var="pageTitle" value="Employee Dashboard" scope="request" />
 <c:set var="userRole" value="employee" scope="request" />
 
+<c:set var="additionalHead">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</c:set>
+
 <c:set var="mainContent">
                 <!-- Alert Message -->
                 <c:if test="${not empty errorMessage}">
@@ -182,6 +187,36 @@
                     </div>
                 </div>
 
+                <!-- Analytics Section -->
+                <div class="mt-8 w-full">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Attendance Analytics</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Weekly Attendance Chart -->
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Weekly Attendance</h3>
+                            <div class="h-64">
+                                <canvas id="weeklyAttendanceChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Monthly Attendance Chart -->
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Monthly Attendance</h3>
+                            <div class="h-64">
+                                <canvas id="monthlyAttendanceChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Attendance Trend Chart -->
+                        <div class="bg-white p-6 rounded-lg shadow-md md:col-span-2">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Attendance Trend (Last 6 Months)</h3>
+                            <div class="h-64">
+                                <canvas id="attendanceTrendChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Recent Activity -->
                 <div class="mt-8 w-full">
                     <h2 class="text-xl font-semibold text-gray-900 mb-4">Recent Activity</h2>
@@ -274,8 +309,189 @@
             </div>
 </c:set>
 
+<c:set var="additionalScripts">
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Function to set chart colors based on status
+        function getStatusColor(status) {
+            switch(status) {
+                case 'PRESENT': return 'rgba(34, 197, 94, 0.7)'; // Green
+                case 'LATE': return 'rgba(234, 179, 8, 0.7)';    // Yellow
+                case 'HALF_DAY': return 'rgba(59, 130, 246, 0.7)'; // Blue
+                case 'ABSENT': return 'rgba(239, 68, 68, 0.7)';   // Red
+                default: return 'rgba(156, 163, 175, 0.7)';      // Gray
+            }
+        }
+
+        function getStatusBorderColor(status) {
+            switch(status) {
+                case 'PRESENT': return 'rgb(22, 163, 74)';      // Darker Green
+                case 'LATE': return 'rgb(202, 138, 4)';         // Darker Yellow
+                case 'HALF_DAY': return 'rgb(37, 99, 235)';     // Darker Blue
+                case 'ABSENT': return 'rgb(220, 38, 38)';       // Darker Red
+                default: return 'rgb(107, 114, 128)';           // Darker Gray
+            }
+        }
+
+        // Load Weekly Attendance Data
+        fetch('${pageContext.request.contextPath}/dashboard/analytics?type=weekly-attendance')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('weeklyAttendanceChart').getContext('2d');
+
+                // Convert data to arrays
+                const labels = Object.keys(data.labels);
+                const statuses = Object.values(data.data);
+
+                // Create background colors based on status
+                const backgroundColors = statuses.map(status => getStatusColor(status));
+                const borderColors = statuses.map(status => getStatusBorderColor(status));
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Attendance Status',
+                            data: statuses.map(status => 1), // Each day has one status
+                            backgroundColor: backgroundColors,
+                            borderColor: borderColors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 1,
+                                ticks: {
+                                    stepSize: 1,
+                                    callback: function(value) {
+                                        return value === 1 ? 'Status' : '';
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return statuses[context.dataIndex];
+                                    }
+                                }
+                            },
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error loading weekly attendance data:', error));
+
+        // Load Monthly Attendance Data
+        fetch('${pageContext.request.contextPath}/dashboard/analytics?type=monthly-attendance')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('monthlyAttendanceChart').getContext('2d');
+
+                // Convert data to arrays
+                const labels = Object.keys(data.labels);
+                const values = Object.values(data.data);
+
+                // Create background colors based on status
+                const backgroundColors = labels.map(status => getStatusColor(status));
+                const borderColors = labels.map(status => getStatusBorderColor(status));
+
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: values,
+                            backgroundColor: backgroundColors,
+                            borderColor: borderColors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error loading monthly attendance data:', error));
+
+        // Load Attendance Trend Data
+        fetch('${pageContext.request.contextPath}/dashboard/analytics?type=attendance-trend')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('attendanceTrendChart').getContext('2d');
+
+                // Convert data to arrays
+                const labels = Object.keys(data.labels);
+                const values = Object.values(data.data);
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Attendance Percentage',
+                            data: values,
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true,
+                            pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.parsed.y.toFixed(1) + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error loading attendance trend data:', error));
+    });
+</script>
+</c:set>
+
 <jsp:include page="/WEB-INF/components/layout.jsp">
     <jsp:param name="pageTitle" value="${pageTitle}" />
     <jsp:param name="userRole" value="${userRole}" />
     <jsp:param name="mainContent" value="${mainContent}" />
+    <jsp:param name="additionalHead" value="${additionalHead}" />
+    <jsp:param name="additionalScripts" value="${additionalScripts}" />
 </jsp:include>

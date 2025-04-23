@@ -3,12 +3,17 @@ package com.example.hrms.dao;
 import com.example.hrms.model.Attendance;
 import com.example.hrms.util.DatabaseConnection;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.DayOfWeek;
+import java.time.format.TextStyle;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class AttendanceDAO {
 
@@ -300,9 +305,27 @@ public class AttendanceDAO {
      * @return The change in attendance rate (positive means increase, negative means decrease)
      */
     public double getAttendanceRateChange(int employeeId) {
-        // For simplicity, we'll just return a fixed value
-        // In a real system, you would compare with a previous period
-        return 1.2; // Example: 1.2% increase
+        // Get current month's attendance rate
+        java.time.LocalDate today = java.time.LocalDate.now();
+        java.time.LocalDate firstDayOfMonth = today.withDayOfMonth(1);
+        java.time.LocalDate lastDayOfMonth = today.withDayOfMonth(today.lengthOfMonth());
+
+        // Get previous month's dates
+        java.time.LocalDate firstDayOfPrevMonth = firstDayOfMonth.minusMonths(1);
+        java.time.LocalDate lastDayOfPrevMonth = firstDayOfPrevMonth.withDayOfMonth(
+                firstDayOfPrevMonth.lengthOfMonth());
+
+        // Calculate attendance rates
+        double currentRate = getAttendancePercentage(employeeId,
+                Date.valueOf(firstDayOfMonth),
+                Date.valueOf(lastDayOfMonth));
+
+        double previousRate = getAttendancePercentage(employeeId,
+                Date.valueOf(firstDayOfPrevMonth),
+                Date.valueOf(lastDayOfPrevMonth));
+
+        // Calculate the change (can be positive or negative)
+        return currentRate - previousRate;
     }
 
     public double getAttendancePercentage(int employeeId, Date startDate, Date endDate) {
@@ -355,5 +378,135 @@ public class AttendanceDAO {
         attendance.setDepartmentName(rs.getString("department_name"));
 
         return attendance;
+    }
+
+    /**
+     * Get attendance data for the last 7 days for a specific employee
+     *
+     * @param employeeId The employee ID
+     * @return Map with day names as keys and attendance status as values
+     */
+    public Map<String, String> getWeeklyAttendanceData(int employeeId) {
+        Map<String, String> weeklyData = new LinkedHashMap<>(); // LinkedHashMap to maintain order
+
+        // Get the last 7 days
+        LocalDate today = LocalDate.now();
+        LocalDate sevenDaysAgo = today.minusDays(6); // 7 days including today
+
+        // Initialize the map with the last 7 days
+        for (int i = 0; i < 7; i++) {
+            LocalDate date = sevenDaysAgo.plusDays(i);
+            String dayName = date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+            weeklyData.put(dayName, "ABSENT"); // Default to absent
+        }
+
+        // Query to get attendance for the last 7 days
+        String sql = "SELECT date, status FROM attendance " +
+                     "WHERE employee_id = ? AND date BETWEEN ? AND ? " +
+                     "ORDER BY date ASC";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, employeeId);
+            pstmt.setDate(2, Date.valueOf(sevenDaysAgo));
+            pstmt.setDate(3, Date.valueOf(today));
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Date date = rs.getDate("date");
+                String status = rs.getString("status");
+
+                // Convert SQL date to LocalDate
+                LocalDate localDate = date.toLocalDate();
+                String dayName = localDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+
+                // Update the map with actual status
+                weeklyData.put(dayName, status);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return weeklyData;
+    }
+
+    /**
+     * Get monthly attendance data for a specific employee
+     *
+     * @param employeeId The employee ID
+     * @return Map with status types as keys and counts as values
+     */
+    public Map<String, Integer> getMonthlyAttendanceData(int employeeId) {
+        Map<String, Integer> monthlyData = new HashMap<>();
+
+        // Initialize with all possible statuses
+        monthlyData.put("PRESENT", 0);
+        monthlyData.put("ABSENT", 0);
+        monthlyData.put("LATE", 0);
+        monthlyData.put("HALF_DAY", 0);
+
+        // Get the current month's start and end dates
+        LocalDate today = LocalDate.now();
+        LocalDate firstDayOfMonth = today.withDayOfMonth(1);
+        LocalDate lastDayOfMonth = today.withDayOfMonth(today.lengthOfMonth());
+
+        // Query to get attendance counts by status for the current month
+        String sql = "SELECT status, COUNT(*) as count FROM attendance " +
+                     "WHERE employee_id = ? AND date BETWEEN ? AND ? " +
+                     "GROUP BY status";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, employeeId);
+            pstmt.setDate(2, Date.valueOf(firstDayOfMonth));
+            pstmt.setDate(3, Date.valueOf(lastDayOfMonth));
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                String status = rs.getString("status");
+                int count = rs.getInt("count");
+                monthlyData.put(status, count);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return monthlyData;
+    }
+
+    /**
+     * Get attendance trend data for the last 6 months for a specific employee
+     *
+     * @param employeeId The employee ID
+     * @return Map with month names as keys and attendance percentages as values
+     */
+    public Map<String, Double> getAttendanceTrendData(int employeeId) {
+        Map<String, Double> trendData = new LinkedHashMap<>(); // LinkedHashMap to maintain order
+
+        // Get data for the last 6 months
+        LocalDate today = LocalDate.now();
+
+        for (int i = 5; i >= 0; i--) {
+            LocalDate firstDayOfMonth = today.minusMonths(i).withDayOfMonth(1);
+            LocalDate lastDayOfMonth = firstDayOfMonth.withDayOfMonth(
+                    firstDayOfMonth.lengthOfMonth());
+
+            String monthName = firstDayOfMonth.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+
+            // Calculate attendance percentage for this month
+            double percentage = getAttendancePercentage(employeeId,
+                    Date.valueOf(firstDayOfMonth),
+                    Date.valueOf(lastDayOfMonth));
+
+            trendData.put(monthName, percentage);
+        }
+
+        return trendData;
     }
 }

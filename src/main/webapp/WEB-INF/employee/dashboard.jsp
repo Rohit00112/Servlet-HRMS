@@ -235,10 +235,11 @@
                     </div>
 
                     <!-- Leave Analytics -->
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4 mt-8">Leave Analytics</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="mt-10 mb-12 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-6 pb-2 border-b border-gray-200 dark:border-gray-700">Leave Analytics</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
                         <!-- Leave Usage by Month Chart -->
-                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-shadow duration-300">
                             <div class="flex justify-between items-center mb-4">
                                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Leave Usage by Month</h3>
                                 <div class="flex space-x-2">
@@ -256,14 +257,14 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="h-64">
+                            <div class="h-64 mt-2">
                                 <canvas id="leaveUsageByMonthChart"></canvas>
                             </div>
-                            <div class="h-4"></div> <!-- Add spacing at the bottom -->
+                            <div class="mt-4 text-center text-sm text-gray-500">Total leave days taken this year: <span class="font-medium" id="totalLeaveDaysByMonth">0</span></div>
                         </div>
 
                         <!-- Leave Usage by Type Chart -->
-                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-shadow duration-300">
                             <div class="flex justify-between items-center mb-4">
                                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Leave Usage by Type</h3>
                                 <div class="flex space-x-2">
@@ -281,14 +282,14 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="h-64">
+                            <div class="h-64 mt-2">
                                 <canvas id="leaveUsageByTypeChart"></canvas>
                             </div>
-                            <div class="h-4"></div> <!-- Add spacing at the bottom -->
+                            <div class="mt-4 text-center text-sm text-gray-500">Total leave days by type: <span class="font-medium" id="totalLeaveDaysByType">0</span></div>
                         </div>
 
                         <!-- Leave Status Distribution Chart -->
-                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md md:col-span-2 mt-4">
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 md:col-span-2 mt-6 hover:shadow-lg transition-shadow duration-300">
                             <div class="flex justify-between items-center mb-4">
                                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Leave Status Distribution</h3>
                                 <div class="flex space-x-2">
@@ -306,10 +307,14 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="h-64">
+                            <div class="h-64 mt-2">
                                 <canvas id="leaveStatusDistributionChart"></canvas>
                             </div>
-                            <div class="h-4"></div> <!-- Add spacing at the bottom -->
+                            <div class="flex justify-center mt-6 gap-6" id="leaveStatusLegendContainer">
+                                <div class="flex items-center"><div class="w-4 h-4 rounded-full bg-green-500 mr-2"></div><span class="text-sm">Approved</span></div>
+                                <div class="flex items-center"><div class="w-4 h-4 rounded-full bg-yellow-500 mr-2"></div><span class="text-sm">Pending</span></div>
+                                <div class="flex items-center"><div class="w-4 h-4 rounded-full bg-red-500 mr-2"></div><span class="text-sm">Rejected</span></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -822,6 +827,9 @@
                 // Calculate total for percentage
                 const total = values.reduce((sum, value) => sum + value, 0);
 
+                // Update the total leave days by month display
+                document.getElementById('totalLeaveDaysByMonth').textContent = total;
+
                 // Create percentage labels with proper formatting
                 const percentageLabels = labels.map((label, index) => {
                     const percentage = total > 0 ? Math.round((values[index] / total) * 100) : 0;
@@ -923,9 +931,9 @@
 
                 // Define colors for different status types with consistent order
                 const statusColors = {
-                    'APPROVED': { bg: 'rgba(16, 185, 129, 0.7)', border: 'rgba(16, 185, 129, 1)' },  // Green
-                    'PENDING': { bg: 'rgba(245, 158, 11, 0.7)', border: 'rgba(245, 158, 11, 1)' },   // Amber
-                    'REJECTED': { bg: 'rgba(239, 68, 68, 0.7)', border: 'rgba(239, 68, 68, 1)' }     // Red
+                    'APPROVED': { bg: 'rgba(34, 197, 94, 0.7)', border: 'rgba(34, 197, 94, 1)' },  // Green-500
+                    'PENDING': { bg: 'rgba(234, 179, 8, 0.7)', border: 'rgba(234, 179, 8, 1)' },    // Yellow-500
+                    'REJECTED': { bg: 'rgba(239, 68, 68, 0.7)', border: 'rgba(239, 68, 68, 1)' }     // Red-500
                 };
 
                 // Create a legend for status colors

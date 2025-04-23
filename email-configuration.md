@@ -2,9 +2,38 @@
 
 This document provides instructions for configuring email notifications in the HRMS system.
 
-## Configuration Steps
+## Configuration Options
 
-1. Open the `db.properties` file located in the `src/main/resources` directory.
+There are two ways to configure email settings in the HRMS system:
+
+### Option 1: Using Environment Variables (Recommended)
+
+For security reasons, it's recommended to use environment variables for sensitive information like email credentials. The system will look for environment variables in the following format:
+
+```
+HRMS_MAIL_USERNAME=your-email@gmail.com
+HRMS_MAIL_PASSWORD=your-app-password
+HRMS_MAIL_FROM=HRMS System <your-email@gmail.com>
+HRMS_MAIL_ENABLED=true
+```
+
+To set these environment variables:
+
+- **On Windows**:
+  ```
+  set HRMS_MAIL_USERNAME=your-email@gmail.com
+  set HRMS_MAIL_PASSWORD=your-app-password
+  ```
+
+- **On Linux/Mac**:
+  ```
+  export HRMS_MAIL_USERNAME=your-email@gmail.com
+  export HRMS_MAIL_PASSWORD=your-app-password
+  ```
+
+### Option 2: Using Properties File
+
+1. Copy the `db.properties.template` file to `db.properties` in the `src/main/resources` directory.
 
 2. Update the following email configuration properties:
 
@@ -20,6 +49,8 @@ mail.from=HRMS System <your-email@gmail.com>
 mail.reply-to=no-reply@hrms.com
 mail.enabled=true
 ```
+
+> **IMPORTANT**: The `db.properties` file is excluded from version control for security reasons. Never commit this file with your credentials.
 
 3. Replace the placeholder values with your actual email configuration:
    - `mail.smtp.host`: Your SMTP server hostname (e.g., smtp.gmail.com for Gmail)

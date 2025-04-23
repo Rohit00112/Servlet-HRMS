@@ -21,39 +21,119 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <!-- Employee Count by Department Chart -->
             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Employee Count by Department</h3>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Employee Count by Department</h3>
+                    <div class="flex space-x-2">
+                        <a href="${pageContext.request.contextPath}/export/employee-count-by-department/pdf" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                            <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                            PDF
+                        </a>
+                        <a href="${pageContext.request.contextPath}/export/employee-count-by-department/excel" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                            <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Excel
+                        </a>
+                    </div>
+                </div>
                 <div class="h-64">
                     <canvas id="employeeCountChart"></canvas>
                 </div>
             </div>
-            
+
             <!-- Average Salary by Department Chart -->
             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Average Salary by Department</h3>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Average Salary by Department</h3>
+                    <div class="flex space-x-2">
+                        <a href="${pageContext.request.contextPath}/export/average-salary-by-department/pdf" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                            <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                            PDF
+                        </a>
+                        <a href="${pageContext.request.contextPath}/export/average-salary-by-department/excel" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                            <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Excel
+                        </a>
+                    </div>
+                </div>
                 <div class="h-64">
                     <canvas id="averageSalaryChart"></canvas>
                 </div>
             </div>
-            
+
             <!-- Leave Usage by Department Chart -->
             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Leave Usage by Department</h3>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Leave Usage by Department</h3>
+                    <div class="flex space-x-2">
+                        <a href="${pageContext.request.contextPath}/export/leave-usage-by-department/pdf" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                            <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                            PDF
+                        </a>
+                        <a href="${pageContext.request.contextPath}/export/leave-usage-by-department/excel" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                            <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Excel
+                        </a>
+                    </div>
+                </div>
                 <div class="h-64">
                     <canvas id="leaveUsageChart"></canvas>
                 </div>
             </div>
-            
+
             <!-- Attendance Rate by Department Chart -->
             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Attendance Rate by Department</h3>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Attendance Rate by Department</h3>
+                    <div class="flex space-x-2">
+                        <a href="${pageContext.request.contextPath}/export/attendance-rate-by-department/pdf" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                            <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                            PDF
+                        </a>
+                        <a href="${pageContext.request.contextPath}/export/attendance-rate-by-department/excel" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                            <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Excel
+                        </a>
+                    </div>
+                </div>
                 <div class="h-64">
                     <canvas id="attendanceRateChart"></canvas>
                 </div>
             </div>
-            
+
             <!-- Gender Distribution by Department Chart -->
             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md md:col-span-2">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Gender Distribution by Department</h3>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Gender Distribution by Department</h3>
+                    <div class="flex space-x-2">
+                        <a href="${pageContext.request.contextPath}/export/gender-distribution-by-department/pdf" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                            <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                            PDF
+                        </a>
+                        <a href="${pageContext.request.contextPath}/export/gender-distribution-by-department/excel" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                            <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Excel
+                        </a>
+                    </div>
+                </div>
                 <div class="h-64">
                     <canvas id="genderDistributionChart"></canvas>
                 </div>
@@ -67,23 +147,23 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Register Chart.js DataLabels plugin
         Chart.register(ChartDataLabels);
-        
+
         // Load Employee Count by Department Data
         fetch('${pageContext.request.contextPath}/dashboard/analytics?type=employee-count-by-department')
             .then(response => response.json())
             .then(data => {
                 const ctx = document.getElementById('employeeCountChart').getContext('2d');
-                
+
                 // Convert data to arrays
                 const labels = Object.keys(data.labels);
                 const values = Object.values(data.data);
-                
+
                 // Add a title above the chart
                 const chartTitle = document.createElement('div');
                 chartTitle.className = 'text-sm text-center text-gray-500 mb-2';
                 chartTitle.textContent = 'Number of employees in each department';
                 document.getElementById('employeeCountChart').parentNode.insertBefore(chartTitle, document.getElementById('employeeCountChart'));
-                
+
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -137,23 +217,23 @@
                 });
             })
             .catch(error => console.error('Error loading employee count data:', error));
-            
+
         // Load Average Salary by Department Data
         fetch('${pageContext.request.contextPath}/dashboard/analytics?type=average-salary-by-department')
             .then(response => response.json())
             .then(data => {
                 const ctx = document.getElementById('averageSalaryChart').getContext('2d');
-                
+
                 // Convert data to arrays
                 const labels = Object.keys(data.labels);
                 const values = Object.values(data.data);
-                
+
                 // Add a title above the chart
                 const chartTitle = document.createElement('div');
                 chartTitle.className = 'text-sm text-center text-gray-500 mb-2';
                 chartTitle.textContent = 'Average salary in each department';
                 document.getElementById('averageSalaryChart').parentNode.insertBefore(chartTitle, document.getElementById('averageSalaryChart'));
-                
+
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -212,23 +292,23 @@
                 });
             })
             .catch(error => console.error('Error loading average salary data:', error));
-            
+
         // Load Leave Usage by Department Data
         fetch('${pageContext.request.contextPath}/dashboard/analytics?type=leave-usage-by-department')
             .then(response => response.json())
             .then(data => {
                 const ctx = document.getElementById('leaveUsageChart').getContext('2d');
-                
+
                 // Convert data to arrays
                 const labels = Object.keys(data.labels);
                 const values = Object.values(data.data);
-                
+
                 // Add a title above the chart
                 const chartTitle = document.createElement('div');
                 chartTitle.className = 'text-sm text-center text-gray-500 mb-2';
                 chartTitle.textContent = 'Total leave days taken by each department this year';
                 document.getElementById('leaveUsageChart').parentNode.insertBefore(chartTitle, document.getElementById('leaveUsageChart'));
-                
+
                 new Chart(ctx, {
                     type: 'pie',
                     data: {
@@ -294,23 +374,23 @@
                 });
             })
             .catch(error => console.error('Error loading leave usage data:', error));
-            
+
         // Load Attendance Rate by Department Data
         fetch('${pageContext.request.contextPath}/dashboard/analytics?type=attendance-rate-by-department')
             .then(response => response.json())
             .then(data => {
                 const ctx = document.getElementById('attendanceRateChart').getContext('2d');
-                
+
                 // Convert data to arrays
                 const labels = Object.keys(data.labels);
                 const values = Object.values(data.data);
-                
+
                 // Add a title above the chart
                 const chartTitle = document.createElement('div');
                 chartTitle.className = 'text-sm text-center text-gray-500 mb-2';
                 chartTitle.textContent = 'Average attendance rate by department this month';
                 document.getElementById('attendanceRateChart').parentNode.insertBefore(chartTitle, document.getElementById('attendanceRateChart'));
-                
+
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -384,26 +464,26 @@
                 });
             })
             .catch(error => console.error('Error loading attendance rate data:', error));
-            
+
         // Load Gender Distribution by Department Data
         fetch('${pageContext.request.contextPath}/dashboard/analytics?type=gender-distribution-by-department')
             .then(response => response.json())
             .then(data => {
                 const ctx = document.getElementById('genderDistributionChart').getContext('2d');
-                
+
                 // Extract data from the response
                 const departmentData = data.data;
                 const departments = departmentData.departments;
                 const maleData = departmentData.male;
                 const femaleData = departmentData.female;
                 const otherData = departmentData.other;
-                
+
                 // Add a title above the chart
                 const chartTitle = document.createElement('div');
                 chartTitle.className = 'text-sm text-center text-gray-500 mb-2';
                 chartTitle.textContent = 'Gender distribution across departments';
                 document.getElementById('genderDistributionChart').parentNode.insertBefore(chartTitle, document.getElementById('genderDistributionChart'));
-                
+
                 new Chart(ctx, {
                     type: 'bar',
                     data: {

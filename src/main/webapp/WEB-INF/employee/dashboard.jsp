@@ -211,7 +211,23 @@
 
                         <!-- Attendance Trend Chart -->
                         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md md:col-span-2">
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Attendance Trend (Last 6 Months)</h3>
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Attendance Trend (Last 6 Months)</h3>
+                                <div class="flex space-x-2">
+                                    <a href="${pageContext.request.contextPath}/export/attendance-trend/pdf" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                                        <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                        </svg>
+                                        PDF
+                                    </a>
+                                    <a href="${pageContext.request.contextPath}/export/attendance-trend/excel" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                                        <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        Excel
+                                    </a>
+                                </div>
+                            </div>
                             <div class="h-64">
                                 <canvas id="attendanceTrendChart"></canvas>
                             </div>
@@ -223,7 +239,23 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Leave Usage by Month Chart -->
                         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Leave Usage by Month</h3>
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Leave Usage by Month</h3>
+                                <div class="flex space-x-2">
+                                    <a href="${pageContext.request.contextPath}/export/leave-usage-by-month/pdf" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                                        <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                        </svg>
+                                        PDF
+                                    </a>
+                                    <a href="${pageContext.request.contextPath}/export/leave-usage-by-month/excel" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                                        <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        Excel
+                                    </a>
+                                </div>
+                            </div>
                             <div class="h-64">
                                 <canvas id="leaveUsageByMonthChart"></canvas>
                             </div>
@@ -231,7 +263,23 @@
 
                         <!-- Leave Usage by Type Chart -->
                         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Leave Usage by Type</h3>
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Leave Usage by Type</h3>
+                                <div class="flex space-x-2">
+                                    <a href="${pageContext.request.contextPath}/export/leave-usage-by-type/pdf" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                                        <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                        </svg>
+                                        PDF
+                                    </a>
+                                    <a href="${pageContext.request.contextPath}/export/leave-usage-by-type/excel" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                                        <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        Excel
+                                    </a>
+                                </div>
+                            </div>
                             <div class="h-64">
                                 <canvas id="leaveUsageByTypeChart"></canvas>
                             </div>
@@ -239,7 +287,23 @@
 
                         <!-- Leave Status Distribution Chart -->
                         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md md:col-span-2">
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Leave Status Distribution</h3>
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Leave Status Distribution</h3>
+                                <div class="flex space-x-2">
+                                    <a href="${pageContext.request.contextPath}/export/leave-status-distribution/pdf" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                                        <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                        </svg>
+                                        PDF
+                                    </a>
+                                    <a href="${pageContext.request.contextPath}/export/leave-status-distribution/excel" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                                        <svg class="-ml-0.5 mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        Excel
+                                    </a>
+                                </div>
+                            </div>
                             <div class="h-64">
                                 <canvas id="leaveStatusDistributionChart"></canvas>
                             </div>

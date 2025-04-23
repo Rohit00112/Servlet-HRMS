@@ -2,8 +2,11 @@ package com.example.hrms.servlet.payroll;
 
 import com.example.hrms.dao.EmployeeDAO;
 import com.example.hrms.dao.NotificationDAO;
+import com.example.hrms.dao.UserActivityDAO;
 import com.example.hrms.model.Employee;
 import com.example.hrms.model.Payroll;
+import com.example.hrms.model.User;
+import com.example.hrms.model.UserActivity;
 import com.example.hrms.service.PayrollService;
 import com.example.hrms.util.EmailService;
 
@@ -30,6 +33,7 @@ public class GeneratePayrollServlet extends HttpServlet {
     private PayrollService payrollService;
     private EmployeeDAO employeeDAO;
     private NotificationDAO notificationDAO;
+    private UserActivityDAO userActivityDAO;
 
     @Override
     public void init() throws ServletException {
@@ -37,6 +41,7 @@ public class GeneratePayrollServlet extends HttpServlet {
         payrollService = new PayrollService();
         employeeDAO = new EmployeeDAO();
         notificationDAO = new NotificationDAO();
+        userActivityDAO = new UserActivityDAO();
     }
 
     @Override
@@ -102,12 +107,13 @@ public class GeneratePayrollServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("username") == null) {
+        if (session == null || session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
-        String role = (String) session.getAttribute("role");
+        User user = (User) session.getAttribute("user");
+        String role = user.getRole();
         if (!role.equals("ADMIN") && !role.equals("HR")) {
             response.sendRedirect(request.getContextPath() + "/access-denied");
             return;
@@ -131,11 +137,38 @@ public class GeneratePayrollServlet extends HttpServlet {
                     int employeeId = Integer.parseInt(employeeIdParam);
                     Payroll payroll = payrollService.generatePayroll(employeeId, month);
 
+                    // Get employee details
+                    Employee employee = employeeDAO.getEmployeeById(employeeId);
+
+                    // Log the activity
+                    userActivityDAO.logActivity(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getRole(),
+                        "GENERATE_PAYROLL",
+                        user.getUsername() + " generated payroll for " + employee.getName() + " for " + month,
+                        "PAYROLL",
+                        payroll.getId(),
+                        request.getRemoteAddr()
+                    );
+
                     // Redirect to view the generated payroll
                     response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/payroll/view?id=" + payroll.getId());
                 } else {
                     // Generate for all employees
                     payrollService.generatePayrollForAllEmployees(month);
+
+                    // Log the activity
+                    userActivityDAO.logActivity(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getRole(),
+                        "GENERATE_PAYROLL",
+                        user.getUsername() + " generated payroll for all employees for " + month,
+                        "PAYROLL",
+                        null,
+                        request.getRemoteAddr()
+                    );
 
                     // Redirect to view all payrolls for the month
                     response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/payroll/generate?month=" + month);
@@ -158,6 +191,21 @@ public class GeneratePayrollServlet extends HttpServlet {
                     payroll.setNotes(notes);
 
                     payrollService.updatePayroll(payroll);
+
+                    // Get employee details
+                    Employee employee = employeeDAO.getEmployeeById(payroll.getEmployeeId());
+
+                    // Log the activity
+                    userActivityDAO.logActivity(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getRole(),
+                        "UPDATE",
+                        user.getUsername() + " updated payroll for " + employee.getName() + " for " + payroll.getMonth(),
+                        "PAYROLL",
+                        payroll.getId(),
+                        request.getRemoteAddr()
+                    );
 
                     // Redirect to view the updated payroll
                     response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/payroll/view?id=" + payrollId);
@@ -205,6 +253,18 @@ public class GeneratePayrollServlet extends HttpServlet {
                                     e.printStackTrace();
                                 }
                             }
+
+                            // Log the activity
+                            userActivityDAO.logActivity(
+                                user.getId(),
+                                user.getUsername(),
+                                user.getRole(),
+                                "FINALIZE",
+                                user.getUsername() + " finalized payroll for " + employee.getName() + " for " + formattedMonth,
+                                "PAYROLL",
+                                payrollId,
+                                request.getRemoteAddr()
+                            );
                         }
                     }
                 }
@@ -216,12 +276,53 @@ public class GeneratePayrollServlet extends HttpServlet {
                 int payrollId = Integer.parseInt(request.getParameter("payrollId"));
                 payrollService.markPayrollAsPaid(payrollId);
 
+                // Get payroll details
+                Payroll payroll = payrollService.getPayrollById(payrollId);
+                if (payroll != null) {
+                    // Get employee details
+                    Employee employee = employeeDAO.getEmployeeById(payroll.getEmployeeId());
+                    if (employee != null) {
+                        // Log the activity
+                        userActivityDAO.logActivity(
+                            user.getId(),
+                            user.getUsername(),
+                            user.getRole(),
+                            "MARK_PAID",
+                            user.getUsername() + " marked payroll as paid for " + employee.getName() + " for " + payroll.getMonth(),
+                            "PAYROLL",
+                            payrollId,
+                            request.getRemoteAddr()
+                        );
+                    }
+                }
+
                 // Redirect back to the payroll view
                 response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/payroll/view?id=" + payrollId);
             } else if ("delete".equals(action)) {
                 // Delete a payroll
                 int payrollId = Integer.parseInt(request.getParameter("payrollId"));
                 String month = request.getParameter("month");
+
+                // Get payroll details before deletion
+                Payroll payroll = payrollService.getPayrollById(payrollId);
+                if (payroll != null) {
+                    // Get employee details
+                    Employee employee = employeeDAO.getEmployeeById(payroll.getEmployeeId());
+                    if (employee != null) {
+                        // Log the activity
+                        userActivityDAO.logActivity(
+                            user.getId(),
+                            user.getUsername(),
+                            user.getRole(),
+                            "DELETE",
+                            user.getUsername() + " deleted payroll for " + employee.getName() + " for " + payroll.getMonth(),
+                            "PAYROLL",
+                            null,
+                            request.getRemoteAddr()
+                        );
+                    }
+                }
+
                 payrollService.deletePayroll(payrollId);
 
                 // Redirect back to the payroll list

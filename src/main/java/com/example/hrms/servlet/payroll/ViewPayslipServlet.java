@@ -122,6 +122,10 @@ public class ViewPayslipServlet extends HttpServlet {
                 List<Payroll> payrolls = payrollService.getAllPayrolls();
                 request.setAttribute("payrolls", payrolls);
 
+                // Get payroll-related activities
+                List<UserActivity> payrollActivities = userActivityDAO.getRecentActivitiesByEntityType("PAYROLL", 10);
+                request.setAttribute("recentActivities", payrollActivities);
+
                 String jspPath = "/WEB-INF/" + role.toLowerCase() + "/payroll-list.jsp";
                 request.getRequestDispatcher(jspPath).forward(request, response);
             }

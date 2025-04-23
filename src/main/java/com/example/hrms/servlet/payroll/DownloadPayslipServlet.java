@@ -1,8 +1,10 @@
 package com.example.hrms.servlet.payroll;
 
 import com.example.hrms.dao.EmployeeDAO;
+import com.example.hrms.dao.UserActivityDAO;
 import com.example.hrms.model.Employee;
 import com.example.hrms.model.Payroll;
+import com.example.hrms.model.User;
 import com.example.hrms.service.PayrollService;
 import com.example.hrms.util.PDFService;
 import com.itextpdf.text.DocumentException;
@@ -26,12 +28,14 @@ import java.sql.SQLException;
 public class DownloadPayslipServlet extends HttpServlet {
     private PayrollService payrollService;
     private EmployeeDAO employeeDAO;
+    private UserActivityDAO userActivityDAO;
 
     @Override
     public void init() throws ServletException {
         super.init();
         payrollService = new PayrollService();
         employeeDAO = new EmployeeDAO();
+        userActivityDAO = new UserActivityDAO();
     }
 
     @Override
@@ -42,7 +46,7 @@ public class DownloadPayslipServlet extends HttpServlet {
             return;
         }
 
-        com.example.hrms.model.User user = (com.example.hrms.model.User) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
         String role = user.getRole();
 
         try {
@@ -102,6 +106,18 @@ public class DownloadPayslipServlet extends HttpServlet {
             try (OutputStream out = response.getOutputStream()) {
                 out.write(pdfBytes);
                 out.flush();
+
+                // Log the activity
+                userActivityDAO.logActivity(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getRole(),
+                    "DOWNLOAD",
+                    user.getUsername() + " downloaded payslip for " + employee.getName() + " for " + payroll.getMonth(),
+                    "PAYROLL",
+                    payroll.getId(),
+                    request.getRemoteAddr()
+                );
             }
 
         } catch (SQLException e) {

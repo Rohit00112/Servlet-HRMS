@@ -84,7 +84,7 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
-                                
+
                                 <!-- Notification Content -->
                                 <div class="flex-1">
                                     <div class="flex items-center justify-between">
@@ -104,7 +104,7 @@
                         </li>
                     </c:forEach>
                 </ul>
-                
+
                 <!-- Pagination -->
                 <c:if test="${totalPages > 1}">
                     <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
@@ -123,14 +123,14 @@
                                             <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
                                         </svg>
                                     </a>
-                                    
+
                                     <!-- Page Numbers -->
                                     <c:forEach begin="1" end="${totalPages}" var="page">
                                         <a href="${pageContext.request.contextPath}/notifications?page=${page}" class="${page == currentPage ? 'z-10 bg-primary-50 border-primary-500 text-primary-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'} relative inline-flex items-center px-4 py-2 border text-sm font-medium">
                                             ${page}
                                         </a>
                                     </c:forEach>
-                                    
+
                                     <!-- Next Page -->
                                     <a href="${pageContext.request.contextPath}/notifications?page=${currentPage + 1}" class="${currentPage == totalPages ? 'pointer-events-none bg-gray-100' : 'bg-white'} relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 text-sm font-medium text-gray-500 hover:bg-gray-50">
                                         <span class="sr-only">Next</span>
@@ -153,10 +153,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             const markAllReadBtn = document.getElementById('mark-all-read-btn');
             const markReadBtns = document.querySelectorAll('.mark-read-btn');
-            
+
             // Mark all notifications as read
             if (markAllReadBtn) {
                 markAllReadBtn.addEventListener('click', function() {
+                        console.log('Marking all notifications as read from notifications page...');
                     fetch('${pageContext.request.contextPath}/notifications/mark-all-read', {
                         method: 'POST',
                         headers: {
@@ -164,6 +165,7 @@
                         }
                     })
                     .then(response => {
+                        console.log('Mark all response status:', response.status);
                         if (response.ok) {
                             // Reload the page to show updated state
                             window.location.reload();
@@ -174,12 +176,12 @@
                     });
                 });
             }
-            
+
             // Mark individual notification as read
             markReadBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const notificationId = this.getAttribute('data-id');
-                    
+
                     fetch('${pageContext.request.contextPath}/notifications/mark-read', {
                         method: 'POST',
                         headers: {

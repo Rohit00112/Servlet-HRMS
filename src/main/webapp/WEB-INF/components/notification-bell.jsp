@@ -12,16 +12,16 @@
 <%
     // Get the current user
     User currentUser = (User) session.getAttribute("user");
-    
+
     // Initialize variables
     int unreadCount = 0;
     List<Notification> notifications = null;
-    
+
     if (currentUser != null) {
         // Get employee ID
         EmployeeDAO employeeDAO = new EmployeeDAO();
         Employee employee = employeeDAO.getEmployeeByUserId(currentUser.getId());
-        
+
         if (employee != null) {
             // Get unread notifications
             NotificationDAO notificationDAO = new NotificationDAO();
@@ -29,7 +29,7 @@
             notifications = notificationDAO.getNotificationsByEmployeeId(employee.getId());
         }
     }
-    
+
     // Format for timestamps
     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm");
 %>
@@ -41,7 +41,7 @@
         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
         </svg>
-        
+
         <% if (unreadCount > 0) { %>
         <!-- Notification Badge -->
         <span class="absolute top-0 right-0 block h-5 w-5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center">
@@ -65,7 +65,7 @@
                 </a>
             </div>
         </div>
-        
+
         <div class="overflow-y-auto max-h-80" id="notification-list">
             <% if (notifications == null || notifications.isEmpty()) { %>
                 <div class="py-4 px-4 text-center text-sm text-gray-500">
@@ -103,7 +103,7 @@
                                     </div>
                                 <% } %>
                             </div>
-                            
+
                             <!-- Notification Content -->
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
@@ -131,22 +131,23 @@
         const notificationDropdown = document.getElementById('notification-dropdown');
         const markAllReadBtn = document.getElementById('mark-all-read-btn');
         const markReadBtns = document.querySelectorAll('.mark-read-btn');
-        
+
         // Toggle notification dropdown
         notificationBellButton.addEventListener('click', function() {
             notificationDropdown.classList.toggle('hidden');
         });
-        
+
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             if (!notificationBellButton.contains(event.target) && !notificationDropdown.contains(event.target)) {
                 notificationDropdown.classList.add('hidden');
             }
         });
-        
+
         // Mark all notifications as read
         if (markAllReadBtn) {
             markAllReadBtn.addEventListener('click', function() {
+                console.log('Marking all notifications as read...');
                 fetch('${pageContext.request.contextPath}/notifications/mark-all-read', {
                     method: 'POST',
                     headers: {
@@ -154,22 +155,23 @@
                     }
                 })
                 .then(response => {
+                    console.log('Mark all response status:', response.status);
                     if (response.ok) {
                         // Update UI
                         document.querySelectorAll('.notification-item').forEach(item => {
                             item.remove();
                         });
-                        
+
                         // Remove badge
                         const badge = notificationBellButton.querySelector('span.absolute');
                         if (badge) {
                             badge.remove();
                         }
-                        
+
                         // Show no notifications message
                         const notificationList = document.getElementById('notification-list');
                         notificationList.innerHTML = '<div class="py-4 px-4 text-center text-sm text-gray-500">No new notifications</div>';
-                        
+
                         // Hide mark all read button
                         markAllReadBtn.style.display = 'none';
                     }
@@ -179,13 +181,13 @@
                 });
             });
         }
-        
+
         // Mark individual notification as read
         markReadBtns.forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 const notificationId = this.getAttribute('data-id');
-                
+
                 fetch('${pageContext.request.contextPath}/notifications/mark-read', {
                     method: 'POST',
                     headers: {
@@ -198,7 +200,7 @@
                         // Remove notification from list
                         const notificationItem = this.closest('.notification-item');
                         notificationItem.remove();
-                        
+
                         // Update badge count
                         const badge = notificationBellButton.querySelector('span.absolute');
                         if (badge) {
@@ -209,14 +211,14 @@
                                 badge.remove();
                             }
                         }
-                        
+
                         // Check if there are any notifications left
                         const notificationItems = document.querySelectorAll('.notification-item');
                         if (notificationItems.length === 0) {
                             // Show no notifications message
                             const notificationList = document.getElementById('notification-list');
                             notificationList.innerHTML = '<div class="py-4 px-4 text-center text-sm text-gray-500">No new notifications</div>';
-                            
+
                             // Hide mark all read button
                             if (markAllReadBtn) {
                                 markAllReadBtn.style.display = 'none';

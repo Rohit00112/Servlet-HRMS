@@ -151,7 +151,12 @@ public class NotificationDAO {
 
             pstmt.setInt(1, employeeId);
             int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;
+
+            // Log for debugging
+            System.out.println("Marked " + rowsAffected + " notifications as read for employee ID: " + employeeId);
+
+            // Return true even if no rows were affected (no unread notifications)
+            return true;
 
         } catch (SQLException e) {
             e.printStackTrace();

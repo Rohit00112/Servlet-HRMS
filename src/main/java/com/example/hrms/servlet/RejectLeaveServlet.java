@@ -3,8 +3,10 @@ package com.example.hrms.servlet;
 import com.example.hrms.dao.EmployeeDAO;
 import com.example.hrms.dao.LeaveDAO;
 import com.example.hrms.dao.NotificationDAO;
+import com.example.hrms.dao.UserActivityDAO;
 import com.example.hrms.model.Employee;
 import com.example.hrms.model.Leave;
+import com.example.hrms.model.User;
 import com.example.hrms.util.EmailService;
 
 import jakarta.servlet.ServletException;
@@ -22,19 +24,21 @@ public class RejectLeaveServlet extends HttpServlet {
     private LeaveDAO leaveDAO;
     private EmployeeDAO employeeDAO;
     private NotificationDAO notificationDAO;
+    private UserActivityDAO userActivityDAO;
 
     @Override
     public void init() {
         leaveDAO = new LeaveDAO();
         employeeDAO = new EmployeeDAO();
         notificationDAO = new NotificationDAO();
+        userActivityDAO = new UserActivityDAO();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Get the current user from the session
         HttpSession session = request.getSession();
-        com.example.hrms.model.User user = (com.example.hrms.model.User) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
 
         if (user == null || (!user.getRole().equals("HR") && !user.getRole().equals("ADMIN"))) {
             response.sendRedirect(request.getContextPath() + "/login");
@@ -124,6 +128,18 @@ public class RejectLeaveServlet extends HttpServlet {
                         }
                     }
                 }
+
+                // Log the activity
+                userActivityDAO.logActivity(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getRole(),
+                    "REJECT",
+                    user.getUsername() + " rejected leave application for " + employee.getName(),
+                    "LEAVE",
+                    leave.getId(),
+                    request.getRemoteAddr()
+                );
 
                 request.getSession().setAttribute("successMessage", "Leave application rejected successfully");
             } else {

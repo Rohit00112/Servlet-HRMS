@@ -250,6 +250,15 @@
                             </table>
                         </div>
                     </div>
+
+                    <!-- Recent Leave Activities -->
+                    <div class="mt-8 w-full">
+                        <jsp:include page="/WEB-INF/components/recent-activities.jsp">
+                            <jsp:param name="title" value="Recent Leave Activities" />
+                            <jsp:param name="entityType" value="LEAVE" />
+                            <jsp:param name="limit" value="5" />
+                        </jsp:include>
+                    </div>
                 </div>
 </c:set>
 

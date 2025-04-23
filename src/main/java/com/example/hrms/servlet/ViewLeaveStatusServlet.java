@@ -77,6 +77,10 @@ public class ViewLeaveStatusServlet extends HttpServlet {
             int pendingCount = leaveDAO.getPendingLeaveCount();
             request.setAttribute("pendingCount", pendingCount);
 
+            // Get leave-related activities
+            List<UserActivity> leaveActivities = userActivityDAO.getRecentActivitiesByEntityType("LEAVE", 10);
+            request.setAttribute("recentActivities", leaveActivities);
+
             // Forward to HR/Admin leave management page
             String requestURI = request.getRequestURI();
             if (requestURI.contains("/hr/")) {

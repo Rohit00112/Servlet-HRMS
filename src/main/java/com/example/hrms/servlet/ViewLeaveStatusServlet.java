@@ -2,8 +2,10 @@ package com.example.hrms.servlet;
 
 import com.example.hrms.dao.EmployeeDAO;
 import com.example.hrms.dao.LeaveDAO;
+import com.example.hrms.dao.UserActivityDAO;
 import com.example.hrms.model.Employee;
 import com.example.hrms.model.Leave;
+import com.example.hrms.model.UserActivity;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,11 +20,13 @@ import java.util.List;
 public class ViewLeaveStatusServlet extends HttpServlet {
     private LeaveDAO leaveDAO;
     private EmployeeDAO employeeDAO;
+    private UserActivityDAO userActivityDAO;
 
     @Override
     public void init() {
         leaveDAO = new LeaveDAO();
         employeeDAO = new EmployeeDAO();
+        userActivityDAO = new UserActivityDAO();
     }
 
     @Override
@@ -57,6 +61,10 @@ public class ViewLeaveStatusServlet extends HttpServlet {
             // Get leave applications for this employee
             List<Leave> leaves = leaveDAO.getLeavesByEmployeeId(employee.getId());
             request.setAttribute("leaves", leaves);
+
+            // Get leave-related activities for this user
+            List<UserActivity> leaveActivities = userActivityDAO.getRecentActivitiesByEntityType("LEAVE", 10);
+            request.setAttribute("recentActivities", leaveActivities);
 
             // Forward to employee leave status page
             request.getRequestDispatcher("/WEB-INF/employee/leave-status.jsp").forward(request, response);

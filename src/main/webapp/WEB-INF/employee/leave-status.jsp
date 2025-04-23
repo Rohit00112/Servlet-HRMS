@@ -119,6 +119,13 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- Recent Leave Activities -->
+                    <jsp:include page="/WEB-INF/components/recent-activities.jsp">
+                        <jsp:param name="title" value="Recent Leave Activities" />
+                        <jsp:param name="entityType" value="LEAVE" />
+                        <jsp:param name="limit" value="5" />
+                    </jsp:include>
 </c:set>
 
 <jsp:include page="/WEB-INF/components/layout.jsp">

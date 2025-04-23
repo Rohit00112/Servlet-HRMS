@@ -1,8 +1,10 @@
 package com.example.hrms.servlet.payroll;
 
 import com.example.hrms.dao.EmployeeDAO;
+import com.example.hrms.dao.UserActivityDAO;
 import com.example.hrms.model.Employee;
 import com.example.hrms.model.Payroll;
+import com.example.hrms.model.UserActivity;
 import com.example.hrms.service.PayrollService;
 
 import jakarta.servlet.ServletException;
@@ -24,12 +26,14 @@ import java.util.List;
 public class ViewPayslipServlet extends HttpServlet {
     private PayrollService payrollService;
     private EmployeeDAO employeeDAO;
+    private UserActivityDAO userActivityDAO;
 
     @Override
     public void init() throws ServletException {
         super.init();
         payrollService = new PayrollService();
         employeeDAO = new EmployeeDAO();
+        userActivityDAO = new UserActivityDAO();
     }
 
     @Override
@@ -106,6 +110,10 @@ public class ViewPayslipServlet extends HttpServlet {
                 }
 
                 List<Payroll> payrolls = payrollService.getPayrollsByEmployeeId(employee.getId());
+
+                // Get payroll-related activities for this user
+                List<UserActivity> payrollActivities = userActivityDAO.getRecentActivitiesByEntityType("PAYROLL", 10);
+                request.setAttribute("recentActivities", payrollActivities);
 
                 request.setAttribute("payrolls", payrolls);
                 request.getRequestDispatcher("/WEB-INF/employee/payroll-list.jsp").forward(request, response);

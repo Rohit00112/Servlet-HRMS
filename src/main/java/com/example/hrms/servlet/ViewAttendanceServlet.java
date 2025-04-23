@@ -3,9 +3,11 @@ package com.example.hrms.servlet;
 import com.example.hrms.dao.AttendanceDAO;
 import com.example.hrms.dao.DepartmentDAO;
 import com.example.hrms.dao.EmployeeDAO;
+import com.example.hrms.dao.UserActivityDAO;
 import com.example.hrms.model.Attendance;
 import com.example.hrms.model.Department;
 import com.example.hrms.model.Employee;
+import com.example.hrms.model.UserActivity;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -28,12 +30,14 @@ public class ViewAttendanceServlet extends HttpServlet {
     private AttendanceDAO attendanceDAO;
     private EmployeeDAO employeeDAO;
     private DepartmentDAO departmentDAO;
+    private UserActivityDAO userActivityDAO;
 
     @Override
     public void init() {
         attendanceDAO = new AttendanceDAO();
         employeeDAO = new EmployeeDAO();
         departmentDAO = new DepartmentDAO();
+        userActivityDAO = new UserActivityDAO();
     }
 
     @Override
@@ -95,6 +99,10 @@ public class ViewAttendanceServlet extends HttpServlet {
             request.setAttribute("employee", employee);
             request.setAttribute("stats", stats);
             request.setAttribute("attendancePercentage", attendancePercentage);
+
+            // Get attendance-related activities for this user
+            List<UserActivity> attendanceActivities = userActivityDAO.getRecentActivitiesByEntityType("ATTENDANCE", 10);
+            request.setAttribute("recentActivities", attendanceActivities);
 
             // Forward to employee attendance view page
             request.setAttribute("attendanceList", attendanceList);

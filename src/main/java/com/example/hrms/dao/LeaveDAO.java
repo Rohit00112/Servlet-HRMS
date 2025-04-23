@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -383,9 +382,10 @@ public class LeaveDAO {
      * @return Map with leave types as keys and counts as values
      */
     public Map<String, Integer> getLeaveUsageByType(int employeeId) {
-        Map<String, Integer> leaveTypes = new HashMap<>();
+        // Use LinkedHashMap to maintain insertion order for consistent display
+        Map<String, Integer> leaveTypes = new LinkedHashMap<>();
 
-        // Initialize with common leave types
+        // Initialize with common leave types in a specific order
         leaveTypes.put("Annual", 0);
         leaveTypes.put("Sick", 0);
         leaveTypes.put("Personal", 0);
@@ -439,9 +439,10 @@ public class LeaveDAO {
      * @return Map with status types as keys and counts as values
      */
     public Map<String, Integer> getLeaveStatusDistribution(int employeeId) {
-        Map<String, Integer> statusDistribution = new HashMap<>();
+        // Use LinkedHashMap to maintain insertion order for consistent display
+        Map<String, Integer> statusDistribution = new LinkedHashMap<>();
 
-        // Initialize with all status types
+        // Initialize with all status types in a specific order
         statusDistribution.put("APPROVED", 0);
         statusDistribution.put("PENDING", 0);
         statusDistribution.put("REJECTED", 0);

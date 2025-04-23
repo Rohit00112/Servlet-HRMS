@@ -822,10 +822,10 @@
                 // Calculate total for percentage
                 const total = values.reduce((sum, value) => sum + value, 0);
 
-                // Create percentage labels
+                // Create percentage labels with proper formatting
                 const percentageLabels = labels.map((label, index) => {
                     const percentage = total > 0 ? Math.round((values[index] / total) * 100) : 0;
-                    return `${label}: ${values[index]} (${percentage}%)`;
+                    return `${label}`; // Keep labels simple for the legend
                 });
 
                 new Chart(ctx, {
@@ -850,7 +850,28 @@
                                         size: 11
                                     },
                                     padding: 15,
-                                    boxWidth: 15
+                                    boxWidth: 15,
+                                    generateLabels: function(chart) {
+                                        const data = chart.data;
+                                        if (data.labels.length && data.datasets.length) {
+                                            return data.labels.map(function(label, i) {
+                                                const meta = chart.getDatasetMeta(0);
+                                                const style = meta.controller.getStyle(i);
+                                                const value = data.datasets[0].data[i];
+                                                const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+
+                                                return {
+                                                    text: `${label}: ${value} days (${percentage}%)`,
+                                                    fillStyle: style.backgroundColor,
+                                                    strokeStyle: style.borderColor,
+                                                    lineWidth: style.borderWidth,
+                                                    hidden: isNaN(data.datasets[0].data[i]) || meta.data[i].hidden,
+                                                    index: i
+                                                };
+                                            });
+                                        }
+                                        return [];
+                                    }
                                 }
                             },
                             tooltip: {
@@ -872,7 +893,8 @@
                                     if (value === 0) return '';
                                     const percentage = Math.round((value / total) * 100);
                                     return percentage > 5 ? percentage + '%' : '';
-                                }
+                                },
+                                textAlign: 'center'
                             }
                         }
                     },
@@ -925,11 +947,11 @@
                 // Calculate total leave requests
                 const totalRequests = values.reduce((sum, value) => sum + value, 0);
 
-                // Create a status description map
+                // Create a status description map with emoji indicators
                 const statusDescriptions = {
-                    'APPROVED': 'Approved leave requests',
-                    'PENDING': 'Pending leave requests',
-                    'REJECTED': 'Rejected leave requests'
+                    'APPROVED': '✅ Approved',
+                    'PENDING': '⏳ Pending',
+                    'REJECTED': '❌ Rejected'
                 };
 
                 // Create a horizontal bar chart for better readability
@@ -985,10 +1007,11 @@
                                     return context.dataset.borderColor[context.dataIndex];
                                 },
                                 font: {
-                                    weight: 'bold'
+                                    weight: 'bold',
+                                    size: 12
                                 },
                                 formatter: function(value) {
-                                    return value > 0 ? value : '';
+                                    return value > 0 ? value + ' requests' : '';
                                 }
                             }
                         }

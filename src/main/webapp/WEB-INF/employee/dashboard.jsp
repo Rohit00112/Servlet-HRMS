@@ -710,19 +710,13 @@
                 const labels = Object.keys(data.labels);
                 const values = Object.values(data.data);
 
-                // Add a title above the chart
-                const chartTitle = document.createElement('div');
-                chartTitle.className = 'text-sm text-center text-gray-500 mb-2';
-                chartTitle.textContent = 'Number of leave days taken each month this year';
-                document.getElementById('leaveUsageByMonthChart').parentNode.insertBefore(chartTitle, document.getElementById('leaveUsageByMonthChart'));
+                // No need to add title - already in HTML
 
                 // Calculate total leave days
                 const totalLeaveDays = values.reduce((sum, value) => sum + value, 0);
 
-                // Add a summary below the chart
-                const chartSummary = document.createElement('div');
-                chartSummary.className = 'text-sm text-center font-medium mt-2';
-                chartSummary.textContent = `Total leave days taken this year: ${totalLeaveDays}`;
+                // Update the total in the existing summary
+                document.getElementById('totalLeaveDaysByMonth').textContent = totalLeaveDays;
 
                 new Chart(ctx, {
                     type: 'bar',
@@ -791,8 +785,7 @@
                     plugins: [ChartDataLabels]
                 });
 
-                // Add the summary after the chart
-                document.getElementById('leaveUsageByMonthChart').parentNode.appendChild(chartSummary);
+                // No need to add summary - already in HTML
             })
             .catch(error => console.error('Error loading leave usage by month data:', error));
 
@@ -818,17 +811,13 @@
                 const backgroundColors = labels.map(label => leaveTypeColors[label]?.bg || 'rgba(107, 114, 128, 0.7)');
                 const borderColors = labels.map(label => leaveTypeColors[label]?.border || 'rgba(107, 114, 128, 1)');
 
-                // Add a title above the chart
-                const chartTitle = document.createElement('div');
-                chartTitle.className = 'text-sm text-center text-gray-500 mb-2';
-                chartTitle.textContent = 'Distribution of leave days by type';
-                document.getElementById('leaveUsageByTypeChart').parentNode.insertBefore(chartTitle, document.getElementById('leaveUsageByTypeChart'));
+                // No need to add title - already in HTML
 
                 // Calculate total for percentage
                 const total = values.reduce((sum, value) => sum + value, 0);
 
-                // Update the total leave days by month display
-                document.getElementById('totalLeaveDaysByMonth').textContent = total;
+                // Update the total leave days by type display
+                document.getElementById('totalLeaveDaysByType').textContent = total;
 
                 // Create percentage labels with proper formatting
                 const percentageLabels = labels.map((label, index) => {
@@ -909,13 +898,7 @@
                     plugins: [ChartDataLabels]
                 });
 
-                // Add a summary below the chart
-                if (total > 0) {
-                    const chartSummary = document.createElement('div');
-                    chartSummary.className = 'text-sm text-center font-medium mt-2';
-                    chartSummary.textContent = `Total leave days by type: ${total}`;
-                    document.getElementById('leaveUsageByTypeChart').parentNode.appendChild(chartSummary);
-                }
+                // No need to add summary - already in HTML
             })
             .catch(error => console.error('Error loading leave usage by type data:', error));
 
@@ -961,11 +944,7 @@
                 const backgroundColor = labels.map(label => statusColors[label]?.bg || 'rgba(107, 114, 128, 0.7)');
                 const borderColor = labels.map(label => statusColors[label]?.border || 'rgba(107, 114, 128, 1)');
 
-                // Add a title above the chart
-                const chartTitle = document.createElement('div');
-                chartTitle.className = 'text-sm text-center text-gray-500 mb-2';
-                chartTitle.textContent = 'Status of your leave requests this year';
-                document.getElementById('leaveStatusDistributionChart').parentNode.insertBefore(chartTitle, document.getElementById('leaveStatusDistributionChart'));
+                // No need to add title - already in HTML
 
                 // Add the status legend below the chart
                 document.getElementById('leaveStatusDistributionChart').parentNode.appendChild(statusLegend);
@@ -1045,13 +1024,7 @@
                     plugins: [ChartDataLabels]
                 });
 
-                // Add a summary below the chart
-                if (totalRequests > 0) {
-                    const chartSummary = document.createElement('div');
-                    chartSummary.className = 'text-sm text-center font-medium mt-2';
-                    chartSummary.textContent = `Total leave requests this year: ${totalRequests}`;
-                    document.getElementById('leaveStatusDistributionChart').parentNode.appendChild(chartSummary);
-                }
+                // No need to add summary - already in HTML
             })
             .catch(error => console.error('Error loading leave status distribution data:', error));
     });

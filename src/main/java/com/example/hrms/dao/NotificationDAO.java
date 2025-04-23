@@ -11,7 +11,7 @@ public class NotificationDAO {
 
     public List<Notification> getNotificationsByEmployeeId(int employeeId) {
         List<Notification> notifications = new ArrayList<>();
-        String sql = "SELECT * FROM notifications WHERE employee_id = ? AND is_read = false ORDER BY created_at DESC";
+        String sql = "SELECT * FROM notifications WHERE employee_id = ? ORDER BY created_at DESC LIMIT 10";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -67,6 +67,22 @@ public class NotificationDAO {
         }
     }
 
+    public boolean markAllNotificationsAsRead(int employeeId) {
+        String sql = "UPDATE notifications SET is_read = true WHERE employee_id = ? AND is_read = false";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, employeeId);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean createNotification(Notification notification) {
         String sql = "INSERT INTO notifications (employee_id, title, message, type, is_read, created_at) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -106,6 +122,29 @@ public class NotificationDAO {
         notification.setType(type);
         notification.setRead(false);
         notification.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+
+        return createNotification(notification);
+    }
+
+    /**
+     * Create a notification for an employee with a specific timestamp and read status
+     *
+     * @param employeeId The employee ID
+     * @param title The notification title
+     * @param message The notification message
+     * @param type The notification type (INFO, SUCCESS, WARNING, ERROR)
+     * @param isRead Whether the notification is read
+     * @param createdAt The timestamp when the notification was created
+     * @return true if the notification was created successfully, false otherwise
+     */
+    public boolean createNotification(int employeeId, String title, String message, String type, boolean isRead, Timestamp createdAt) {
+        Notification notification = new Notification();
+        notification.setEmployeeId(employeeId);
+        notification.setTitle(title);
+        notification.setMessage(message);
+        notification.setType(type);
+        notification.setRead(isRead);
+        notification.setCreatedAt(createdAt);
 
         return createNotification(notification);
     }

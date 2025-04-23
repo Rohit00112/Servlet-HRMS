@@ -15,6 +15,9 @@
             <!-- Theme Toggle Button -->
             <jsp:include page="/WEB-INF/components/theme-toggle.jsp" />
 
+            <!-- Notification Bell -->
+            <jsp:include page="/WEB-INF/components/notification-bell.jsp" />
+
             <div class="relative">
                 <button type="button" class="flex items-center max-w-xs text-sm rounded-full focus:outline-none focus:shadow-outline" id="user-menu-button">
                     <span class="mr-2 text-gray-700">Welcome, ${username}</span>

@@ -75,21 +75,21 @@
                                                 </div>
                                                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Select your work location for today.</p>
                                             </div>
-                                            
+
                                             <div class="sm:col-span-6">
                                                 <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notes (Optional)</label>
                                                 <div class="relative">
-                                                    <textarea 
-                                                        id="notes" 
-                                                        name="notes" 
-                                                        rows="4" 
+                                                    <textarea
+                                                        id="notes"
+                                                        name="notes"
+                                                        rows="4"
                                                         class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 transition-all duration-200 ease-in-out hover:border-primary-300 dark:hover:border-primary-700 resize-none"
                                                         placeholder="Enter any notes or comments about your work today..."
                                                     ></textarea>
                                                 </div>
                                                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Brief note about your work for today.</p>
                                             </div>
-                                            
+
                                             <div>
                                                 <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
                                                     <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -151,17 +151,17 @@
                                             <div class="sm:col-span-6">
                                                 <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notes (Optional)</label>
                                                 <div class="relative">
-                                                    <textarea 
-                                                        id="notes" 
-                                                        name="notes" 
-                                                        rows="4" 
+                                                    <textarea
+                                                        id="notes"
+                                                        name="notes"
+                                                        rows="4"
                                                         class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 transition-all duration-200 ease-in-out hover:border-primary-300 dark:hover:border-primary-700 resize-none"
                                                         placeholder="Enter any notes or comments about your work today..."
                                                     >${todayAttendance.notes}</textarea>
                                                 </div>
                                                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Additional notes or comments about your work day.</p>
                                             </div>
-                                            
+
                                             <div>
                                                 <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                                                     <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -227,6 +227,15 @@
                                 </c:otherwise>
                             </c:choose>
                         </div>
+                    </div>
+
+                    <!-- Recent Attendance Activities -->
+                    <div class="mt-8 w-full">
+                        <jsp:include page="/WEB-INF/components/recent-activities.jsp">
+                            <jsp:param name="title" value="Recent Attendance Activities" />
+                            <jsp:param name="entityType" value="ATTENDANCE" />
+                            <jsp:param name="limit" value="5" />
+                        </jsp:include>
                     </div>
                 </div>
 </c:set>

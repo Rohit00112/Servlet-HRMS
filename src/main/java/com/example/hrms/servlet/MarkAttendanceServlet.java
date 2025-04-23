@@ -3,8 +3,13 @@ package com.example.hrms.servlet;
 import com.example.hrms.dao.AttendanceDAO;
 import com.example.hrms.dao.EmployeeDAO;
 import com.example.hrms.dao.NotificationDAO;
+import com.example.hrms.dao.UserActivityDAO;
 import com.example.hrms.model.Attendance;
 import com.example.hrms.model.Employee;
+import com.example.hrms.model.User;
+import com.example.hrms.model.UserActivity;
+
+import java.util.List;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,19 +28,21 @@ public class MarkAttendanceServlet extends HttpServlet {
     private AttendanceDAO attendanceDAO;
     private EmployeeDAO employeeDAO;
     private NotificationDAO notificationDAO;
+    private UserActivityDAO userActivityDAO;
 
     @Override
     public void init() {
         attendanceDAO = new AttendanceDAO();
         employeeDAO = new EmployeeDAO();
         notificationDAO = new NotificationDAO();
+        userActivityDAO = new UserActivityDAO();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Get the current user from the session
         HttpSession session = request.getSession();
-        com.example.hrms.model.User user = (com.example.hrms.model.User) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
 
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login");
@@ -67,6 +74,10 @@ public class MarkAttendanceServlet extends HttpServlet {
         request.setAttribute("today", today);
         request.setAttribute("todayAttendance", todayAttendance);
 
+        // Get attendance-related activities for this user
+        List<UserActivity> attendanceActivities = userActivityDAO.getRecentActivitiesByEntityType("ATTENDANCE", 5);
+        request.setAttribute("recentActivities", attendanceActivities);
+
         request.getRequestDispatcher("/WEB-INF/employee/mark-attendance.jsp").forward(request, response);
     }
 
@@ -74,7 +85,7 @@ public class MarkAttendanceServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Get the current user from the session
         HttpSession session = request.getSession();
-        com.example.hrms.model.User user = (com.example.hrms.model.User) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
 
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login");
@@ -139,6 +150,18 @@ public class MarkAttendanceServlet extends HttpServlet {
                 // Create notification for attendance
                 notificationDAO.createAttendanceNotification(employee.getId(), status, sqlNow);
 
+                // Log the activity
+                userActivityDAO.logActivity(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getRole(),
+                    "MARK_ATTENDANCE",
+                    user.getUsername() + " checked in with status: " + status,
+                    "ATTENDANCE",
+                    null,
+                    request.getRemoteAddr()
+                );
+
                 request.getSession().setAttribute("successMessage", "Check-in recorded successfully at " + now);
             } else {
                 request.getSession().setAttribute("errorMessage", "Failed to record check-in");
@@ -164,6 +187,18 @@ public class MarkAttendanceServlet extends HttpServlet {
             success = attendanceDAO.markCheckOut(employee.getId(), sqlToday, sqlNow);
 
             if (success) {
+                // Log the activity
+                userActivityDAO.logActivity(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getRole(),
+                    "MARK_ATTENDANCE",
+                    user.getUsername() + " checked out",
+                    "ATTENDANCE",
+                    null,
+                    request.getRemoteAddr()
+                );
+
                 request.getSession().setAttribute("successMessage", "Check-out recorded successfully at " + now);
             } else {
                 request.getSession().setAttribute("errorMessage", "Failed to record check-out");

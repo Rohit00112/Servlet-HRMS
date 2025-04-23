@@ -152,6 +152,10 @@ public class ViewAttendanceServlet extends HttpServlet {
             request.setAttribute("startDate", startDate);
             request.setAttribute("endDate", endDate);
 
+            // Get attendance-related activities
+            List<UserActivity> attendanceActivities = userActivityDAO.getRecentActivitiesByEntityType("ATTENDANCE", 10);
+            request.setAttribute("recentActivities", attendanceActivities);
+
             String requestURI = request.getRequestURI();
             if (requestURI.contains("/hr/")) {
                 request.getRequestDispatcher("/WEB-INF/hr/view-attendance.jsp").forward(request, response);

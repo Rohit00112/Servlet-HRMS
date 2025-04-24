@@ -25,10 +25,13 @@ This document tracks potential features and enhancements for the HRMS system. Us
   - [x] Optimize all pages for mobile devices
   - [x] Mobile-friendly workflows for common tasks
 
-- [ ] Advanced Attendance Tracking
+- [x] Advanced Attendance Tracking
+  - [x] Late arrival tracking
+  - [x] Early departure tracking
+  - [x] Overtime calculation
+  - [x] Detailed attendance reports
   - [ ] Geolocation verification for remote check-ins
   - [ ] Flexible work hour policies
-  - [ ] Overtime tracking and approval
 
 ### Medium Priority
 - [ ] Document Management System
@@ -120,7 +123,7 @@ For each feature, consider:
 | Document Management | | Medium | High | Planned | |
 | Mobile Responsiveness | | High | Medium | Completed | Improved layout, header, sidebar, and notification components for mobile devices |
 | Performance Management | | Medium | High | Planned | |
-| Advanced Attendance | | High | Medium | Planned | |
+| Advanced Attendance | | High | Medium | Completed | Implemented late arrival, early departure, overtime tracking, and detailed reports |
 
 ## Resources and References
 - [TailwindCSS Documentation](https://tailwindcss.com/docs)

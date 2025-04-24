@@ -181,10 +181,12 @@ public class AttendanceDAO {
     }
 
     public boolean markAttendance(Attendance attendance) {
-        String sql = "INSERT INTO attendance (employee_id, date, check_in_time, status, notes) " +
-                     "VALUES (?, ?, ?, ?, ?) " +
+        String sql = "INSERT INTO attendance (employee_id, date, check_in_time, status, notes, latitude, longitude, location_verified, location_address) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
                      "ON CONFLICT (employee_id, date) DO UPDATE " +
-                     "SET check_in_time = EXCLUDED.check_in_time, status = EXCLUDED.status, notes = EXCLUDED.notes";
+                     "SET check_in_time = EXCLUDED.check_in_time, status = EXCLUDED.status, notes = EXCLUDED.notes, " +
+                     "latitude = EXCLUDED.latitude, longitude = EXCLUDED.longitude, location_verified = EXCLUDED.location_verified, " +
+                     "location_address = EXCLUDED.location_address";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -194,6 +196,27 @@ public class AttendanceDAO {
             pstmt.setTime(3, attendance.getCheckInTime());
             pstmt.setString(4, attendance.getStatus());
             pstmt.setString(5, attendance.getNotes());
+
+            // Set geolocation data
+            if (attendance.getLatitude() != null) {
+                pstmt.setDouble(6, attendance.getLatitude());
+            } else {
+                pstmt.setNull(6, java.sql.Types.DECIMAL);
+            }
+
+            if (attendance.getLongitude() != null) {
+                pstmt.setDouble(7, attendance.getLongitude());
+            } else {
+                pstmt.setNull(7, java.sql.Types.DECIMAL);
+            }
+
+            if (attendance.getLocationVerified() != null) {
+                pstmt.setBoolean(8, attendance.getLocationVerified());
+            } else {
+                pstmt.setBoolean(8, false);
+            }
+
+            pstmt.setString(9, attendance.getLocationAddress());
 
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
@@ -374,6 +397,16 @@ public class AttendanceDAO {
         attendance.setCheckOutTime(rs.getTime("check_out_time"));
         attendance.setStatus(rs.getString("status"));
         attendance.setNotes(rs.getString("notes"));
+
+        // Get geolocation data if available
+        try {
+            attendance.setLatitude(rs.getObject("latitude") != null ? rs.getDouble("latitude") : null);
+            attendance.setLongitude(rs.getObject("longitude") != null ? rs.getDouble("longitude") : null);
+            attendance.setLocationVerified(rs.getObject("location_verified") != null ? rs.getBoolean("location_verified") : null);
+            attendance.setLocationAddress(rs.getString("location_address"));
+        } catch (SQLException e) {
+            // Ignore if the columns don't exist
+        }
 
         // Additional fields for display
         attendance.setEmployeeName(rs.getString("employee_name"));

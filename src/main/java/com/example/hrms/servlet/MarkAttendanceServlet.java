@@ -1,6 +1,5 @@
 package com.example.hrms.servlet;
 
-import com.example.hrms.dao.AllowedLocationDAO;
 import com.example.hrms.dao.AttendanceDAO;
 import com.example.hrms.dao.EmployeeDAO;
 import com.example.hrms.dao.NotificationDAO;
@@ -30,7 +29,6 @@ public class MarkAttendanceServlet extends HttpServlet {
     private EmployeeDAO employeeDAO;
     private NotificationDAO notificationDAO;
     private UserActivityDAO userActivityDAO;
-    private AllowedLocationDAO allowedLocationDAO;
 
     @Override
     public void init() {
@@ -38,7 +36,6 @@ public class MarkAttendanceServlet extends HttpServlet {
         employeeDAO = new EmployeeDAO();
         notificationDAO = new NotificationDAO();
         userActivityDAO = new UserActivityDAO();
-        allowedLocationDAO = new AllowedLocationDAO();
     }
 
     @Override
@@ -114,11 +111,6 @@ public class MarkAttendanceServlet extends HttpServlet {
         String notes = request.getParameter("notes");
         String workType = request.getParameter("workType");
 
-        // Get geolocation data
-        String latitudeStr = request.getParameter("latitude");
-        String longitudeStr = request.getParameter("longitude");
-        String locationAddress = request.getParameter("locationAddress");
-
         // Get today's date and current time
         LocalDate today = LocalDate.now();
         LocalTime now = LocalTime.now();
@@ -151,64 +143,16 @@ public class MarkAttendanceServlet extends HttpServlet {
             attendance.setDate(sqlToday);
             attendance.setCheckInTime(sqlNow);
             attendance.setStatus(status);
-            attendance.setNotes(notes);
 
-            // Process geolocation data if available
-            boolean locationVerified = false;
-            String locationVerificationMessage = "";
-
-            if (latitudeStr != null && !latitudeStr.isEmpty() && longitudeStr != null && !longitudeStr.isEmpty()) {
-                try {
-                    double latitude = Double.parseDouble(latitudeStr);
-                    double longitude = Double.parseDouble(longitudeStr);
-
-                    // Set the geolocation data
-                    attendance.setLatitude(latitude);
-                    attendance.setLongitude(longitude);
-                    attendance.setLocationAddress(locationAddress);
-
-                    // Verify if the location is allowed
-                    String allowedLocationName = allowedLocationDAO.isLocationAllowed(latitude, longitude);
-                    if (allowedLocationName != null) {
-                        locationVerified = true;
-                        locationVerificationMessage = "Location verified: " + allowedLocationName;
-
-                        // If working remotely but in an allowed location, update notes
-                        if ("remote".equals(workType)) {
-                            notes = (notes != null && !notes.isEmpty()) ?
-                                    notes + " | " + locationVerificationMessage :
-                                    locationVerificationMessage;
-                            attendance.setNotes(notes);
-                        }
-                    } else if ("remote".equals(workType)) {
-                        // If working remotely and not in an allowed location, that's expected
-                        locationVerificationMessage = "Remote location recorded";
-                        notes = (notes != null && !notes.isEmpty()) ?
-                                notes + " | " + locationVerificationMessage :
-                                locationVerificationMessage;
-                        attendance.setNotes(notes);
-                    } else {
-                        // If supposed to be in office but not in an allowed location
-                        locationVerificationMessage = "Warning: Location not recognized as an office location";
-                        notes = (notes != null && !notes.isEmpty()) ?
-                                notes + " | " + locationVerificationMessage :
-                                locationVerificationMessage;
-                        attendance.setNotes(notes);
-                    }
-
-                    attendance.setLocationVerified(locationVerified);
-                } catch (NumberFormatException e) {
-                    // Invalid latitude/longitude format
-                    System.err.println("Invalid geolocation format: " + e.getMessage());
-                }
-            } else if ("remote".equals(workType)) {
-                // Working remotely but no location data provided
-                locationVerificationMessage = "Remote work - no location data provided";
+            // Add work type to notes if provided
+            if (workType != null && !workType.isEmpty()) {
+                String workTypeNote = "Work Type: " + workType;
                 notes = (notes != null && !notes.isEmpty()) ?
-                        notes + " | " + locationVerificationMessage :
-                        locationVerificationMessage;
-                attendance.setNotes(notes);
+                        notes + " | " + workTypeNote :
+                        workTypeNote;
             }
+
+            attendance.setNotes(notes);
 
             success = attendanceDAO.markAttendance(attendance);
 
@@ -218,8 +162,8 @@ public class MarkAttendanceServlet extends HttpServlet {
 
                 // Log the activity
                 String activityDescription = user.getUsername() + " checked in with status: " + status;
-                if (!locationVerificationMessage.isEmpty()) {
-                    activityDescription += " | " + locationVerificationMessage;
+                if (workType != null && !workType.isEmpty()) {
+                    activityDescription += " | Work Type: " + workType;
                 }
 
                 userActivityDAO.logActivity(
@@ -234,9 +178,6 @@ public class MarkAttendanceServlet extends HttpServlet {
                 );
 
                 String successMessage = "Check-in recorded successfully at " + now;
-                if (!locationVerificationMessage.isEmpty()) {
-                    successMessage += " | " + locationVerificationMessage;
-                }
                 request.getSession().setAttribute("successMessage", successMessage);
             } else {
                 request.getSession().setAttribute("errorMessage", "Failed to record check-in");

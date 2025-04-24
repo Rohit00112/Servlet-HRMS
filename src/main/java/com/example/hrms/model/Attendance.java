@@ -16,11 +16,7 @@ public class Attendance {
     private String status;
     private String notes;
 
-    // Geolocation fields
-    private Double latitude;
-    private Double longitude;
-    private Boolean locationVerified;
-    private String locationAddress;
+    // Geolocation fields removed
 
     // Additional fields for display purposes
     private String employeeName;
@@ -100,37 +96,7 @@ public class Attendance {
         this.notes = notes;
     }
 
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
-    public Boolean getLocationVerified() {
-        return locationVerified;
-    }
-
-    public void setLocationVerified(Boolean locationVerified) {
-        this.locationVerified = locationVerified;
-    }
-
-    public String getLocationAddress() {
-        return locationAddress;
-    }
-
-    public void setLocationAddress(String locationAddress) {
-        this.locationAddress = locationAddress;
-    }
+    // Geolocation getters and setters removed
 
     public String getEmployeeName() {
         return employeeName;
@@ -293,10 +259,6 @@ public class Attendance {
                 ", checkOutTime=" + checkOutTime +
                 ", status='" + status + '\'' +
                 ", notes='" + notes + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", locationVerified=" + locationVerified +
-                ", locationAddress='" + locationAddress + '\'' +
                 '}';
     }
 }

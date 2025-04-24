@@ -414,44 +414,21 @@ public class DatabaseConnection {
             stmt.executeUpdate("ALTER TABLE employees ADD CONSTRAINT employees_department_id_fkey FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL");
             stmt.executeUpdate("ALTER TABLE employees ADD CONSTRAINT employees_designation_id_fkey FOREIGN KEY (designation_id) REFERENCES designations(id) ON DELETE SET NULL");
 
-            // Execute geolocation update script
-            // Add geolocation fields to attendance table
-            stmt.executeUpdate("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS latitude DECIMAL(10, 8)");
-            stmt.executeUpdate("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS longitude DECIMAL(11, 8)");
-            stmt.executeUpdate("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS location_verified BOOLEAN DEFAULT FALSE");
-            stmt.executeUpdate("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS location_address TEXT");
+            // Remove geolocation fields
+            try {
+                // Remove geolocation fields from attendance table
+                stmt.executeUpdate("ALTER TABLE attendance DROP COLUMN IF EXISTS latitude");
+                stmt.executeUpdate("ALTER TABLE attendance DROP COLUMN IF EXISTS longitude");
+                stmt.executeUpdate("ALTER TABLE attendance DROP COLUMN IF EXISTS location_verified");
+                stmt.executeUpdate("ALTER TABLE attendance DROP COLUMN IF EXISTS location_address");
 
-            // Create allowed_locations table if it doesn't exist
-            String createAllowedLocationsTable = "CREATE TABLE IF NOT EXISTS allowed_locations (" +
-                    "id SERIAL PRIMARY KEY, " +
-                    "name VARCHAR(100) NOT NULL, " +
-                    "latitude DECIMAL(10, 8) NOT NULL, " +
-                    "longitude DECIMAL(11, 8) NOT NULL, " +
-                    "radius INTEGER NOT NULL DEFAULT 100, " + // Radius in meters
-                    "is_active BOOLEAN DEFAULT TRUE, " +
-                    "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-                    "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
-                    ")";
-            stmt.executeUpdate(createAllowedLocationsTable);
+                // Drop allowed_locations table
+                stmt.executeUpdate("DROP TABLE IF EXISTS allowed_locations");
 
-            // Check if allowed locations exist, if not add sample locations
-            String checkAllowedLocations = "SELECT COUNT(*) FROM allowed_locations";
-            ResultSet rs = stmt.executeQuery(checkAllowedLocations);
-            rs.next();
-            int locationCount = rs.getInt(1);
-
-            if (locationCount == 0) {
-                // Add sample allowed locations
-                String insertLocation1 = "INSERT INTO allowed_locations (name, latitude, longitude, radius) " +
-                                        "VALUES ('Main Office', 27.7172, 85.3240, 200)";  // Example: Kathmandu coordinates
-
-                String insertLocation2 = "INSERT INTO allowed_locations (name, latitude, longitude, radius) " +
-                                        "VALUES ('Branch Office', 27.6710, 85.4298, 150)"; // Example: Bhaktapur coordinates
-
-                stmt.executeUpdate(insertLocation1);
-                stmt.executeUpdate(insertLocation2);
-
-                System.out.println("Sample allowed locations created");
+                System.out.println("Geolocation fields and tables removed successfully");
+            } catch (SQLException e) {
+                System.out.println("Error removing geolocation fields: " + e.getMessage());
+                // Continue execution even if there's an error
             }
 
             System.out.println("Database update scripts executed successfully");

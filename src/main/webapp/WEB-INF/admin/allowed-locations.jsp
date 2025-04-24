@@ -13,28 +13,28 @@
                 document.getElementById('deleteForm').submit();
             }
         }
-        
+
         function initMap() {
             // Initialize the map if the map container exists
             const mapContainer = document.getElementById('location-map');
             if (!mapContainer) return;
-            
+
             // Default center (can be overridden by form values)
             let center = { lat: 27.7172, lng: 85.3240 }; // Default to Kathmandu
             let zoom = 13;
-            
+
             // Get values from form if in edit mode
             const latInput = document.getElementById('latitude');
             const lngInput = document.getElementById('longitude');
             const radiusInput = document.getElementById('radius');
-            
+
             if (latInput && latInput.value && lngInput && lngInput.value) {
                 center = {
                     lat: parseFloat(latInput.value),
                     lng: parseFloat(lngInput.value)
                 };
             }
-            
+
             // Create the map
             const map = new google.maps.Map(mapContainer, {
                 center: center,
@@ -44,7 +44,7 @@
                 streetViewControl: true,
                 fullscreenControl: true
             });
-            
+
             // Create a marker for the location
             const marker = new google.maps.Marker({
                 position: center,
@@ -52,7 +52,7 @@
                 draggable: true,
                 title: 'Location'
             });
-            
+
             // Create a circle to represent the radius
             const circle = new google.maps.Circle({
                 map: map,
@@ -63,10 +63,10 @@
                 strokeOpacity: 0.8,
                 strokeWeight: 2
             });
-            
+
             // Bind the circle to the marker
             circle.bindTo('center', marker, 'position');
-            
+
             // Update form values when marker is dragged
             google.maps.event.addListener(marker, 'dragend', function() {
                 const position = marker.getPosition();
@@ -75,7 +75,7 @@
                     lngInput.value = position.lng().toFixed(6);
                 }
             });
-            
+
             // Update circle radius when radius input changes
             if (radiusInput) {
                 radiusInput.addEventListener('input', function() {
@@ -83,7 +83,7 @@
                     circle.setRadius(radius);
                 });
             }
-            
+
             // Add click event to map to move marker
             google.maps.event.addListener(map, 'click', function(event) {
                 marker.setPosition(event.latLng);
@@ -94,8 +94,8 @@
             });
         }
     </script>
-    <!-- Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+    <!-- Google Maps API - No API key needed for development -->
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
 </c:set>
 
 <c:set var="mainContent">
@@ -123,7 +123,7 @@
                 <c:if test="${editMode}">
                     <input type="hidden" name="locationId" value="${location.id}">
                 </c:if>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="col-span-1">
                         <div class="space-y-6">
@@ -136,7 +136,7 @@
                                 </div>
                                 <p class="mt-1 text-sm text-gray-500">A descriptive name for this location</p>
                             </div>
-                            
+
                             <div>
                                 <label for="latitude" class="block text-sm font-medium text-gray-700">Latitude</label>
                                 <div class="mt-1">
@@ -146,7 +146,7 @@
                                 </div>
                                 <p class="mt-1 text-sm text-gray-500">Decimal latitude coordinate</p>
                             </div>
-                            
+
                             <div>
                                 <label for="longitude" class="block text-sm font-medium text-gray-700">Longitude</label>
                                 <div class="mt-1">
@@ -156,7 +156,7 @@
                                 </div>
                                 <p class="mt-1 text-sm text-gray-500">Decimal longitude coordinate</p>
                             </div>
-                            
+
                             <div>
                                 <label for="radius" class="block text-sm font-medium text-gray-700">Radius (meters)</label>
                                 <div class="mt-1">
@@ -166,7 +166,7 @@
                                 </div>
                                 <p class="mt-1 text-sm text-gray-500">Allowed radius in meters (10-5000)</p>
                             </div>
-                            
+
                             <div class="flex items-start">
                                 <div class="flex items-center h-5">
                                     <input id="isActive" name="isActive" type="checkbox" ${location.active ? 'checked' : ''}
@@ -179,14 +179,14 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-span-1">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Location Map</label>
                         <div id="location-map" class="w-full h-80 bg-gray-100 rounded-lg"></div>
                         <p class="mt-1 text-sm text-gray-500">Click on the map to set location or drag the marker</p>
                     </div>
                 </div>
-                
+
                 <div class="flex justify-end space-x-3">
                     <button type="button" id="cancel-btn" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
                         Cancel
@@ -265,7 +265,7 @@
             </c:choose>
         </div>
     </div>
-    
+
     <!-- Delete Form (Hidden) -->
     <form id="deleteForm" action="${pageContext.request.contextPath}/${userRole}/locations" method="post" class="hidden">
         <input type="hidden" name="action" value="delete">
@@ -279,7 +279,7 @@
         const addLocationBtn = document.getElementById('add-location-btn');
         const cancelBtn = document.getElementById('cancel-btn');
         const locationForm = document.getElementById('location-form');
-        
+
         if (addLocationBtn) {
             addLocationBtn.addEventListener('click', function() {
                 locationForm.classList.remove('hidden');
@@ -287,7 +287,7 @@
                 locationForm.scrollIntoView({ behavior: 'smooth' });
             });
         }
-        
+
         if (cancelBtn) {
             cancelBtn.addEventListener('click', function() {
                 // If in edit mode, redirect to locations page

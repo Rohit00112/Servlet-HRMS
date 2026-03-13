@@ -23,7 +23,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@WebServlet(name = "markAttendanceServlet", value = "/employee/attendance/mark")
+@WebServlet(name = "markAttendanceServlet", value = {"/attendance/mark", "/employee/attendance/mark"})
 public class MarkAttendanceServlet extends HttpServlet {
     private AttendanceDAO attendanceDAO;
     private EmployeeDAO employeeDAO;
@@ -45,7 +45,7 @@ public class MarkAttendanceServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -59,7 +59,7 @@ public class MarkAttendanceServlet extends HttpServlet {
 
         if (employee == null) {
             request.getSession().setAttribute("errorMessage", "Employee record not found for the current user");
-            response.sendRedirect(request.getContextPath() + "/employee/dashboard");
+            response.sendRedirect(request.getContextPath() + "/dashboard");
             return;
         }
 
@@ -88,7 +88,7 @@ public class MarkAttendanceServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -102,7 +102,7 @@ public class MarkAttendanceServlet extends HttpServlet {
 
         if (employee == null) {
             request.getSession().setAttribute("errorMessage", "Employee record not found for the current user");
-            response.sendRedirect(request.getContextPath() + "/employee/dashboard");
+            response.sendRedirect(request.getContextPath() + "/dashboard");
             return;
         }
 
@@ -125,7 +125,7 @@ public class MarkAttendanceServlet extends HttpServlet {
 
             if (existingAttendance != null && existingAttendance.getCheckInTime() != null) {
                 request.getSession().setAttribute("errorMessage", "You have already checked in today");
-                response.sendRedirect(request.getContextPath() + "/employee/attendance/mark");
+                response.sendRedirect(request.getContextPath() + "/attendance/mark");
                 return;
             }
 
@@ -189,13 +189,13 @@ public class MarkAttendanceServlet extends HttpServlet {
 
             if (existingAttendance == null) {
                 request.getSession().setAttribute("errorMessage", "You need to check in first before checking out");
-                response.sendRedirect(request.getContextPath() + "/employee/attendance/mark");
+                response.sendRedirect(request.getContextPath() + "/attendance/mark");
                 return;
             }
 
             if (existingAttendance.getCheckOutTime() != null) {
                 request.getSession().setAttribute("errorMessage", "You have already checked out today");
-                response.sendRedirect(request.getContextPath() + "/employee/attendance/mark");
+                response.sendRedirect(request.getContextPath() + "/attendance/mark");
                 return;
             }
 

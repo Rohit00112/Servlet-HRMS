@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet(name = "ViewPayslipServlet", urlPatterns = {
+    "/payroll/view",
     "/admin/payroll/view",
     "/hr/payroll/view",
     "/employee/payroll/view"
@@ -40,7 +41,7 @@ public class ViewPayslipServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -68,7 +69,7 @@ public class ViewPayslipServlet extends HttpServlet {
                         }
 
                         if (currentEmployee == null || payroll.getEmployeeId() != currentEmployee.getId()) {
-                            response.sendRedirect(request.getContextPath() + "/access-denied");
+                            response.sendRedirect(request.getContextPath() + "/dashboard");
                             return;
                         }
                     }
@@ -105,7 +106,7 @@ public class ViewPayslipServlet extends HttpServlet {
 
                 if (employee == null) {
                     request.getSession().setAttribute("errorMessage", "Employee record not found for the current user");
-                    response.sendRedirect(request.getContextPath() + "/employee/dashboard");
+                    response.sendRedirect(request.getContextPath() + "/dashboard");
                     return;
                 }
 
@@ -144,6 +145,6 @@ public class ViewPayslipServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // This servlet primarily handles GET requests
         // Any POST requests will be redirected to the appropriate action in GeneratePayrollServlet
-        response.sendRedirect(request.getContextPath() + "/admin/payroll/generate");
+        response.sendRedirect(request.getContextPath() + "/payroll/generate");
     }
 }

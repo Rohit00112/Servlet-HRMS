@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
 <%--
 Stepper Component Usage:
@@ -47,7 +48,7 @@ For vertical stepper with content:
 
 <%-- Parse steps --%>
 <c:set var="steps" value="${stepsString.split(',')}" />
-<c:set var="totalSteps" value="${steps.length}" />
+<c:set var="totalSteps" value="${fn:length(steps)}" />
 
 <%-- Horizontal Stepper --%>
 <c:if test="${vertical eq 'false'}">
@@ -96,6 +97,9 @@ For vertical stepper with content:
 
 <%-- Vertical Stepper --%>
 <c:if test="${vertical eq 'true'}">
+    <c:if test="${not empty stepContents}">
+        <c:set var="stepContentArray" value="${stepContents.split(',')}" />
+    </c:if>
     <div id="${stepperId}" class="stepper-container">
         <div class="space-y-6">
             <c:forEach var="step" items="${steps}" varStatus="status">
@@ -132,9 +136,8 @@ For vertical stepper with content:
                         </div>
                     </div>
                     
-                    <c:if test="${not empty stepContents}">
-                        <c:set var="stepContentArray" value="${stepContents.split(',')}" />
-                        <c:if test="${isCurrent && status.index < stepContentArray.length}">
+                    <c:if test="${not empty stepContentArray}">
+                        <c:if test="${isCurrent && status.index lt fn:length(stepContentArray)}">
                             <div class="mt-4 ml-12">
                                 <div class="bg-white p-4 rounded-md border border-gray-200">
                                     ${stepContentArray[status.index]}

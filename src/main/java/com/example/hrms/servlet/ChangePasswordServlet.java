@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet(name = "changePasswordServlet", value = "/change-password")
+@WebServlet(name = "changePasswordServlet", value = {"/change-password", "/auth/password/change"})
 public class ChangePasswordServlet extends HttpServlet {
     private UserDAO userDAO;
     private EmployeeDAO employeeDAO;
@@ -33,7 +33,7 @@ public class ChangePasswordServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -98,13 +98,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
     private void redirectBack(HttpServletRequest request, HttpServletResponse response, String role) throws IOException {
         String redirectUrl;
-        if (role.equals("ADMIN")) {
-            redirectUrl = request.getContextPath() + "/admin/profile";
-        } else if (role.equals("HR")) {
-            redirectUrl = request.getContextPath() + "/hr/profile";
-        } else {
-            redirectUrl = request.getContextPath() + "/employee/profile";
-        }
+        redirectUrl = request.getContextPath() + "/profile";
         response.sendRedirect(redirectUrl);
     }
 }

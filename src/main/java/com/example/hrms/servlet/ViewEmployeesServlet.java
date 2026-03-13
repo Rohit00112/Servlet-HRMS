@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "viewEmployeesServlet", value = {"/admin/employees", "/hr/employees"})
+@WebServlet(name = "viewEmployeesServlet", value = {"/employees", "/admin/employees", "/hr/employees"})
 public class ViewEmployeesServlet extends BaseServlet {
     private EmployeeDAO employeeDAO;
     private UserActivityDAO userActivityDAO;

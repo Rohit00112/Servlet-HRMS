@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet(name = "loginServlet", value = "/login")
+@WebServlet(name = "loginServlet", value = {"/login", "/auth/login"})
 public class LoginServlet extends HttpServlet {
     private UserDAO userDAO;
     private UserActivityDAO userActivityDAO;
@@ -149,9 +149,8 @@ public class LoginServlet extends HttpServlet {
             // Check if password change is required
             if (user.isPasswordChangeRequired()) {
                 // Redirect to password change page
-                response.sendRedirect(request.getContextPath() + "/first-login-password-change");
+                response.sendRedirect(request.getContextPath() + "/auth/password/first-login");
             } else {
-                // Redirect to appropriate dashboard based on role
                 redirectToDashboard(response, user.getRole());
             }
         } else {
@@ -161,19 +160,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void redirectToDashboard(HttpServletResponse response, String role) throws IOException {
-        switch (role) {
-            case "ADMIN":
-                response.sendRedirect("admin/dashboard");
-                break;
-            case "HR":
-                response.sendRedirect("hr/dashboard");
-                break;
-            case "EMPLOYEE":
-                response.sendRedirect("employee/dashboard");
-                break;
-            default:
-                response.sendRedirect("login");
-        }
+        response.sendRedirect("dashboard");
     }
 
     /**

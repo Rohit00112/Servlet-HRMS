@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
 <%--
 Table Component:
@@ -37,14 +38,15 @@ Table Component:
                         <tr>
                             <c:set var="columns" value="${param.columns}" />
                             <c:set var="columnWidths" value="${param.columnWidths}" />
+                            <c:set var="columnArray" value="${columns.split(',')}" />
+                            <c:if test="${not empty columnWidths}">
+                                <c:set var="widths" value="${columnWidths.split(',')}" />
+                            </c:if>
 
-                            <c:forEach var="column" items="${columns.split(',')}" varStatus="status">
+                            <c:forEach var="column" items="${columnArray}" varStatus="status">
                                 <c:set var="width" value="" />
-                                <c:if test="${not empty columnWidths}">
-                                    <c:set var="widths" value="${columnWidths.split(',')}" />
-                                    <c:if test="${status.index < widths.length}">
-                                        <c:set var="width" value="width: ${widths[status.index]};" />
-                                    </c:if>
+                                <c:if test="${not empty widths and status.index lt fn:length(widths)}">
+                                    <c:set var="width" value="width: ${widths[status.index]};" />
                                 </c:if>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" style="${width}">
                                     ${column}
@@ -57,7 +59,7 @@ Table Component:
                         <c:choose>
                             <c:when test="${empty requestScope[param.items]}">
                                 <tr>
-                                    <td colspan="${columns.split(',').length}" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-center">
+                                    <td colspan="${fn:length(columnArray)}" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-center">
                                         ${param.emptyMessage}
                                     </td>
                                 </tr>

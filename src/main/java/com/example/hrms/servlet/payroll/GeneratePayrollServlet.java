@@ -26,6 +26,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @WebServlet(name = "GeneratePayrollServlet", urlPatterns = {
+    "/payroll/generate",
     "/admin/payroll/generate",
     "/hr/payroll/generate"
 })
@@ -48,7 +49,7 @@ public class GeneratePayrollServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("username") == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -108,7 +109,7 @@ public class GeneratePayrollServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -153,7 +154,7 @@ public class GeneratePayrollServlet extends HttpServlet {
                     );
 
                     // Redirect to view the generated payroll
-                    response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/payroll/view?id=" + payroll.getId());
+                    response.sendRedirect(request.getContextPath() + "/payroll/view?id=" + payroll.getId());
                 } else {
                     // Generate for all employees
                     payrollService.generatePayrollForAllEmployees(month);
@@ -171,7 +172,7 @@ public class GeneratePayrollServlet extends HttpServlet {
                     );
 
                     // Redirect to view all payrolls for the month
-                    response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/payroll/generate?month=" + month);
+                    response.sendRedirect(request.getContextPath() + "/payroll/generate?month=" + month);
                 }
             } else if ("update".equals(action)) {
                 // Update an existing payroll
@@ -208,7 +209,7 @@ public class GeneratePayrollServlet extends HttpServlet {
                     );
 
                     // Redirect to view the updated payroll
-                    response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/payroll/view?id=" + payrollId);
+                    response.sendRedirect(request.getContextPath() + "/payroll/view?id=" + payrollId);
                 } else {
                     request.setAttribute("errorMessage", "Payroll not found");
                     request.getRequestDispatcher("/WEB-INF/error.jsp").forward(request, response);
@@ -270,7 +271,7 @@ public class GeneratePayrollServlet extends HttpServlet {
                 }
 
                 // Redirect back to the payroll view
-                response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/payroll/view?id=" + payrollId);
+                response.sendRedirect(request.getContextPath() + "/payroll/view?id=" + payrollId);
             } else if ("markPaid".equals(action)) {
                 // Mark a payroll as paid
                 int payrollId = Integer.parseInt(request.getParameter("payrollId"));
@@ -297,7 +298,7 @@ public class GeneratePayrollServlet extends HttpServlet {
                 }
 
                 // Redirect back to the payroll view
-                response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/payroll/view?id=" + payrollId);
+                response.sendRedirect(request.getContextPath() + "/payroll/view?id=" + payrollId);
             } else if ("delete".equals(action)) {
                 // Delete a payroll
                 int payrollId = Integer.parseInt(request.getParameter("payrollId"));
@@ -326,7 +327,7 @@ public class GeneratePayrollServlet extends HttpServlet {
                 payrollService.deletePayroll(payrollId);
 
                 // Redirect back to the payroll list
-                response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/payroll/generate?month=" + month);
+                response.sendRedirect(request.getContextPath() + "/payroll/generate?month=" + month);
             } else {
                 request.setAttribute("errorMessage", "Invalid action");
                 request.getRequestDispatcher("/WEB-INF/error.jsp").forward(request, response);

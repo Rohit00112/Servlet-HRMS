@@ -1,5 +1,7 @@
 package com.example.hrms.filter;
 
+import com.example.hrms.shared.web.RouteRegistry;
+
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,7 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(filterName = "AuthFilter", urlPatterns = {"/admin/*", "/hr/*", "/employee/*"})
+@WebFilter(filterName = "AuthFilter", urlPatterns = "/*")
 public class AuthFilter implements Filter {
     
     @Override
@@ -21,35 +23,27 @@ public class AuthFilter implements Filter {
         
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
+        String path = RouteRegistry.getPath(httpRequest);
+
+        if (!RouteRegistry.isProtectedPath(path)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         HttpSession session = httpRequest.getSession(false);
-        
-        // Check if user is logged in
         boolean isLoggedIn = (session != null && session.getAttribute("user") != null);
-        
+
         if (!isLoggedIn) {
-            // User is not logged in, redirect to login page
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/login");
+            httpResponse.sendRedirect(httpRequest.getContextPath() + "/auth/login");
             return;
         }
-        
-        // Get the requested URL and user role
-        String requestURI = httpRequest.getRequestURI();
+
         String role = (String) session.getAttribute("role");
-        
-        // Check if user has permission to access the requested resource
-        if (requestURI.contains("/admin/") && !"ADMIN".equals(role)) {
-            httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
-            return;
-        } else if (requestURI.contains("/hr/") && !("HR".equals(role) || "ADMIN".equals(role))) {
-            httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
-            return;
-        } else if (requestURI.contains("/employee/") && 
-                !("EMPLOYEE".equals(role) || "HR".equals(role) || "ADMIN".equals(role))) {
+        if (!RouteRegistry.isAuthorized(path, role)) {
             httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
             return;
         }
-        
-        // User has permission, continue with the request
+
         chain.doFilter(request, response);
     }
     

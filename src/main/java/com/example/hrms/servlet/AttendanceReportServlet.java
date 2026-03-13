@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(name = "attendanceReportServlet", value = {"/hr/attendance-report", "/admin/attendance-report"})
+@WebServlet(name = "attendanceReportServlet", value = {"/attendance/report", "/hr/attendance-report", "/admin/attendance-report"})
 public class AttendanceReportServlet extends HttpServlet {
     private AttendanceDAO attendanceDAO;
     private DepartmentDAO departmentDAO;
@@ -38,7 +38,7 @@ public class AttendanceReportServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 

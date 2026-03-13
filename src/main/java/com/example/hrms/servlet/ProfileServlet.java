@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet(name = "profileServlet", value = {"/employee/profile", "/hr/profile", "/admin/profile"})
+@WebServlet(name = "profileServlet", value = {"/profile", "/employee/profile", "/hr/profile", "/admin/profile"})
 public class ProfileServlet extends HttpServlet {
     private EmployeeDAO employeeDAO;
     private DepartmentDAO departmentDAO;
@@ -36,7 +36,7 @@ public class ProfileServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -62,11 +62,9 @@ public class ProfileServlet extends HttpServlet {
 
         // Forward to the appropriate view based on the user's role
         String role = user.getRole();
-        String requestURI = request.getRequestURI();
-        
-        if (role.equals("ADMIN") || requestURI.contains("/admin/")) {
+        if (role.equals("ADMIN")) {
             request.getRequestDispatcher("/WEB-INF/admin/profile.jsp").forward(request, response);
-        } else if (role.equals("HR") || requestURI.contains("/hr/")) {
+        } else if (role.equals("HR")) {
             request.getRequestDispatcher("/WEB-INF/hr/profile.jsp").forward(request, response);
         } else {
             request.getRequestDispatcher("/WEB-INF/employee/profile.jsp").forward(request, response);
@@ -80,7 +78,7 @@ public class ProfileServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 

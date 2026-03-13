@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 
-@WebServlet(name = "rejectLeaveServlet", value = {"/hr/leave/reject", "/admin/leave/reject"})
+@WebServlet(name = "rejectLeaveServlet", value = {"/leaves/reject", "/hr/leave/reject", "/admin/leave/reject"})
 public class RejectLeaveServlet extends HttpServlet {
     private LeaveDAO leaveDAO;
     private EmployeeDAO employeeDAO;
@@ -41,7 +41,7 @@ public class RejectLeaveServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
 
         if (user == null || (!user.getRole().equals("HR") && !user.getRole().equals("ADMIN"))) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -156,10 +156,6 @@ public class RejectLeaveServlet extends HttpServlet {
     }
 
     private void redirectBack(HttpServletRequest request, HttpServletResponse response, String role) throws IOException {
-        if (role.equals("HR")) {
-            response.sendRedirect(request.getContextPath() + "/hr/leave/all");
-        } else {
-            response.sendRedirect(request.getContextPath() + "/admin/leave/all");
-        }
+        response.sendRedirect(request.getContextPath() + "/leaves");
     }
 }

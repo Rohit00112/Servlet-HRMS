@@ -31,7 +31,7 @@ public class NotificationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -41,7 +41,7 @@ public class NotificationServlet extends HttpServlet {
         // Get employee ID
         Employee employee = employeeDAO.getEmployeeByUserId(user.getId());
         if (employee == null) {
-            response.sendRedirect(request.getContextPath() + "/" + role.toLowerCase() + "/dashboard");
+            response.sendRedirect(request.getContextPath() + "/dashboard");
             return;
         }
 
@@ -116,7 +116,7 @@ public class NotificationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 

@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.sql.SQLException;
 
 @WebServlet(name = "DownloadPayslipServlet", urlPatterns = {
+    "/payroll/download",
     "/admin/payroll/download",
     "/hr/payroll/download",
     "/employee/payroll/download"
@@ -42,7 +43,7 @@ public class DownloadPayslipServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 

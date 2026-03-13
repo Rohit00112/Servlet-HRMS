@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 
-@WebServlet(name = "applyLeaveServlet", value = "/employee/leave/apply")
+@WebServlet(name = "applyLeaveServlet", value = {"/leaves/apply", "/employee/leave/apply"})
 public class ApplyLeaveServlet extends HttpServlet {
     private LeaveDAO leaveDAO;
     private EmployeeDAO employeeDAO;
@@ -33,7 +33,7 @@ public class ApplyLeaveServlet extends HttpServlet {
         com.example.hrms.model.User user = (com.example.hrms.model.User) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -47,7 +47,7 @@ public class ApplyLeaveServlet extends HttpServlet {
 
         if (employee == null) {
             request.getSession().setAttribute("errorMessage", "Employee record not found for the current user");
-            response.sendRedirect(request.getContextPath() + "/employee/dashboard");
+            response.sendRedirect(request.getContextPath() + "/dashboard");
             return;
         }
 
@@ -62,7 +62,7 @@ public class ApplyLeaveServlet extends HttpServlet {
         com.example.hrms.model.User user = (com.example.hrms.model.User) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -76,7 +76,7 @@ public class ApplyLeaveServlet extends HttpServlet {
 
         if (employee == null) {
             request.getSession().setAttribute("errorMessage", "Employee record not found for the current user");
-            response.sendRedirect(request.getContextPath() + "/employee/dashboard");
+            response.sendRedirect(request.getContextPath() + "/dashboard");
             return;
         }
 
@@ -91,7 +91,7 @@ public class ApplyLeaveServlet extends HttpServlet {
             reason == null || reason.trim().isEmpty()) {
 
             request.getSession().setAttribute("errorMessage", "All fields are required");
-            response.sendRedirect(request.getContextPath() + "/employee/leave/apply");
+            response.sendRedirect(request.getContextPath() + "/leaves/apply");
             return;
         }
 
@@ -103,7 +103,7 @@ public class ApplyLeaveServlet extends HttpServlet {
             // Validate dates
             if (startDate.after(endDate)) {
                 request.getSession().setAttribute("errorMessage", "Start date cannot be after end date");
-                response.sendRedirect(request.getContextPath() + "/employee/leave/apply");
+                response.sendRedirect(request.getContextPath() + "/leaves/apply");
                 return;
             }
 
@@ -126,11 +126,11 @@ public class ApplyLeaveServlet extends HttpServlet {
             }
 
             // Redirect to leave status page
-            response.sendRedirect(request.getContextPath() + "/employee/leave/status");
+            response.sendRedirect(request.getContextPath() + "/leaves");
 
         } catch (IllegalArgumentException e) {
             request.getSession().setAttribute("errorMessage", "Invalid date format. Please use YYYY-MM-DD");
-            response.sendRedirect(request.getContextPath() + "/employee/leave/apply");
+            response.sendRedirect(request.getContextPath() + "/leaves/apply");
         }
     }
 }

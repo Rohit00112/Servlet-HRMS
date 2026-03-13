@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "departmentServlet", value = {"/admin/departments"})
+@WebServlet(name = "departmentServlet", value = {"/departments", "/admin/departments"})
 public class DepartmentServlet extends BaseServlet {
     private DepartmentDAO departmentDAO;
 
@@ -29,7 +29,7 @@ public class DepartmentServlet extends BaseServlet {
         User user = (User) session.getAttribute("user");
 
         if (user == null || !user.getRole().equals("ADMIN")) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -51,7 +51,7 @@ public class DepartmentServlet extends BaseServlet {
         User user = (User) session.getAttribute("user");
 
         if (user == null || !user.getRole().equals("ADMIN")) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -125,6 +125,6 @@ public class DepartmentServlet extends BaseServlet {
         }
 
         // Redirect back to the departments page
-        response.sendRedirect(request.getContextPath() + "/admin/departments");
+        response.sendRedirect(request.getContextPath() + "/departments");
     }
 }

@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * Servlet to handle password change on first login
  */
-@WebServlet(name = "firstLoginPasswordChangeServlet", value = "/first-login-password-change")
+@WebServlet(name = "firstLoginPasswordChangeServlet", value = {"/first-login-password-change", "/auth/password/first-login"})
 public class FirstLoginPasswordChangeServlet extends HttpServlet {
     private UserDAO userDAO;
     private EmployeeDAO employeeDAO;
@@ -36,7 +36,7 @@ public class FirstLoginPasswordChangeServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -57,7 +57,7 @@ public class FirstLoginPasswordChangeServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 

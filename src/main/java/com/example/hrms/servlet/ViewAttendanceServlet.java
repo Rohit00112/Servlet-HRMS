@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @WebServlet(name = "viewAttendanceServlet", value = {
+    "/attendance",
     "/employee/attendance/view",
     "/hr/attendance/view",
     "/admin/attendance/view"
@@ -47,7 +48,7 @@ public class ViewAttendanceServlet extends HttpServlet {
         com.example.hrms.model.User user = (com.example.hrms.model.User) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -86,7 +87,7 @@ public class ViewAttendanceServlet extends HttpServlet {
 
             if (employee == null) {
                 request.getSession().setAttribute("errorMessage", "Employee record not found for the current user");
-                response.sendRedirect(request.getContextPath() + "/employee/dashboard");
+                response.sendRedirect(request.getContextPath() + "/dashboard");
                 return;
             }
 
@@ -156,14 +157,13 @@ public class ViewAttendanceServlet extends HttpServlet {
             List<UserActivity> attendanceActivities = userActivityDAO.getRecentActivitiesByEntityType("ATTENDANCE", 10);
             request.setAttribute("recentActivities", attendanceActivities);
 
-            String requestURI = request.getRequestURI();
-            if (requestURI.contains("/hr/")) {
+            if (role.equals("HR")) {
                 request.getRequestDispatcher("/WEB-INF/hr/view-attendance.jsp").forward(request, response);
             } else {
                 request.getRequestDispatcher("/WEB-INF/admin/view-attendance.jsp").forward(request, response);
             }
         } else {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
         }
     }
 }

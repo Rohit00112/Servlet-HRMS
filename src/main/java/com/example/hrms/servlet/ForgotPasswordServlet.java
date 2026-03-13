@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  * Servlet for handling password reset requests
  */
-@WebServlet(name = "forgotPasswordServlet", value = "/forgot-password")
+@WebServlet(name = "forgotPasswordServlet", value = {"/forgot-password", "/auth/password/forgot"})
 public class ForgotPasswordServlet extends HttpServlet {
     private EmployeeDAO employeeDAO;
     private UserDAO userDAO;
@@ -132,7 +132,7 @@ public class ForgotPasswordServlet extends HttpServlet {
             request.getSession().setAttribute("messageType", "success");
 
             // Redirect to login page
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Failed to send password reset email. Please try again later.");

@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "viewLeaveStatusServlet", value = {"/employee/leave/status", "/hr/leave/all", "/admin/leave/all"})
+@WebServlet(name = "viewLeaveStatusServlet", value = {"/leaves", "/employee/leave/status", "/hr/leave/all", "/admin/leave/all"})
 public class ViewLeaveStatusServlet extends HttpServlet {
     private LeaveDAO leaveDAO;
     private EmployeeDAO employeeDAO;
@@ -36,7 +36,7 @@ public class ViewLeaveStatusServlet extends HttpServlet {
         com.example.hrms.model.User user = (com.example.hrms.model.User) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -54,7 +54,7 @@ public class ViewLeaveStatusServlet extends HttpServlet {
 
             if (employee == null) {
                 request.getSession().setAttribute("errorMessage", "Employee record not found for the current user");
-                response.sendRedirect(request.getContextPath() + "/employee/dashboard");
+                response.sendRedirect(request.getContextPath() + "/dashboard");
                 return;
             }
 
@@ -82,14 +82,13 @@ public class ViewLeaveStatusServlet extends HttpServlet {
             request.setAttribute("recentActivities", leaveActivities);
 
             // Forward to HR/Admin leave management page
-            String requestURI = request.getRequestURI();
-            if (requestURI.contains("/hr/")) {
+            if (role.equals("HR")) {
                 request.getRequestDispatcher("/WEB-INF/hr/leave-management.jsp").forward(request, response);
             } else {
                 request.getRequestDispatcher("/WEB-INF/admin/leave-management.jsp").forward(request, response);
             }
         } else {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
         }
     }
 }

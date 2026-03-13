@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet(name = "logoutServlet", value = "/logout")
+@WebServlet(name = "logoutServlet", value = {"/logout", "/auth/logout"})
 public class LogoutServlet extends HttpServlet {
     private UserActivityDAO userActivityDAO;
 

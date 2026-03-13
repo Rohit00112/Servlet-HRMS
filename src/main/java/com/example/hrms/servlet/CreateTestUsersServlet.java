@@ -103,6 +103,6 @@ public class CreateTestUsersServlet extends HttpServlet {
         request.getSession().setAttribute("successMessage", "Test users created successfully. HR: hr/hr123, Employee: employee/emp123");
 
         // Redirect back to admin dashboard
-        response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+        response.sendRedirect(request.getContextPath() + "/dashboard");
     }
 }

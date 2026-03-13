@@ -1,6 +1,7 @@
 package com.example.hrms.filter;
 
 import com.example.hrms.model.User;
+import com.example.hrms.shared.web.RouteRegistry;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -20,14 +21,17 @@ import java.util.List;
  * Filter to check if a user needs to change their password
  * If so, redirect them to the password change page
  */
-@WebFilter(urlPatterns = {"/employee/*", "/hr/*", "/admin/*"})
+@WebFilter(urlPatterns = "/*")
 public class PasswordChangeFilter implements Filter {
 
     // List of URLs that are exempt from the password change requirement
     private static final List<String> EXEMPT_URLS = Arrays.asList(
             "/first-login-password-change",
             "/change-password",
-            "/logout"
+            "/logout",
+            "/auth/password/first-login",
+            "/auth/password/change",
+            "/auth/logout"
     );
 
     @Override
@@ -42,28 +46,18 @@ public class PasswordChangeFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession(false);
-        
-        // Get the current request path
-        String requestURI = httpRequest.getRequestURI();
-        String contextPath = httpRequest.getContextPath();
-        String path = requestURI.substring(contextPath.length());
-        
-        // Check if the URL is exempt
+        String path = RouteRegistry.getPath(httpRequest);
         boolean isExempt = EXEMPT_URLS.stream().anyMatch(path::contains);
-        
-        // If the user is logged in and password change is required
+
         if (session != null && session.getAttribute("user") != null) {
             User user = (User) session.getAttribute("user");
-            
-            // If password change is required and the URL is not exempt
+
             if (user.isPasswordChangeRequired() && !isExempt) {
-                // Redirect to the password change page
-                httpResponse.sendRedirect(contextPath + "/first-login-password-change");
+                httpResponse.sendRedirect(httpRequest.getContextPath() + "/auth/password/first-login");
                 return;
             }
         }
-        
-        // Continue with the request
+
         chain.doFilter(request, response);
     }
 
